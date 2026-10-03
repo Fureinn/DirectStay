@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AddOn;
+use App\Models\BlockedDate;
 use App\Models\Booking;
 use App\Models\BookingAddOn;
 use App\Models\Building;
@@ -63,11 +64,24 @@ class BookingController extends Controller
             ->whereNotIn('status', ['cancelled'])
             ->get(['check_in_date', 'check_out_date']);
 
+        $manualBlocked = BlockedDate::where('unit_id', $unit->id)
+            ->where('end_date', '>=', now()->toDateString())
+            ->get(['start_date', 'end_date']);
+
         $blockedDates = [];
         foreach ($existingBookings as $b) {
             $start = Carbon::parse($b->check_in_date);
             $end = Carbon::parse($b->check_out_date);
             while ($start->lt($end)) {
+                $blockedDates[] = $start->format('Y-m-d');
+                $start->addDay();
+            }
+        }
+
+        foreach ($manualBlocked as $mb) {
+            $start = Carbon::parse($mb->start_date);
+            $end = Carbon::parse($mb->end_date);
+            while ($start->lte($end)) {
                 $blockedDates[] = $start->format('Y-m-d');
                 $start->addDay();
             }
@@ -131,7 +145,14 @@ class BookingController extends Controller
             })
             ->exists();
 
-        if ($hasOverlap) {
+        $isManuallyBlocked = BlockedDate::where('unit_id', $unit->id)
+            ->where(function ($query) use ($checkIn, $checkOut) {
+                $query->where('start_date', '<', $checkOut->toDateString())
+                    ->where('end_date', '>=', $checkIn->toDateString());
+            })
+            ->exists();
+
+        if ($hasOverlap || $isManuallyBlocked) {
             return back()->withErrors([
                 'check_in_date' => 'The selected dates are no longer available for this unit. Please select different dates.',
             ])->withInput();

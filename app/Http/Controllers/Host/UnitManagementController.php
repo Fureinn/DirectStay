@@ -18,7 +18,7 @@ class UnitManagementController extends Controller
      */
     public function index(): View
     {
-        $units = Unit::with('building')->latest()->get();
+        $units = Unit::with(['building', 'blockedDates'])->latest()->get();
 
         return view('host.units.index', [
             'units' => $units,
@@ -26,11 +26,99 @@ class UnitManagementController extends Controller
     }
 
     /**
+     * Show form to create a new unit.
+     */
+    public function create(): View
+    {
+        $buildings = Building::all();
+
+        return view('host.units.create', [
+            'buildings' => $buildings,
+        ]);
+    }
+
+    /**
+     * Store a newly created unit.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'building_id' => ['required', 'exists:buildings,id'],
+            'unit_number' => ['required', 'string', 'max:50'],
+            'title' => ['required', 'string', 'max:255'],
+            'base_price_per_night' => ['required', 'numeric', 'min:0', 'max:100000'],
+            'advance_deposit_required' => ['required', 'numeric', 'min:0', 'max:100000'],
+            'max_guests' => ['required', 'integer', 'min:1', 'max:20'],
+            'description' => ['nullable', 'string', 'max:5000'],
+            'inventory_items' => ['nullable', 'string'],
+            'cover_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:10240'],
+            'photos' => ['nullable', 'array'],
+            'photos.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:10240'],
+        ]);
+
+        $inventoryArray = [];
+        if (! empty($validated['inventory_items'])) {
+            $inventoryArray = array_values(array_filter(array_map('trim', explode(',', $validated['inventory_items']))));
+        }
+
+        $unit = Unit::create([
+            'building_id' => $validated['building_id'],
+            'user_id' => auth()->id(),
+            'unit_number' => $validated['unit_number'],
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'base_price_per_night' => $validated['base_price_per_night'],
+            'advance_deposit_required' => $validated['advance_deposit_required'],
+            'max_guests' => $validated['max_guests'],
+            'inventory_items' => $inventoryArray,
+            'is_active' => true,
+        ]);
+
+        $uploadedImages = [];
+        $destinationPath = public_path('images/units/'.$unit->id);
+        if (! File::isDirectory($destinationPath)) {
+            File::makeDirectory($destinationPath, 0755, true);
+        }
+
+        if ($request->hasFile('cover_photo')) {
+            $cover = $request->file('cover_photo');
+            $filename = 'cover_'.$unit->id.'_'.Str::random(8).'.'.$cover->getClientOriginalExtension();
+            $cover->move($destinationPath, $filename);
+            $coverPath = 'images/units/'.$unit->id.'/'.$filename;
+            $uploadedImages[] = $coverPath;
+            $unit->cover_image = $coverPath;
+        }
+
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $filename = 'unit_'.$unit->id.'_'.Str::random(8).'.'.$photo->getClientOriginalExtension();
+                $photo->move($destinationPath, $filename);
+                $uploadedImages[] = 'images/units/'.$unit->id.'/'.$filename;
+            }
+        }
+
+        if (! empty($uploadedImages)) {
+            $unit->images = $uploadedImages;
+            if (! $unit->cover_image) {
+                $unit->cover_image = $uploadedImages[0];
+            }
+        } else {
+            // Default placeholder image
+            $unit->cover_image = 'images/units/unit_n412.jpg';
+            $unit->images = ['images/units/unit_n412.jpg'];
+        }
+
+        $unit->save();
+
+        return redirect()->route('host.units.index')->with('success', "Unit {$unit->unit_number} ({$unit->title}) created successfully!");
+    }
+
+    /**
      * Show edit form and photo manager for a unit.
      */
     public function edit(Unit $unit): View
     {
-        $unit->load('building');
+        $unit->load(['building', 'blockedDates' => fn ($q) => $q->latest()]);
         $buildings = Building::all();
 
         return view('host.units.edit', [

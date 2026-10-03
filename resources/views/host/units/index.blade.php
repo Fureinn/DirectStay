@@ -20,10 +20,20 @@
             </p>
         </div>
 
-        <a href="{{ route('units.index') }}" target="_blank"
-           class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
-            View Live Catalog &rarr;
-        </a>
+        <div class="flex items-center gap-2.5">
+            <a href="{{ route('host.units.create') }}"
+               class="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 shadow-sm transition-all hover:-translate-y-0.5">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                <span>Add New Unit</span>
+            </a>
+
+            <a href="{{ route('units.index') }}" target="_blank"
+               class="px-4 py-2.5 rounded-2xl text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
+                View Live Catalog &rarr;
+            </a>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">

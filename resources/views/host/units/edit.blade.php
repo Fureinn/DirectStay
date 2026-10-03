@@ -108,6 +108,201 @@
                     </button>
                 </form>
             </div>
+
+            <!-- Manual Date Blocker Bento Card with Visual Calendar -->
+            @php
+                $blockedArray = $unit->blockedDates->map(fn($b) => [
+                    'id' => $b->id,
+                    'start_date' => $b->start_date->format('Y-m-d'),
+                    'end_date' => $b->end_date->format('Y-m-d'),
+                    'reason' => $b->reason,
+                ]);
+            @endphp
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6 space-y-4"
+                 x-data="{
+                     currentYear: {{ now()->year }},
+                     currentMonth: {{ now()->month - 1 }},
+                     startDate: '{{ date('Y-m-d') }}',
+                     endDate: '{{ date('Y-m-d', strtotime('+1 day')) }}',
+                     isSelecting: false,
+                     blocks: @json($blockedArray),
+                     get monthName() {
+                         const dt = new Date(this.currentYear, this.currentMonth, 1);
+                         return dt.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+                     },
+                     prevMonth() {
+                         if (this.currentMonth === 0) { this.currentMonth = 11; this.currentYear--; }
+                         else { this.currentMonth--; }
+                     },
+                     nextMonth() {
+                         if (this.currentMonth === 11) { this.currentMonth = 0; this.currentYear++; }
+                         else { this.currentMonth++; }
+                     },
+                     get days() {
+                         const y = this.currentYear, m = this.currentMonth;
+                         const firstDay = new Date(y, m, 1).getDay();
+                         const totalDays = new Date(y, m + 1, 0).getDate();
+                         const today = '{{ now()->toDateString() }}';
+                         const list = [];
+                         for (let i = 0; i < firstDay; i++) list.push({ isBlank: true, key: 'b-' + i });
+                         for (let d = 1; d <= totalDays; d++) {
+                             const mStr = String(m + 1).padStart(2, '0');
+                             const dStr = String(d).padStart(2, '0');
+                             const dateStr = `${y}-${mStr}-${dStr}`;
+                             const isBlocked = this.blocks.some(b => dateStr >= b.start_date && dateStr <= b.end_date);
+                             list.push({ isBlank: false, key: dateStr, day: d, dateStr, isToday: dateStr === today, isBlocked, isPast: dateStr < today });
+                         }
+                         return list;
+                     },
+                     handleDayClick(cell) {
+                         if (cell.isBlank) return;
+                         if (!this.isSelecting) {
+                             this.startDate = cell.dateStr;
+                             this.endDate = cell.dateStr;
+                             this.isSelecting = true;
+                         } else {
+                             if (cell.dateStr < this.startDate) {
+                                 this.startDate = cell.dateStr;
+                                 this.endDate = cell.dateStr;
+                             } else {
+                                 this.endDate = cell.dateStr;
+                                 this.isSelecting = false;
+                             }
+                         }
+                     },
+                     isInRange(dateStr) {
+                         if (!this.startDate || !this.endDate) return false;
+                         return dateStr >= this.startDate && dateStr <= this.endDate;
+                     }
+                 }">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+                    <h2 class="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-xs border border-rose-100">
+                            🚫
+                        </span>
+                        <span>Interactive Date Blocker</span>
+                    </h2>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-700">
+                        {{ $unit->blockedDates->count() }} Blocked
+                    </span>
+                </div>
+
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Click dates directly on the calendar below to block reservation availability for this unit.
+                </p>
+
+                <!-- Mini Month Calendar in Unit Edit -->
+                <div class="p-3 bg-slate-50/80 rounded-2xl border border-slate-200/80">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-bold text-slate-800" x-text="monthName"></span>
+                        <div class="flex items-center gap-1">
+                            <button type="button" @click="prevMonth()" class="p-1 rounded-lg hover:bg-slate-200 text-slate-600 cursor-pointer">
+                                ◀
+                            </button>
+                            <button type="button" @click="nextMonth()" class="p-1 rounded-lg hover:bg-slate-200 text-slate-600 cursor-pointer">
+                                ▶
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-7 gap-1 text-center font-bold text-[9px] text-slate-400 mb-1">
+                        <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+                    </div>
+
+                    <div class="grid grid-cols-7 gap-1 text-center">
+                        <template x-for="cell in days" :key="cell.key">
+                            <div>
+                                <template x-if="cell.isBlank">
+                                    <div class="h-7 rounded-lg"></div>
+                                </template>
+                                <template x-if="!cell.isBlank">
+                                    <button type="button" @click="handleDayClick(cell)"
+                                            :class="{
+                                                'bg-rose-600 text-white font-bold shadow-xs': cell.dateStr === startDate || cell.dateStr === endDate,
+                                                'bg-rose-100 text-rose-900 font-semibold': isInRange(cell.dateStr) && cell.dateStr !== startDate && cell.dateStr !== endDate,
+                                                'bg-rose-50 text-rose-700 border border-rose-200 line-through opacity-70': cell.isBlocked && !isInRange(cell.dateStr),
+                                                'text-slate-700 hover:bg-slate-200/70': !cell.isBlocked && !isInRange(cell.dateStr)
+                                            }"
+                                            class="w-full h-7 rounded-lg text-[11px] font-mono flex items-center justify-center transition-colors cursor-pointer"
+                                            x-text="cell.day">
+                                    </button>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-2 pt-2 border-t border-slate-200/60 text-[10px] text-slate-500">
+                        <span>Click start date, then end date</span>
+                        <span class="font-mono text-rose-600 font-semibold" x-text="startDate + ' → ' + endDate"></span>
+                    </div>
+                </div>
+
+                <!-- Block Dates Form -->
+                <form action="{{ route('host.blocked-dates.store') }}" method="POST" class="space-y-3 pt-1">
+                    @csrf
+                    <input type="hidden" name="unit_id" value="{{ $unit->id }}">
+                    <input type="hidden" name="start_date" :value="startDate">
+                    <input type="hidden" name="end_date" :value="endDate">
+
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Start Date</label>
+                            <input type="date" min="{{ date('Y-m-d') }}" x-model="startDate" required
+                                   class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-rose-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">End Date</label>
+                            <input type="date" min="{{ date('Y-m-d') }}" x-model="endDate" required
+                                   class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-mono font-bold text-slate-900 focus:ring-2 focus:ring-rose-500">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Block Reason</label>
+                        <select name="reason" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs text-slate-800 bg-white focus:ring-2 focus:ring-rose-500">
+                            <option value="Host Personal Staycation">Host Personal Stay</option>
+                            <option value="Unit Maintenance & Deep Cleaning">Maintenance / Deep Cleaning</option>
+                            <option value="Aircon / Appliance Servicing">Appliance Servicing</option>
+                            <option value="Direct / Offline Guest Reservation">Direct / Offline Reservation</option>
+                            <option value="Building Elevator / Power Maintenance">Building Maintenance</option>
+                        </select>
+                    </div>
+
+                    <button type="submit"
+                            class="w-full py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition-all cursor-pointer flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        <span>Block Selected Dates</span>
+                    </button>
+                </form>
+
+                <!-- Currently Blocked Dates List -->
+                @if($unit->blockedDates->count() > 0)
+                    <div class="pt-3 border-t border-slate-100 space-y-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Active Date Blocks</span>
+                        <div class="space-y-2 max-h-56 overflow-y-auto pr-1">
+                            @foreach($unit->blockedDates as $block)
+                                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
+                                    <div>
+                                        <div class="font-bold text-slate-900 font-mono text-[11px]">
+                                            {{ $block->start_date->format('M d, Y') }} &rarr; {{ $block->end_date->format('M d, Y') }}
+                                        </div>
+                                        <span class="text-[10px] text-slate-500 block truncate max-w-[180px]">{{ $block->reason }}</span>
+                                    </div>
+                                    <form action="{{ route('host.blocked-dates.destroy', $block) }}" method="POST" onsubmit="return confirm('Unblock these dates?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-2 py-1 rounded-lg text-[10px] font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer">
+                                            Unblock
+                                        </button>
+                                    </form>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+            </div>
         </div>
 
         <!-- Photo Gallery & Upload Section -->

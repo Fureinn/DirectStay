@@ -81,6 +81,16 @@ class Unit extends Model
     }
 
     /**
+     * Dates manually blocked by the host.
+     *
+     * @return HasMany<BlockedDate, $this>
+     */
+    public function blockedDates(): HasMany
+    {
+        return $this->hasMany(BlockedDate::class);
+    }
+
+    /**
      * Reviews for this unit.
      *
      * @return HasMany<Review, $this>

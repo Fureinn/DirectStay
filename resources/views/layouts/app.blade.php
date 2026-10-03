@@ -16,6 +16,7 @@
 <body class="flex flex-col min-h-screen font-sans antialiased selection:bg-emerald-600 selection:text-white">
 
     <!-- Top Navigation -->
+    @unless(View::hasSection('hideNav'))
     <header class="sticky top-0 z-50 glass-header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 gap-4">
@@ -241,6 +242,7 @@
             @endauth
         </div>
     </header>
+    @endunless
 
     <!-- Notifications / Alerts -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
@@ -285,6 +287,7 @@
     </main>
 
     <!-- Mobile bottom navigation -->
+    @unless(View::hasSection('hideNav'))
     <nav class="fixed inset-x-0 bottom-0 z-50 glass-bottom-bar px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 md:hidden" aria-label="Mobile navigation">
         @auth
             @if (auth()->user()->isHost())
@@ -338,6 +341,7 @@
             </div>
         @endauth
     </nav>
+    @endunless
 
     <!-- Footer -->
     <footer class="glass-footer mt-16 py-8">

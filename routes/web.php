@@ -6,6 +6,7 @@ use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\CustomerSettingsController;
 use App\Http\Controllers\Host\AuthController as HostAuthController;
+use App\Http\Controllers\Host\BlockedDateController as HostBlockedDateController;
 use App\Http\Controllers\Host\CheckoutController as HostCheckoutController;
 use App\Http\Controllers\Host\DashboardController as HostDashboardController;
 use App\Http\Controllers\Host\UnitManagementController as HostUnitManagementController;
@@ -65,11 +66,17 @@ Route::prefix('host')->name('host.')->group(function () {
 
         // Unit Management & Photo Uploads
         Route::get('/units', [HostUnitManagementController::class, 'index'])->name('units.index');
+        Route::get('/units/create', [HostUnitManagementController::class, 'create'])->name('units.create');
+        Route::post('/units', [HostUnitManagementController::class, 'store'])->name('units.store');
         Route::get('/units/{unit}/edit', [HostUnitManagementController::class, 'edit'])->name('units.edit');
         Route::put('/units/{unit}', [HostUnitManagementController::class, 'update'])->name('units.update');
         Route::post('/units/{unit}/photos', [HostUnitManagementController::class, 'uploadPhotos'])->name('units.photos.upload');
         Route::post('/units/{unit}/cover', [HostUnitManagementController::class, 'setCover'])->name('units.photos.cover');
         Route::post('/units/{unit}/photos/delete', [HostUnitManagementController::class, 'deletePhoto'])->name('units.photos.delete');
+
+        // Manual Date Blocking
+        Route::post('/blocked-dates', [HostBlockedDateController::class, 'store'])->name('blocked-dates.store');
+        Route::delete('/blocked-dates/{blockedDate}', [HostBlockedDateController::class, 'destroy'])->name('blocked-dates.destroy');
 
         // Verification Triage & Private Document Viewing
         Route::get('/verifications', [HostVerificationController::class, 'index'])->name('verifications.index');
