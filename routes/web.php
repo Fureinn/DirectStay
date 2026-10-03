@@ -10,6 +10,7 @@ use App\Http\Controllers\Host\CheckoutController as HostCheckoutController;
 use App\Http\Controllers\Host\DashboardController as HostDashboardController;
 use App\Http\Controllers\Host\UnitManagementController as HostUnitManagementController;
 use App\Http\Controllers\Host\VerificationController as HostVerificationController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [BookingController::class, 'index'])->name('units.index');
 Route::get('/units/{unit}', [BookingController::class, 'show'])->name('units.show');
 Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+Route::post('/bookings/{booking}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
 Route::prefix('compliance')->name('compliance.')->group(function () {
     Route::get('/{bookingCode}', [ComplianceController::class, 'portal'])->name('portal');
@@ -58,7 +60,7 @@ Route::prefix('host')->name('host.')->group(function () {
     Route::post('/login', [HostAuthController::class, 'login'])->name('login.post');
     Route::post('/logout', [HostAuthController::class, 'logout'])->name('logout');
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', 'host'])->group(function () {
         Route::get('/', [HostDashboardController::class, 'index'])->name('dashboard');
 
         // Unit Management & Photo Uploads

@@ -79,4 +79,32 @@ class Unit extends Model
     {
         return $this->hasMany(AddOn::class);
     }
+
+    /**
+     * Reviews for this unit.
+     *
+     * @return HasMany<Review, $this>
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class)->latest();
+    }
+
+    /**
+     * Calculate average star rating.
+     */
+    public function averageRating(): float
+    {
+        $avg = $this->reviews()->avg('rating');
+
+        return $avg ? round((float) $avg, 1) : 5.0;
+    }
+
+    /**
+     * Get review count.
+     */
+    public function reviewsCount(): int
+    {
+        return $this->reviews()->count();
+    }
 }

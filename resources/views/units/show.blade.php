@@ -141,6 +141,121 @@
                         {{ $unit->building ? $unit->building->house_rules : 'All guests must submit valid government-issued IDs for security gate pass clearance prior to building entry.' }}
                     </div>
                 </div>
+
+                <!-- Guest Ratings & Verified Reviews Section -->
+                <div id="reviewsSection" class="mt-8 pt-8 border-t border-slate-200">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <div class="flex items-center gap-2.5 mb-1">
+                                <span class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-1.5">
+                                    <span class="text-amber-500 text-2xl">★</span>
+                                    <span>{{ number_format($unit->averageRating(), 1) }}</span>
+                                </span>
+                                <span class="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full score-badge-gold">
+                                    Guest Favorite
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 font-medium">
+                                Overall score from {{ $unit->reviewsCount() }} verified guest review{{ $unit->reviewsCount() === 1 ? '' : 's' }}
+                            </p>
+                        </div>
+
+                        @auth
+                            @php
+                                $userEligibleBooking = \App\Models\Booking::where('unit_id', $unit->id)
+                                    ->where('user_id', auth()->id())
+                                    ->whereIn('status', ['checked_out', 'confirmed', 'checked_in'])
+                                    ->whereDoesntHave('review')
+                                    ->latest()
+                                    ->first();
+                            @endphp
+                            @if($userEligibleBooking)
+                                <button type="button" onclick="openReviewModal('{{ $userEligibleBooking->id }}', '{{ $unit->title }}', '{{ $userEligibleBooking->booking_code }}')"
+                                        class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-amber-950 bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-400 hover:from-amber-400 hover:to-yellow-500 shadow-md shadow-amber-500/25 hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                                    <span>★ Rate Your Stay</span>
+                                </button>
+                            @endif
+                        @endauth
+                    </div>
+
+                    <!-- Rating Criteria Breakdown Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs">
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-700 mb-1">
+                                <span>Cleanliness</span>
+                                <span class="font-bold text-slate-900">5.0</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-700 mb-1">
+                                <span>Host Communication</span>
+                                <span class="font-bold text-slate-900">5.0</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-700 mb-1">
+                                <span>Amenities & WiFi Speed</span>
+                                <span class="font-bold text-slate-900">4.9</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full" style="width: 98%;"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between font-semibold text-slate-700 mb-1">
+                                <span>Value for Money</span>
+                                <span class="font-bold text-slate-900">5.0</span>
+                            </div>
+                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-emerald-500 to-teal-500 h-full rounded-full" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Individual Review Cards -->
+                    <div class="space-y-4">
+                        @forelse($unit->reviews as $review)
+                            <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all">
+                                <div class="flex items-start justify-between gap-4 mb-2">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-sm">
+                                            {{ strtoupper(substr($review->guest_name, 0, 2)) }}
+                                        </div>
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-xs font-bold text-slate-900">{{ $review->guest_name }}</span>
+                                                <span class="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">Verified Stay</span>
+                                            </div>
+                                            <span class="text-[11px] text-slate-400">{{ $review->created_at->diffForHumans() }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center gap-0.5 text-amber-500 text-xs">
+                                        @for($s = 1; $s <= 5; $s++)
+                                            <span>{{ $s <= $review->rating ? '★' : '☆' }}</span>
+                                        @endfor
+                                    </div>
+                                </div>
+
+                                @if($review->comment)
+                                    <p class="text-xs text-slate-600 leading-relaxed pl-12">
+                                        &ldquo;{{ $review->comment }}&rdquo;
+                                    </p>
+                                @endif
+                            </div>
+                        @empty
+                            <div class="text-center py-8 text-slate-400 text-xs">
+                                No guest reviews yet. Book this unit to be the first to share your experience!
+                            </div>
+                        @endforelse
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -154,11 +269,11 @@
                         <span class="text-2xl sm:text-3xl font-black text-slate-900">₱{{ number_format($unit->base_price_per_night, 0) }}</span>
                         <span class="text-sm font-normal text-slate-500">night</span>
                     </div>
-                    <div class="flex items-center gap-1 text-xs text-slate-600 font-medium">
-                        <span class="text-amber-500">★</span>
-                        <span>4.95</span>
-                        <span class="text-slate-400">&bull;</span>
-                        <span class="underline">Verified</span>
+                    <div class="flex items-center gap-1.5 text-xs text-slate-700 font-semibold bg-amber-50 border border-amber-200/80 px-2.5 py-1 rounded-full">
+                        <span class="text-amber-500 font-bold">★</span>
+                        <span>{{ number_format($unit->averageRating(), 1) }}</span>
+                        <span class="text-slate-400 font-normal">&bull;</span>
+                        <a href="#reviewsSection" class="text-slate-600 hover:text-slate-900 underline">{{ $unit->reviewsCount() }} reviews</a>
                     </div>
                 </div>
 
@@ -212,13 +327,23 @@
                         </div>
                     </div>
 
+                    @error('check_in_date')
+                        <p class="text-xs text-rose-600 font-semibold p-2 bg-rose-50 border border-rose-200 rounded-xl">{{ $message }}</p>
+                    @enderror
+                    @error('check_out_date')
+                        <p class="text-xs text-rose-600 font-semibold p-2 bg-rose-50 border border-rose-200 rounded-xl">{{ $message }}</p>
+                    @enderror
+                    @error('guest_count')
+                        <p class="text-xs text-rose-600 font-semibold p-2 bg-rose-50 border border-rose-200 rounded-xl">{{ $message }}</p>
+                    @enderror
+
                     <!-- Date Conflict Alert -->
                     <div id="dateAlert" class="hidden text-xs text-rose-600 font-semibold p-3 bg-rose-50 border border-rose-200 rounded-xl">
                         These dates are unavailable. Please pick different check-in/checkout dates.
                     </div>
 
                     <!-- Step 2: lead guest details (revealed after choosing dates) -->
-                    <div id="confirmAndPaySection" class="{{ old('guest_name') ? '' : 'hidden' }} space-y-4 pt-4 border-t border-slate-200">
+                    <div id="confirmAndPaySection" class="{{ ($errors->any() || old('guest_name')) ? '' : 'hidden' }} space-y-4 pt-4 border-t border-slate-200">
                         <div class="flex items-center justify-between">
                             <h3 class="text-sm font-extrabold text-slate-900">Lead guest details</h3>
                             @auth
@@ -235,7 +360,10 @@
                                 <input type="text" name="guest_name" id="guestNameInput"
                                        value="{{ old('guest_name', auth()->check() ? auth()->user()->name : '') }}"
                                        placeholder="As shown on government ID" required
-                                       class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900">
+                                       class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_name') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror focus:outline-none focus:ring-2 focus:ring-slate-900">
+                                @error('guest_name')
+                                    <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                                @enderror
                             </div>
 
                             <div class="grid grid-cols-2 gap-3">
@@ -244,14 +372,20 @@
                                     <input type="email" name="guest_email" id="guestEmailInput"
                                            value="{{ old('guest_email', auth()->check() ? auth()->user()->email : '') }}"
                                            placeholder="For gate pass" required
-                                           class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900">
+                                           class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_email') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror focus:outline-none focus:ring-2 focus:ring-slate-900">
+                                    @error('guest_email')
+                                        <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Phone</label>
                                     <input type="text" name="guest_phone" id="guestPhoneInput"
                                            value="{{ old('guest_phone', auth()->check() ? (auth()->user()->phone ?? '') : '') }}"
                                            placeholder="e.g. 09171234567" required
-                                           class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900">
+                                           class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_phone') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror focus:outline-none focus:ring-2 focus:ring-slate-900">
+                                    @error('guest_phone')
+                                        <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -280,12 +414,12 @@
                     <!-- Primary Action Button (Airbnb Style Gradient / Solid) -->
                     <div class="pt-2">
                         <button type="button" id="reserveStepBtn" onclick="handleReserveClick()"
-                                class="w-full py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-rose-500 via-rose-600 to-pink-600 hover:from-rose-600 hover:to-pink-700 shadow-md shadow-rose-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                class="{{ ($errors->any() || old('guest_name')) ? 'hidden' : '' }} w-full py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-rose-500 via-rose-600 to-pink-600 hover:from-rose-600 hover:to-pink-700 shadow-md shadow-rose-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
                             <span id="btnText">Reserve</span>
                         </button>
 
                         <button type="submit" id="confirmAndPayBtn"
-                                class="hidden w-full py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-rose-500 via-rose-600 to-pink-600 hover:from-rose-600 hover:to-pink-700 shadow-md shadow-rose-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                class="{{ ($errors->any() || old('guest_name')) ? '' : 'hidden' }} w-full py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-rose-500 via-rose-600 to-pink-600 hover:from-rose-600 hover:to-pink-700 shadow-md shadow-rose-500/25 hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer">
                             <span>Start reservation</span>
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                         </button>
@@ -520,6 +654,156 @@
     addonInputs.forEach(input => input.addEventListener('input', calculate));
 
     calculate();
+
+    // Review Modal Interactive Functions
+    let currentRating = 5;
+    const ratingDescriptions = {
+        1: '1★ Needs Improvement',
+        2: '2★ Fair Experience',
+        3: '3★ Good Stay',
+        4: '4★ Very Good!',
+        5: '5★ Exceptional Staycation!'
+    };
+
+    function openReviewModal(bookingId, unitTitle, bookingCode) {
+        const modal = document.getElementById('reviewModal');
+        const form = document.getElementById('reviewModalForm');
+        const titleEl = document.getElementById('reviewModalUnitTitle');
+        const codeEl = document.getElementById('reviewModalBookingCode');
+
+        if (modal && form) {
+            form.action = '/bookings/' + bookingId + '/reviews';
+            if (titleEl) titleEl.innerText = unitTitle;
+            if (codeEl) codeEl.innerText = 'Reservation Reference: ' + bookingCode;
+            setModalRating(5);
+            modal.classList.remove('hidden');
+        }
+    }
+
+    function closeReviewModal() {
+        const modal = document.getElementById('reviewModal');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function setModalRating(rating) {
+        currentRating = rating;
+        const input = document.getElementById('ratingInput');
+        if (input) input.value = rating;
+
+        updateStarDisplay(rating);
+        const label = document.getElementById('ratingLabel');
+        if (label) label.innerText = ratingDescriptions[rating] || (rating + ' Stars');
+    }
+
+    function hoverModalRating(rating) {
+        updateStarDisplay(rating);
+        const label = document.getElementById('ratingLabel');
+        if (label) label.innerText = ratingDescriptions[rating] || (rating + ' Stars');
+    }
+
+    function resetModalRating() {
+        updateStarDisplay(currentRating);
+        const label = document.getElementById('ratingLabel');
+        if (label) label.innerText = ratingDescriptions[currentRating] || (currentRating + ' Stars');
+    }
+
+    function updateStarDisplay(rating) {
+        const buttons = document.querySelectorAll('#starContainer .star-btn');
+        buttons.forEach((btn, index) => {
+            const starValue = index + 1;
+            if (starValue <= rating) {
+                btn.classList.add('star-active');
+                btn.classList.remove('star-inactive');
+            } else {
+                btn.classList.remove('star-active');
+                btn.classList.add('star-inactive');
+            }
+        });
+    }
 </script>
+
+<!-- Interactive Rating & Review Modal -->
+<div id="reviewModal" class="hidden fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="surface-card bg-white rounded-3xl border border-slate-200 w-full max-w-lg overflow-hidden shadow-2xl">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">Rate Your Stay</span>
+                <h3 class="text-lg font-bold text-slate-900 mt-1" id="reviewModalUnitTitle">Review Stay</h3>
+                <p class="text-xs text-slate-400" id="reviewModalBookingCode"></p>
+            </div>
+            <button type="button" onclick="closeReviewModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors">
+                ✕
+            </button>
+        </div>
+
+        <form id="reviewModalForm" method="POST" action="" class="p-6 space-y-5">
+            @csrf
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-2">Overall Stay Rating</label>
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5" id="starContainer">
+                        @for($star = 1; $star <= 5; $star++)
+                            <button type="button" onclick="setModalRating({{ $star }})" onmouseover="hoverModalRating({{ $star }})" onmouseleave="resetModalRating()"
+                                    class="star-btn text-2xl text-slate-300 transition-transform cursor-pointer" data-star="{{ $star }}">
+                                ★
+                            </button>
+                        @endfor
+                    </div>
+                    <span id="ratingLabel" class="text-xs font-bold text-amber-600 ml-2">Click to select rating</span>
+                </div>
+                <input type="hidden" name="rating" id="ratingInput" value="5" required>
+            </div>
+
+            <!-- Category Ratings (Sub-ratings) -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-600 mb-1">Cleanliness</label>
+                    <select name="cleanliness_rating" class="w-full rounded-lg border-slate-200 text-xs py-1.5 px-2 bg-white">
+                        <option value="5">5 ★ Spotless</option>
+                        <option value="4">4 ★ Clean</option>
+                        <option value="3">3 ★ Average</option>
+                        <option value="2">2 ★ Below Average</option>
+                        <option value="1">1 ★ Poor</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-600 mb-1">Communication</label>
+                    <select name="communication_rating" class="w-full rounded-lg border-slate-200 text-xs py-1.5 px-2 bg-white">
+                        <option value="5">5 ★ Responsive</option>
+                        <option value="4">4 ★ Helpful</option>
+                        <option value="3">3 ★ Acceptable</option>
+                        <option value="2">2 ★ Slow</option>
+                        <option value="1">1 ★ Unresponsive</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-600 mb-1">Accuracy</label>
+                    <select name="accuracy_rating" class="w-full rounded-lg border-slate-200 text-xs py-1.5 px-2 bg-white">
+                        <option value="5">5 ★ Accurate</option>
+                        <option value="4">4 ★ Mostly Accurate</option>
+                        <option value="3">3 ★ Fair</option>
+                        <option value="2">2 ★ Inaccurate</option>
+                        <option value="1">1 ★ Misleading</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1">Your Review & Feedback</label>
+                <textarea name="comment" rows="4" maxlength="1000" placeholder="Share your experience (e.g. aircon coolness, WiFi speed, amenities, building pool, host assistance)..."
+                          class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+            </div>
+
+            <div class="flex items-center justify-end gap-3 pt-2">
+                <button type="button" onclick="closeReviewModal()" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors">
+                    Cancel
+                </button>
+                <button type="submit" class="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-amber-500 via-amber-600 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 shadow-md shadow-amber-500/25 hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                    Publish Review
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endpush
 @endsection

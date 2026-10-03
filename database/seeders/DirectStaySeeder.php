@@ -3,9 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\AddOn;
+use App\Models\Booking;
 use App\Models\Building;
+use App\Models\Review;
 use App\Models\Unit;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -193,6 +196,186 @@ class DirectStaySeeder extends Seeder
                     'unit_id' => null,
                     'price' => $addOnData['price'],
                     'is_active' => true,
+                ]
+            );
+        }
+
+        // 7. Seed completed booking reservations and authentic guest reviews
+        $unitN = Unit::where('unit_number', 'Unit N343')->first();
+        $unitP = Unit::where('unit_number', 'Unit P718')->first();
+
+        if ($unitN) {
+            $booking1 = Booking::updateOrCreate(
+                ['booking_code' => 'DS-SEED-REV-01'],
+                [
+                    'unit_id' => $unitN->id,
+                    'user_id' => null,
+                    'guest_name' => 'Maria Cristina Reyes',
+                    'guest_email' => 'maria.reyes@example.com',
+                    'guest_phone' => '09171239988',
+                    'guest_count' => 4,
+                    'check_in_date' => Carbon::now()->subDays(10)->toDateString(),
+                    'check_out_date' => Carbon::now()->subDays(8)->toDateString(),
+                    'nights_count' => 2,
+                    'base_amount' => 3000.00,
+                    'add_ons_amount' => 50.00,
+                    'advance_deposit_amount' => 1000.00,
+                    'platform_fee' => 150.00,
+                    'total_amount' => 4200.00,
+                    'status' => 'checked_out',
+                    'payment_status' => 'verified',
+                    'waiver_accepted_at' => Carbon::now()->subDays(10),
+                    'verified_at' => Carbon::now()->subDays(10),
+                    'created_at' => Carbon::now()->subDays(12),
+                    'updated_at' => Carbon::now()->subDays(8),
+                ]
+            );
+
+            Review::updateOrCreate(
+                ['booking_id' => $booking1->id],
+                [
+                    'unit_id' => $unitN->id,
+                    'user_id' => null,
+                    'guest_name' => 'Maria Cristina Reyes',
+                    'rating' => 5,
+                    'cleanliness_rating' => 5,
+                    'communication_rating' => 5,
+                    'accuracy_rating' => 5,
+                    'value_rating' => 5,
+                    'comment' => 'Sobrang ganda and linis ng unit! Very cold aircon and the WiFi was super fast for work-from-home. Host Sir Aurelio and Ma\'am Ferlyn were very accommodating and made our Deca gate pass clearance hassle-free. Will definitely book again!',
+                    'created_at' => Carbon::now()->subDays(8),
+                    'updated_at' => Carbon::now()->subDays(8),
+                ]
+            );
+
+            $booking2 = Booking::updateOrCreate(
+                ['booking_code' => 'DS-SEED-REV-02'],
+                [
+                    'unit_id' => $unitN->id,
+                    'user_id' => null,
+                    'guest_name' => 'Joshua Villanueva',
+                    'guest_email' => 'joshua.v@example.com',
+                    'guest_phone' => '09187766554',
+                    'guest_count' => 5,
+                    'check_in_date' => Carbon::now()->subDays(6)->toDateString(),
+                    'check_out_date' => Carbon::now()->subDays(5)->toDateString(),
+                    'nights_count' => 1,
+                    'base_amount' => 1500.00,
+                    'add_ons_amount' => 0.00,
+                    'advance_deposit_amount' => 1000.00,
+                    'platform_fee' => 75.00,
+                    'total_amount' => 2575.00,
+                    'status' => 'checked_out',
+                    'payment_status' => 'verified',
+                    'waiver_accepted_at' => Carbon::now()->subDays(6),
+                    'verified_at' => Carbon::now()->subDays(6),
+                    'created_at' => Carbon::now()->subDays(7),
+                    'updated_at' => Carbon::now()->subDays(5),
+                ]
+            );
+
+            Review::updateOrCreate(
+                ['booking_id' => $booking2->id],
+                [
+                    'unit_id' => $unitN->id,
+                    'user_id' => null,
+                    'guest_name' => 'Joshua Villanueva',
+                    'rating' => 5,
+                    'cleanliness_rating' => 5,
+                    'communication_rating' => 5,
+                    'accuracy_rating' => 5,
+                    'value_rating' => 5,
+                    'comment' => 'Great staycation for our barkada! The 2-bedroom setup with the loft bed fit us comfortably. We saved a lot booking directly through DirectStay without the expensive Airbnb fees. Clean towels and complete kitchen cookware. 10/10!',
+                    'created_at' => Carbon::now()->subDays(5),
+                    'updated_at' => Carbon::now()->subDays(5),
+                ]
+            );
+        }
+
+        if ($unitP) {
+            $booking3 = Booking::updateOrCreate(
+                ['booking_code' => 'DS-SEED-REV-03'],
+                [
+                    'unit_id' => $unitP->id,
+                    'user_id' => null,
+                    'guest_name' => 'Angelica Santos',
+                    'guest_email' => 'angelica.s@example.com',
+                    'guest_phone' => '09228833441',
+                    'guest_count' => 2,
+                    'check_in_date' => Carbon::now()->subDays(4)->toDateString(),
+                    'check_out_date' => Carbon::now()->subDays(2)->toDateString(),
+                    'nights_count' => 2,
+                    'base_amount' => 3300.00,
+                    'add_ons_amount' => 0.00,
+                    'advance_deposit_amount' => 1000.00,
+                    'platform_fee' => 165.00,
+                    'total_amount' => 4465.00,
+                    'status' => 'checked_out',
+                    'payment_status' => 'verified',
+                    'waiver_accepted_at' => Carbon::now()->subDays(4),
+                    'verified_at' => Carbon::now()->subDays(4),
+                    'created_at' => Carbon::now()->subDays(5),
+                    'updated_at' => Carbon::now()->subDays(2),
+                ]
+            );
+
+            Review::updateOrCreate(
+                ['booking_id' => $booking3->id],
+                [
+                    'unit_id' => $unitP->id,
+                    'user_id' => null,
+                    'guest_name' => 'Angelica Santos',
+                    'rating' => 5,
+                    'cleanliness_rating' => 5,
+                    'communication_rating' => 5,
+                    'accuracy_rating' => 5,
+                    'value_rating' => 5,
+                    'comment' => 'Unit P718 was very cozy and peaceful on a high floor! Super easy elevator RFID access and the Netflix TV was great for movie night. Deca pool was refreshing and check-in was seamless. Highly recommended!',
+                    'created_at' => Carbon::now()->subDays(2),
+                    'updated_at' => Carbon::now()->subDays(2),
+                ]
+            );
+
+            $booking4 = Booking::updateOrCreate(
+                ['booking_code' => 'DS-SEED-REV-04'],
+                [
+                    'unit_id' => $unitP->id,
+                    'user_id' => null,
+                    'guest_name' => 'Mark Anthony Delos Santos',
+                    'guest_email' => 'mark.delossantos@example.com',
+                    'guest_phone' => '09339944112',
+                    'guest_count' => 3,
+                    'check_in_date' => Carbon::now()->subDays(14)->toDateString(),
+                    'check_out_date' => Carbon::now()->subDays(12)->toDateString(),
+                    'nights_count' => 2,
+                    'base_amount' => 3300.00,
+                    'add_ons_amount' => 0.00,
+                    'advance_deposit_amount' => 1000.00,
+                    'platform_fee' => 165.00,
+                    'total_amount' => 4465.00,
+                    'status' => 'checked_out',
+                    'payment_status' => 'verified',
+                    'waiver_accepted_at' => Carbon::now()->subDays(14),
+                    'verified_at' => Carbon::now()->subDays(14),
+                    'created_at' => Carbon::now()->subDays(14),
+                    'updated_at' => Carbon::now()->subDays(12),
+                ]
+            );
+
+            Review::updateOrCreate(
+                ['booking_id' => $booking4->id],
+                [
+                    'unit_id' => $unitP->id,
+                    'user_id' => null,
+                    'guest_name' => 'Mark Anthony Delos Santos',
+                    'rating' => 5,
+                    'cleanliness_rating' => 5,
+                    'communication_rating' => 5,
+                    'accuracy_rating' => 5,
+                    'value_rating' => 5,
+                    'comment' => 'Very spacious unit and seamless direct check-in. The security gate pass was already confirmed at the lobby desk when we arrived. Host responds in minutes on GCash confirmation. Thank you DirectStay!',
+                    'created_at' => Carbon::now()->subDays(12),
+                    'updated_at' => Carbon::now()->subDays(12),
                 ]
             );
         }

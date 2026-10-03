@@ -173,7 +173,152 @@
             </div>
         </div>
 
-        <div class="flex flex-wrap items-center justify-center gap-4">
+        <!-- Customer Rating & Review Section -->
+        @if($booking->review)
+            <div class="text-left bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent rounded-2xl border border-amber-500/20 p-6 mb-8">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-amber-500 text-lg">★</span>
+                        <h4 class="font-extrabold text-slate-900 dark:text-white text-sm">Your Rating & Review</h4>
+                    </div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-300">
+                        {{ $booking->review->rating }}.0 / 5.0 Rating
+                    </span>
+                </div>
+                <div class="flex items-center gap-1 text-amber-500 text-base mb-2">
+                    @for($i = 1; $i <= 5; $i++)
+                        <span>{{ $i <= $booking->review->rating ? '★' : '☆' }}</span>
+                    @endfor
+                </div>
+                @if($booking->review->comment)
+                    <p class="text-xs text-slate-600 dark:text-slate-300 italic mb-3">"{{ $booking->review->comment }}"</p>
+                @endif
+                <div class="flex flex-wrap gap-4 text-[11px] text-slate-500 pt-2 border-t border-amber-500/15">
+                    @if($booking->review->cleanliness_rating)
+                        <span>Cleanliness: <strong>{{ $booking->review->cleanliness_rating }}/5</strong></span>
+                    @endif
+                    @if($booking->review->communication_rating)
+                        <span>Host Communication: <strong>{{ $booking->review->communication_rating }}/5</strong></span>
+                    @endif
+                    @if($booking->review->accuracy_rating)
+                        <span>Accuracy: <strong>{{ $booking->review->accuracy_rating }}/5</strong></span>
+                    @endif
+                    @if($booking->review->value_rating)
+                        <span>Value: <strong>{{ $booking->review->value_rating }}/5</strong></span>
+                    @endif
+                </div>
+            </div>
+        @elseif($booking->canBeReviewed())
+            <div class="text-left bg-gradient-to-r from-blue-500/10 via-amber-500/5 to-transparent rounded-2xl border border-blue-500/20 p-6 mb-8">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl">✨</span>
+                        <div>
+                            <h4 class="font-extrabold text-slate-900 dark:text-white text-sm">How was your stay at {{ $unit->unit_number }}?</h4>
+                            <p class="text-[11px] text-slate-500">Your rating helps future guests and supports direct staycation hosts.</p>
+                        </div>
+                    </div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                        ★ Verified Guest Rating
+                    </span>
+                </div>
+
+                <form action="{{ route('reviews.store', $booking) }}" method="POST" class="space-y-4 pt-2">
+                    @csrf
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Overall Rating *</label>
+                        <div class="flex items-center gap-2" id="status-star-rating">
+                            <input type="hidden" name="rating" id="status_rating_value" value="5" required>
+                            @for($i = 1; $i <= 5; $i++)
+                                <button type="button" onclick="setStatusRating({{ $i }})" class="status-star text-2xl text-amber-400 hover:scale-125 transition-transform" data-star="{{ $i }}">★</button>
+                            @endfor
+                            <span id="status-rating-label" class="text-xs font-bold text-slate-600 dark:text-slate-400 ml-2">5 - Exceptional</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Cleanliness</label>
+                            <select name="cleanliness_rating" class="w-full text-xs rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white py-1.5 px-2">
+                                <option value="5">5 ★ Exceptional</option>
+                                <option value="4">4 ★ Good</option>
+                                <option value="3">3 ★ Average</option>
+                                <option value="2">2 ★ Below Average</option>
+                                <option value="1">1 ★ Poor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Communication</label>
+                            <select name="communication_rating" class="w-full text-xs rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white py-1.5 px-2">
+                                <option value="5">5 ★ Exceptional</option>
+                                <option value="4">4 ★ Good</option>
+                                <option value="3">3 ★ Average</option>
+                                <option value="2">2 ★ Below</option>
+                                <option value="1">1 ★ Poor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Listing Accuracy</label>
+                            <select name="accuracy_rating" class="w-full text-xs rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white py-1.5 px-2">
+                                <option value="5">5 ★ Exceptional</option>
+                                <option value="4">4 ★ Accurate</option>
+                                <option value="3">3 ★ Mixed</option>
+                                <option value="2">2 ★ Inaccurate</option>
+                                <option value="1">1 ★ Poor</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Value for Money</label>
+                            <select name="value_rating" class="w-full text-xs rounded-lg border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white py-1.5 px-2">
+                                <option value="5">5 ★ Great Value</option>
+                                <option value="4">4 ★ Good</option>
+                                <option value="3">3 ★ Fair</option>
+                                <option value="2">2 ★ Overpriced</option>
+                                <option value="1">1 ★ Poor</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Leave your feedback or tips for future guests</label>
+                        <textarea name="comment" rows="2" placeholder="e.g. Host was very responsive, WiFi was fast for Netflix, very smooth check-in at Deca Homes!" class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white p-2.5 focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" class="inline-flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold text-white bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 shadow-md shadow-amber-500/20 transition-all">
+                            <span>Submit Review & Rating</span>
+                            <span>&rarr;</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <script>
+                function setStatusRating(rating) {
+                    document.getElementById('status_rating_value').value = rating;
+                    const stars = document.querySelectorAll('.status-star');
+                    const labels = {
+                        1: '1 - Poor',
+                        2: '2 - Fair',
+                        3: '3 - Good',
+                        4: '4 - Very Good',
+                        5: '5 - Exceptional'
+                    };
+                    document.getElementById('status-rating-label').textContent = labels[rating] || (rating + ' Stars');
+                    stars.forEach((star, idx) => {
+                        if (idx < rating) {
+                            star.textContent = '★';
+                            star.classList.add('text-amber-400');
+                            star.classList.remove('text-slate-300');
+                        } else {
+                            star.textContent = '☆';
+                            star.classList.remove('text-amber-400');
+                            star.classList.add('text-slate-300');
+                        }
+                    });
+                }
+            </script>
+        @endif
             <a href="{{ route('compliance.portal', ['bookingCode' => $booking->booking_code]) }}"
                class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
                 &larr; View Compliance Vault

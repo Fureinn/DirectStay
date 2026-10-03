@@ -28,15 +28,24 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div class="sm:col-span-2">
                     <label for="name" class="block text-xs font-bold text-slate-700 mb-1.5">Full name</label>
-                    <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}" required autocomplete="name" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}" required autocomplete="name" class="w-full rounded-xl border @error('name') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    @error('name')
+                        <p class="text-xs text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="email" class="block text-xs font-bold text-slate-700 mb-1.5">Email address</label>
-                    <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" required autocomplete="email" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" required autocomplete="email" class="w-full rounded-xl border @error('email') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    @error('email')
+                        <p class="text-xs text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="phone" class="block text-xs font-bold text-slate-700 mb-1.5">Mobile number</label>
-                    <input id="phone" name="phone" type="tel" value="{{ old('phone', $user->phone) }}" required autocomplete="tel" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    <input id="phone" name="phone" type="tel" value="{{ old('phone', $user->phone) }}" required autocomplete="tel" class="w-full rounded-xl border @error('phone') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    @error('phone')
+                        <p class="text-xs text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
             </div>
         </section>
@@ -50,11 +59,17 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div class="sm:col-span-2">
                     <label for="current_password" class="block text-xs font-bold text-slate-700 mb-1.5">Current password</label>
-                    <input id="current_password" name="current_password" type="password" autocomplete="current-password" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    <input id="current_password" name="current_password" type="password" autocomplete="current-password" class="w-full rounded-xl border @error('current_password') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    @error('current_password')
+                        <p class="text-xs text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="password" class="block text-xs font-bold text-slate-700 mb-1.5">New password</label>
-                    <input id="password" name="password" type="password" autocomplete="new-password" class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    <input id="password" name="password" type="password" autocomplete="new-password" class="w-full rounded-xl border @error('password') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/20">
+                    @error('password')
+                        <p class="text-xs text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="password_confirmation" class="block text-xs font-bold text-slate-700 mb-1.5">Confirm new password</label>

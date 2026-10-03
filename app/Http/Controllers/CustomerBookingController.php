@@ -15,7 +15,7 @@ class CustomerBookingController extends Controller
     {
         $user = Auth::user();
 
-        $bookings = Booking::with(['unit.building', 'complianceDocuments'])
+        $bookings = Booking::with(['unit.building', 'complianceDocuments', 'review'])
             ->where(function ($query) use ($user) {
                 $query->where('user_id', $user->id)
                     ->orWhere('guest_email', $user->email);

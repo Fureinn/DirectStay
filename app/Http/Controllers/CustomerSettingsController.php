@@ -36,13 +36,13 @@ class CustomerSettingsController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user)],
             'phone' => ['required', 'string', 'max:30'],
             'current_password' => ['nullable', 'required_with:password', 'current_password'],
-            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+            'password' => ['nullable', 'required_with:current_password', 'string', 'min:6', 'confirmed'],
         ]);
 
         $attributes = [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'phone' => $validated['phone'],
+            'name' => trim($validated['name']),
+            'email' => trim(strtolower($validated['email'])),
+            'phone' => trim($validated['phone']),
         ];
 
         if (! empty($validated['password'])) {

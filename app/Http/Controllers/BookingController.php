@@ -25,7 +25,7 @@ class BookingController extends Controller
 
         $selectedBuilding = $request->query('building');
 
-        $unitsQuery = Unit::with('building')->where('is_active', true);
+        $unitsQuery = Unit::with(['building', 'reviews'])->where('is_active', true);
 
         if ($selectedBuilding) {
             $unitsQuery->whereHas('building', function ($q) use ($selectedBuilding) {
@@ -47,7 +47,7 @@ class BookingController extends Controller
      */
     public function show(Unit $unit): View
     {
-        $unit->load('building');
+        $unit->load(['building', 'reviews.user']);
 
         // Fetch booked dates for this unit to prevent double-booking
         $existingBookings = Booking::where('unit_id', $unit->id)
@@ -95,8 +95,21 @@ class BookingController extends Controller
         ]);
 
         $unit = Unit::with('building')->findOrFail($validated['unit_id']);
+
+        if ((int) $validated['guest_count'] > (int) $unit->max_guests) {
+            return back()->withErrors([
+                'guest_count' => "The selected guest count ({$validated['guest_count']}) exceeds the maximum occupancy ({$unit->max_guests}) for {$unit->title}.",
+            ])->withInput();
+        }
+
         $checkIn = Carbon::parse($validated['check_in_date']);
         $checkOut = Carbon::parse($validated['check_out_date']);
+
+        if ($checkIn->diffInDays($checkOut) > 90) {
+            return back()->withErrors([
+                'check_out_date' => 'Reservations are limited to a maximum duration of 90 nights.',
+            ])->withInput();
+        }
 
         // Double booking prevention check
         $hasOverlap = Booking::where('unit_id', $unit->id)
@@ -124,11 +137,18 @@ class BookingController extends Controller
         $advanceDeposit = (float) $unit->advance_deposit_required; // ₱1,000.00
         $platformFee = round($baseAmount * 0.05, 2); // DirectStay 5% guest platform service fee
 
-        // Calculate Add-Ons
+        // Calculate Add-Ons safely (only active add-ons belonging to this unit or global)
         $addOnsAmount = 0.00;
         $selectedAddOns = [];
         if (! empty($validated['add_ons'])) {
-            $availableAddOns = AddOn::whereIn('id', array_keys($validated['add_ons']))->get()->keyBy('id');
+            $availableAddOns = AddOn::where('is_active', true)
+                ->where(function ($q) use ($unit) {
+                    $q->whereNull('unit_id')->orWhere('unit_id', $unit->id);
+                })
+                ->whereIn('id', array_keys($validated['add_ons']))
+                ->get()
+                ->keyBy('id');
+
             foreach ($validated['add_ons'] as $addOnId => $quantity) {
                 if ($quantity > 0 && isset($availableAddOns[$addOnId])) {
                     $item = $availableAddOns[$addOnId];

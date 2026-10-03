@@ -118,6 +118,25 @@ class Booking extends Model
     }
 
     /**
+     * Customer review for this stay reservation.
+     *
+     * @return HasOne<Review, $this>
+     */
+    public function review(): HasOne
+    {
+        return $this->hasOne(Review::class);
+    }
+
+    /**
+     * Determine if customer can submit a review.
+     */
+    public function canBeReviewed(): bool
+    {
+        return ($this->status === 'checked_out' || $this->status === 'confirmed' || $this->status === 'checked_in')
+            && ! $this->review()->exists();
+    }
+
+    /**
      * Ledger transactions associated with this booking.
      *
      * @return HasMany<Transaction, $this>

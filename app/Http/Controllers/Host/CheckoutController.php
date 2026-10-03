@@ -42,6 +42,10 @@ class CheckoutController extends Controller
      */
     public function store(Request $request, Booking $booking): RedirectResponse
     {
+        if ($booking->status === 'cancelled') {
+            return back()->with('error', 'Cannot perform checkout inspection on a cancelled reservation.');
+        }
+
         $validated = $request->validate([
             'inventory_status' => ['required', 'array'],
             'cleaning_type' => ['required', 'in:none,basic,deep'],
@@ -49,7 +53,7 @@ class CheckoutController extends Controller
             'penalty_lost_key' => ['nullable', 'boolean'],
             'penalty_smoking' => ['nullable', 'boolean'],
             'custom_penalty_reason' => ['nullable', 'string', 'max:255'],
-            'custom_penalty_amount' => ['nullable', 'numeric', 'min:0'],
+            'custom_penalty_amount' => ['nullable', 'numeric', 'min:0', 'max:50000'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 

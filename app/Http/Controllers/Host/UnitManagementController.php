@@ -47,10 +47,10 @@ class UnitManagementController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'unit_number' => ['required', 'string', 'max:50'],
-            'base_price_per_night' => ['required', 'numeric', 'min:0'],
-            'advance_deposit_required' => ['required', 'numeric', 'min:0'],
-            'max_guests' => ['required', 'integer', 'min:1'],
-            'description' => ['nullable', 'string'],
+            'base_price_per_night' => ['required', 'numeric', 'min:0', 'max:100000'],
+            'advance_deposit_required' => ['required', 'numeric', 'min:0', 'max:100000'],
+            'max_guests' => ['required', 'integer', 'min:1', 'max:20'],
+            'description' => ['nullable', 'string', 'max:5000'],
         ]);
 
         $unit->update($validated);
@@ -100,8 +100,8 @@ class UnitManagementController extends Controller
     {
         $image = $request->input('image_path') ?? $request->input('image');
 
-        if (! $image) {
-            return back()->withErrors(['image' => 'The image path is required.']);
+        if (! $image || ! in_array($image, $unit->images ?? [], true)) {
+            return back()->withErrors(['image' => 'The selected photo does not belong to this unit.']);
         }
 
         $unit->update([
@@ -118,17 +118,19 @@ class UnitManagementController extends Controller
     {
         $target = $request->input('image_path') ?? $request->input('image');
 
-        if (! $target) {
-            return back()->withErrors(['image' => 'The image path is required.']);
+        if (! $target || ! in_array($target, $unit->images ?? [], true)) {
+            return back()->withErrors(['image' => 'The specified photo is invalid or does not belong to this unit.']);
         }
 
         $currentImages = $unit->images ?? [];
         $updatedImages = array_values(array_filter($currentImages, fn ($img) => $img !== $target));
 
-        // Delete file on disk if exists
-        $filePath = public_path($target);
-        if (File::exists($filePath)) {
-            File::delete($filePath);
+        // Delete file on disk if exists and safely within unit's image folder
+        if (str_starts_with($target, 'images/units/'.$unit->id.'/')) {
+            $filePath = public_path($target);
+            if (File::exists($filePath)) {
+                File::delete($filePath);
+            }
         }
 
         $cover = $unit->cover_image;

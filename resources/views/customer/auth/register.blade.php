@@ -19,26 +19,38 @@
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Full Legal Name</label>
                 <input type="text" name="name" value="{{ old('name') }}" placeholder="As shown on Government ID" required
-                       class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('name') border-rose-400 bg-rose-50/30 @else border-slate-200 @enderror focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('name')
+                    <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
                 <input type="email" name="email" value="{{ old('email') }}" placeholder="For gate pass delivery" required
-                       class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('email') border-rose-400 bg-rose-50/30 @else border-slate-200 @enderror focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('email')
+                    <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
                 <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Phone</label>
                 <input type="text" name="phone" value="{{ old('phone') }}" placeholder="e.g. 09171234567" required
-                       class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                       class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('phone') border-rose-400 bg-rose-50/30 @else border-slate-200 @enderror focus:outline-none focus:ring-2 focus:ring-blue-500">
+                @error('phone')
+                    <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                @enderror
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
                     <input type="password" name="password" required placeholder="Min 6 characters"
-                           class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                           class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('password') border-rose-400 bg-rose-50/30 @else border-slate-200 @enderror focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    @error('password')
+                        <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Confirm Password</label>
@@ -47,7 +59,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="w-full py-3.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-600/30 transition-all mt-2">
+            <button type="submit" class="w-full py-3.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-600/30 transition-all mt-2 cursor-pointer">
                 Register as Guest
             </button>
         </form>

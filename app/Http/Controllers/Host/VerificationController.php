@@ -79,6 +79,10 @@ class VerificationController extends Controller
      */
     public function approve(Booking $booking, GatePassService $gatePassService): RedirectResponse
     {
+        if ($booking->status === 'cancelled' || $booking->status === 'checked_out') {
+            return back()->with('error', 'Cannot approve a cancelled or completed reservation.');
+        }
+
         $booking->load(['unit.building', 'complianceDocuments']);
 
         $governmentIdCount = $booking->complianceDocuments
@@ -139,6 +143,10 @@ class VerificationController extends Controller
      */
     public function reject(Request $request, Booking $booking): RedirectResponse
     {
+        if ($booking->status === 'checked_out') {
+            return back()->with('error', 'Cannot reject a completed checkout reservation.');
+        }
+
         $validated = $request->validate([
             'reason' => ['required', 'string', 'max:500'],
         ]);

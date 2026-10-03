@@ -45,6 +45,14 @@ class ComplianceController extends Controller
     {
         $booking = Booking::where('booking_code', $bookingCode)->firstOrFail();
 
+        if ($booking->status === 'cancelled') {
+            return back()->with('error', 'This reservation has been cancelled. New payment uploads are not accepted.');
+        }
+
+        if ($booking->payment_status === 'verified') {
+            return back()->with('error', 'Payment for this reservation has already been verified by the host.');
+        }
+
         $validated = $request->validate([
             'payment_receipt' => ['required', 'file', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'reference_number' => ['nullable', 'string', 'max:100'],
@@ -60,7 +68,7 @@ class ComplianceController extends Controller
                 'file_path' => $path,
                 'original_filename' => $file->getClientOriginalName(),
                 'mime_type' => $file->getClientMimeType(),
-                'notes' => $validated['reference_number'] ? 'GCash Ref: '.$validated['reference_number'] : null,
+                'notes' => $validated['reference_number'] ? 'GCash Ref: '.trim($validated['reference_number']) : null,
             ]
         );
 
@@ -77,6 +85,10 @@ class ComplianceController extends Controller
     public function uploadIdentity(Request $request, string $bookingCode): RedirectResponse
     {
         $booking = Booking::where('booking_code', $bookingCode)->firstOrFail();
+
+        if ($booking->status === 'cancelled') {
+            return back()->with('error', 'This reservation has been cancelled. Document submissions are disabled.');
+        }
 
         $rules = [
             'gov_ids' => ['required', 'array', 'size:'.$booking->guest_count],
@@ -127,6 +139,10 @@ class ComplianceController extends Controller
     {
         $booking = Booking::where('booking_code', $bookingCode)->firstOrFail();
 
+        if ($booking->status === 'cancelled') {
+            return back()->with('error', 'This reservation has been cancelled.');
+        }
+
         $validated = $request->validate([
             'agree_rules' => ['accepted'],
             'companion_names' => ['nullable', 'array'],
@@ -161,7 +177,7 @@ class ComplianceController extends Controller
      */
     public function status(string $bookingCode): View
     {
-        $booking = Booking::with(['unit.building', 'complianceDocuments', 'bookingAddOns.addOn'])
+        $booking = Booking::with(['unit.building', 'complianceDocuments', 'bookingAddOns.addOn', 'review'])
             ->where('booking_code', $bookingCode)
             ->firstOrFail();
 
