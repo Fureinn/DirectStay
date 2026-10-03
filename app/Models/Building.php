@@ -25,4 +25,20 @@ class Building extends Model
     {
         return $this->hasMany(Unit::class);
     }
+
+    /**
+     * Exact GPS Latitude inside Urban Deca Homes Ortigas, Pasig.
+     */
+    public function getLatitudeAttribute(): float
+    {
+        return $this->code === 'UDH-P' ? 14.591915 : 14.592870;
+    }
+
+    /**
+     * Exact GPS Longitude inside Urban Deca Homes Ortigas, Pasig.
+     */
+    public function getLongitudeAttribute(): float
+    {
+        return $this->code === 'UDH-P' ? 121.102448 : 121.102135;
+    }
 }

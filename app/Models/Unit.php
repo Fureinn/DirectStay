@@ -107,4 +107,20 @@ class Unit extends Model
     {
         return $this->reviews()->count();
     }
+
+    /**
+     * GPS Latitude for map display.
+     */
+    public function getLatitudeAttribute(): float
+    {
+        return $this->building?->latitude ?? 14.59239;
+    }
+
+    /**
+     * GPS Longitude for map display.
+     */
+    public function getLongitudeAttribute(): float
+    {
+        return $this->building?->longitude ?? 121.10229;
+    }
 }

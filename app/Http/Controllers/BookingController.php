@@ -21,7 +21,11 @@ class BookingController extends Controller
      */
     public function index(Request $request): View
     {
-        $buildings = Building::withCount('units')->get();
+        $buildings = Building::withCount(['units' => function ($q) {
+            $q->where('is_active', true);
+        }])->get();
+
+        $totalUnitsCount = Unit::where('is_active', true)->count();
 
         $selectedBuilding = $request->query('building');
 
@@ -35,9 +39,14 @@ class BookingController extends Controller
 
         $units = $unitsQuery->get();
 
+        // All active units for map pins so both buildings remain interactive on map
+        $allUnits = Unit::with(['building', 'reviews'])->where('is_active', true)->get();
+
         return view('units.index', [
             'buildings' => $buildings,
             'units' => $units,
+            'allUnits' => $allUnits,
+            'totalUnitsCount' => $totalUnitsCount,
             'selectedBuilding' => $selectedBuilding,
         ]);
     }

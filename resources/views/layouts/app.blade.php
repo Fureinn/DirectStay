@@ -11,100 +11,162 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('styles')
 </head>
 <body class="flex flex-col min-h-screen font-sans antialiased selection:bg-emerald-600 selection:text-white">
 
     <!-- Top Navigation -->
-    <header class="sticky top-0 z-50 bg-white/85 backdrop-blur-xl border-b border-white/70 shadow-[0_1px_0_rgb(15_23_42_/_0.04)]">
+    <header class="sticky top-0 z-50 glass-header">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
+            <div class="flex items-center justify-between h-16 gap-4">
                 <!-- Brand -->
-                <div class="flex items-center gap-3">
-                    <a href="{{ route('units.index') }}" class="flex items-center gap-3 group">
-                        <div class="brand-mark w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white font-black text-xl group-hover:scale-105 transition-transform duration-200">
+                <div class="flex items-center gap-3 shrink-0">
+                    <a href="{{ route('units.index') }}" class="flex items-center gap-2.5 group">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-700 flex items-center justify-center text-white font-black text-sm shadow-md shadow-blue-600/25 group-hover:scale-105 group-active:scale-95 transition-all duration-200">
                             DS
                         </div>
-                        <div>
-                            <span class="text-xl font-bold tracking-tight text-slate-900">Direct<span class="text-emerald-600">Stay</span></span>
-                            <span class="block text-[10px] uppercase tracking-wider font-bold text-slate-400">Urban Deca Homes Ortigas</span>
+                        <div class="flex flex-col">
+                            <span class="text-lg font-black tracking-tight text-slate-900 leading-none">
+                                Direct<span class="text-blue-600">Stay</span>
+                            </span>
+                            <span class="text-[9px] uppercase tracking-wider font-extrabold text-slate-400 mt-0.5 leading-none">
+                                Ortigas &bull; Pasig
+                            </span>
                         </div>
                     </a>
                 </div>
 
-                <!-- Desktop Navigation Links -->
-                <nav class="desktop-nav hidden md:flex items-center text-sm font-medium">
-                    <a href="{{ route('units.index') }}" class="text-slate-600 hover:text-emerald-600 transition-colors {{ request()->routeIs('units.*') && !request()->routeIs('host.units.*') ? 'text-emerald-600 font-semibold' : '' }}">
-                        Explore Units
+                <!-- Center Segmented Pill Navigation -->
+                <nav class="hidden md:flex items-center p-1 rounded-full bg-slate-200/50 backdrop-blur-md border border-white/60 shadow-inner gap-0.5">
+                    <a href="{{ route('units.index') }}"
+                       class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('units.*') && !request()->routeIs('host.units.*') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                        Explore
                     </a>
 
                     @auth
                         @if (auth()->user()->isHost())
-                            <span class="text-slate-200">|</span>
-                            <a href="{{ route('host.dashboard') }}" class="text-slate-600 hover:text-emerald-600 transition-colors {{ request()->routeIs('host.dashboard') ? 'text-emerald-600 font-semibold' : '' }}">
+                            <a href="{{ route('host.dashboard') }}"
+                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('host.dashboard') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
                                 Dashboard
                             </a>
-                            <a href="{{ route('host.units.index') }}" class="text-slate-600 hover:text-emerald-600 transition-colors {{ request()->routeIs('host.units.*') ? 'text-emerald-600 font-semibold' : '' }}">
-                                Manage Units
+                            <a href="{{ route('host.units.index') }}"
+                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('host.units.*') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                                Units
                             </a>
-                            <a href="{{ route('host.verifications.index') }}" class="text-slate-600 hover:text-emerald-600 transition-colors {{ request()->routeIs('host.verifications.*') ? 'text-emerald-600 font-semibold' : '' }}">
+                            <a href="{{ route('host.verifications.index') }}"
+                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('host.verifications.*') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
                                 Verifications
                             </a>
-                            <div class="flex items-center gap-2 pl-2 border-l border-slate-200">
-                                <span class="text-xs font-semibold px-2 py-1 rounded-md bg-emerald-100 text-emerald-800">
-                                    Host: {{ auth()->user()->name }}
-                                </span>
-                                <form method="POST" action="{{ route('host.logout') }}" class="inline">
-                                    @csrf
-                                    <button type="submit" class="px-3 py-1.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-lg border border-rose-200 transition-colors">
-                                        Sign Out
-                                    </button>
-                                </form>
-                            </div>
                         @else
-                            <a href="{{ route('customer.bookings') }}" class="text-slate-600 hover:text-emerald-600 transition-colors {{ request()->routeIs('customer.bookings') ? 'text-emerald-600 font-semibold' : '' }}">
+                            <a href="{{ route('customer.bookings') }}"
+                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('customer.bookings') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
                                 My Bookings
                             </a>
-                            <a href="{{ route('customer.settings.edit') }}" class="text-slate-600 hover:text-emerald-600 transition-colors {{ request()->routeIs('customer.settings.*') ? 'text-emerald-600 font-semibold' : '' }}">
-                                Account Settings
-                            </a>
-                            <div class="flex items-center gap-3 pl-3 border-l border-slate-200">
-                                <div class="text-left">
-                                    <span class="block text-xs font-bold text-slate-800">{{ auth()->user()->name }}</span>
-                                    <span class="block text-[11px] text-slate-400">Guest</span>
-                                </div>
-                                <form method="POST" action="{{ route('customer.logout') }}" class="inline">
-                                    @csrf
-                                    <button type="submit" class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-lg border border-slate-200 transition-colors">
-                                        Sign Out
-                                    </button>
-                                </form>
-                            </div>
                         @endif
-                    @else
-                        <div class="flex items-center gap-2.5 pl-3 border-l border-slate-200">
-                            <a href="{{ route('customer.login') }}" class="px-3.5 py-2 text-xs font-semibold text-slate-700 hover:text-emerald-600 rounded-lg transition-colors">
-                                Customer Login
-                            </a>
-                            <a href="{{ route('customer.register') }}" class="px-3.5 py-2 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm shadow-emerald-500/20 transition-all">
-                                Register
-                            </a>
-                            <a href="{{ route('host.login') }}" class="inline-flex items-center gap-1 px-3 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 transition-colors">
-                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                                Host Login
-                            </a>
-                        </div>
                     @endauth
                 </nav>
 
+                <!-- Right Action & Profile Area -->
+                <div class="hidden md:flex items-center gap-2.5">
+                    @auth
+                        <!-- User Profile Glass Dropdown -->
+                        <div class="relative" x-data="{ userMenuOpen: false }">
+                            <button @click="userMenuOpen = !userMenuOpen"
+                                    @click.outside="userMenuOpen = false"
+                                    type="button"
+                                    class="flex items-center gap-2 p-1.5 pr-3 rounded-full bg-white/60 hover:bg-white/90 border border-white/70 backdrop-blur-md shadow-xs transition-all btn-press cursor-pointer">
+                                <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shadow-xs {{ auth()->user()->isHost() ? 'bg-gradient-to-tr from-emerald-500 to-teal-600 text-white' : 'bg-gradient-to-tr from-blue-600 to-indigo-600 text-white' }}">
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                                </div>
+                                <span class="text-xs font-bold text-slate-800 max-w-[120px] truncate">
+                                    {{ auth()->user()->name }}
+                                </span>
+                                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full {{ auth()->user()->isHost() ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-700' }}">
+                                    {{ auth()->user()->isHost() ? 'Host' : 'Guest' }}
+                                </span>
+                                <svg class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200" :class="{ 'rotate-180': userMenuOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+
+                            <!-- Floating Frosted Glass Dropdown Menu -->
+                            <div x-show="userMenuOpen"
+                                 x-transition:enter="transition ease-out duration-150"
+                                 x-transition:enter-start="opacity-0 translate-y-1 scale-95"
+                                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                                 x-transition:leave="transition ease-in duration-100"
+                                 x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                                 x-transition:leave-end="opacity-0 translate-y-1 scale-95"
+                                 x-cloak
+                                 class="absolute right-0 mt-2 w-56 rounded-2xl glass-surface-dense border border-white/70 shadow-2xl backdrop-blur-2xl p-1.5 z-50">
+                                
+                                <div class="px-3 py-2.5 border-b border-slate-200/50">
+                                    <p class="text-xs font-bold text-slate-900 truncate">{{ auth()->user()->name }}</p>
+                                    <p class="text-[11px] text-slate-500 font-mono truncate">{{ auth()->user()->email ?? auth()->user()->phone ?? 'DirectStay Member' }}</p>
+                                </div>
+
+                                <div class="py-1 space-y-0.5">
+                                    @if(auth()->user()->isHost())
+                                        <a href="{{ route('host.dashboard') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                                            Host Dashboard
+                                        </a>
+                                        <a href="{{ route('host.units.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                            Manage Units
+                                        </a>
+                                        <a href="{{ route('host.verifications.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                            Verifications Queue
+                                        </a>
+                                        <a href="{{ route('units.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                            View Guest Portal
+                                        </a>
+                                    @else
+                                        <a href="{{ route('customer.bookings') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                            My Bookings
+                                        </a>
+                                        <a href="{{ route('customer.settings.edit') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                            Account Settings
+                                        </a>
+                                    @endif
+                                </div>
+
+                                <div class="pt-1 border-t border-slate-200/50">
+                                    <form method="POST" action="{{ auth()->user()->isHost() ? route('host.logout') : route('customer.logout') }}" class="w-full">
+                                        @csrf
+                                        <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50/80 rounded-xl transition-colors cursor-pointer">
+                                            <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                            Sign Out
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('customer.login') }}" class="text-xs font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-full transition-colors">
+                            Sign In
+                        </a>
+                        <a href="{{ route('customer.register') }}" class="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 rounded-full shadow-sm shadow-blue-500/25 hover:shadow-md transition-all btn-press">
+                            Register
+                        </a>
+                        <a href="{{ route('host.login') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white/50 hover:bg-white/90 border border-white/70 rounded-full backdrop-blur-md transition-all shadow-xs">
+                            <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            Host Portal
+                        </a>
+                    @endauth
+                </div>
+
                 <!-- Mobile Hamburger Button -->
-                <div class="hidden md:hidden items-center">
-                    <button id="mobileMenuButton" type="button" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500" aria-label="Toggle navigation">
-                        <svg id="hamburgerIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="flex md:hidden items-center">
+                    <button id="mobileMenuButton" type="button" class="p-2 rounded-xl bg-white/50 hover:bg-white/90 border border-white/60 text-slate-700 hover:text-slate-900 backdrop-blur-md shadow-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all btn-press cursor-pointer" aria-label="Toggle navigation">
+                        <svg id="hamburgerIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
-                        <svg id="closeIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg id="closeIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
@@ -113,57 +175,66 @@
         </div>
 
         <!-- Mobile Drawer Menu -->
-        <div id="mobileMenu" class="hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3">
-            <a href="{{ route('units.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600">
+        <div id="mobileMenu" class="glass-mobile-drawer hidden px-4 pt-3 pb-6 space-y-3">
+            <a href="{{ route('units.index') }}" class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-sm font-semibold {{ request()->routeIs('units.*') && !request()->routeIs('host.units.*') ? 'bg-blue-500/10 text-blue-700 font-bold' : 'text-slate-700 hover:bg-white/60' }}">
+                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Explore Units
             </a>
 
             @auth
                 @if (auth()->user()->isHost())
-                    <div class="pt-2 border-t border-slate-100">
-                        <div class="px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-400">Host Management</div>
-                        <a href="{{ route('host.dashboard') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600">
+                    <div class="pt-2 border-t border-slate-200/50 space-y-1">
+                        <div class="px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Host Management</div>
+                        <a href="{{ route('host.dashboard') }}" class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-sm font-medium {{ request()->routeIs('host.dashboard') ? 'bg-blue-500/10 text-blue-700 font-bold' : 'text-slate-700 hover:bg-white/60' }}">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                             Dashboard
                         </a>
-                        <a href="{{ route('host.units.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600">
+                        <a href="{{ route('host.units.index') }}" class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-sm font-medium {{ request()->routeIs('host.units.*') ? 'bg-blue-500/10 text-blue-700 font-bold' : 'text-slate-700 hover:bg-white/60' }}">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                             Manage Units & Photos
                         </a>
-                        <a href="{{ route('host.verifications.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600">
+                        <a href="{{ route('host.verifications.index') }}" class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-sm font-medium {{ request()->routeIs('host.verifications.*') ? 'bg-blue-500/10 text-blue-700 font-bold' : 'text-slate-700 hover:bg-white/60' }}">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                             Verifications Queue
                         </a>
-                        <form method="POST" action="{{ route('host.logout') }}" class="pt-2 px-3">
+                        <form method="POST" action="{{ route('host.logout') }}" class="pt-2">
                             @csrf
-                            <button type="submit" class="w-full text-left font-medium text-rose-600 py-1">
-                                Sign Out (Host)
+                            <button type="submit" class="flex items-center gap-2 w-full px-3.5 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50/60 rounded-xl transition-colors cursor-pointer">
+                                <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                Sign Out (Host: {{ auth()->user()->name }})
                             </button>
                         </form>
                     </div>
                 @else
-                    <div class="pt-2 border-t border-slate-100">
-                        <div class="px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-400">Guest: {{ auth()->user()->name }}</div>
-                        <a href="{{ route('customer.bookings') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600">
+                    <div class="pt-2 border-t border-slate-200/50 space-y-1">
+                        <div class="px-3 py-1 text-[11px] font-extrabold uppercase tracking-wider text-slate-400">Guest Account ({{ auth()->user()->name }})</div>
+                        <a href="{{ route('customer.bookings') }}" class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-sm font-medium {{ request()->routeIs('customer.bookings') ? 'bg-blue-500/10 text-blue-700 font-bold' : 'text-slate-700 hover:bg-white/60' }}">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                             My Bookings
                         </a>
-                        <a href="{{ route('customer.settings.edit') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600">
+                        <a href="{{ route('customer.settings.edit') }}" class="flex items-center gap-2.5 px-3.5 py-2 rounded-xl text-sm font-medium {{ request()->routeIs('customer.settings.*') ? 'bg-blue-500/10 text-blue-700 font-bold' : 'text-slate-700 hover:bg-white/60' }}">
+                            <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             Account Settings
                         </a>
-                        <form method="POST" action="{{ route('customer.logout') }}" class="pt-2 px-3">
+                        <form method="POST" action="{{ route('customer.logout') }}" class="pt-2">
                             @csrf
-                            <button type="submit" class="w-full text-left font-medium text-rose-600 py-1">
+                            <button type="submit" class="flex items-center gap-2 w-full px-3.5 py-2 text-sm font-semibold text-rose-600 hover:bg-rose-50/60 rounded-xl transition-colors cursor-pointer">
+                                <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                                 Sign Out
                             </button>
                         </form>
                     </div>
                 @endif
             @else
-                <div class="pt-3 border-t border-slate-100 space-y-2">
-                    <a href="{{ route('customer.login') }}" class="block w-full text-center px-4 py-2.5 rounded-xl border border-slate-300 font-semibold text-slate-700 hover:bg-slate-50 text-sm">
+                <div class="pt-3 border-t border-slate-200/50 space-y-2">
+                    <a href="{{ route('customer.login') }}" class="block w-full text-center px-4 py-2.5 rounded-xl border border-white/60 bg-white/60 backdrop-blur-md font-semibold text-slate-800 text-sm shadow-xs">
                         Customer Login
                     </a>
-                    <a href="{{ route('customer.register') }}" class="block w-full text-center px-4 py-2.5 rounded-xl bg-emerald-600 text-white font-semibold hover:bg-emerald-700 text-sm shadow-sm">
+                    <a href="{{ route('customer.register') }}" class="block w-full text-center px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md shadow-blue-500/25">
                         Register Account
                     </a>
-                    <a href="{{ route('host.login') }}" class="block w-full text-center px-4 py-2 text-xs font-medium text-slate-500 hover:text-slate-800">
+                    <a href="{{ route('host.login') }}" class="flex items-center justify-center gap-1.5 w-full text-center px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-900">
+                        <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                         Host Portal Access
                     </a>
                 </div>
@@ -214,7 +285,7 @@
     </main>
 
     <!-- Mobile bottom navigation -->
-    <nav class="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200/80 bg-white/95 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl md:hidden" aria-label="Mobile navigation">
+    <nav class="fixed inset-x-0 bottom-0 z-50 glass-bottom-bar px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 md:hidden" aria-label="Mobile navigation">
         @auth
             @if (auth()->user()->isHost())
                 <div class="grid grid-cols-4 gap-1">
@@ -269,7 +340,7 @@
     </nav>
 
     <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200/80 mt-16 py-8">
+    <footer class="glass-footer mt-16 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
             <div>
                 &copy; {{ date('Y') }} <strong>DirectStay</strong> &bull; Direct-Booking & Property Compliance Platform (Urban Deca Homes Ortigas).
