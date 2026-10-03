@@ -12,16 +12,16 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="flex flex-col min-h-screen font-sans antialiased selection:bg-emerald-600 selection:text-white bg-slate-50">
+<body class="flex flex-col min-h-screen font-sans antialiased selection:bg-emerald-600 selection:text-white">
 
     <!-- Top Navigation -->
-    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs">
+    <header class="sticky top-0 z-50 bg-white/85 backdrop-blur-xl border-b border-white/70 shadow-[0_1px_0_rgb(15_23_42_/_0.04)]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <!-- Brand -->
                 <div class="flex items-center gap-3">
                     <a href="{{ route('units.index') }}" class="flex items-center gap-3 group">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white font-black text-xl shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
+                        <div class="brand-mark w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white font-black text-xl group-hover:scale-105 transition-transform duration-200">
                             DS
                         </div>
                         <div>
@@ -32,7 +32,7 @@
                 </div>
 
                 <!-- Desktop Navigation Links -->
-                <nav class="hidden md:flex items-center gap-5 text-sm font-medium">
+                <nav class="desktop-nav hidden md:flex items-center text-sm font-medium">
                     <a href="{{ route('units.index') }}" class="text-slate-600 hover:text-emerald-600 transition-colors {{ request()->routeIs('units.*') && !request()->routeIs('host.units.*') ? 'text-emerald-600 font-semibold' : '' }}">
                         Explore Units
                     </a>
@@ -99,7 +99,7 @@
                 </nav>
 
                 <!-- Mobile Hamburger Button -->
-                <div class="flex md:hidden items-center">
+                <div class="hidden md:hidden items-center">
                     <button id="mobileMenuButton" type="button" class="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500" aria-label="Toggle navigation">
                         <svg id="hamburgerIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -113,7 +113,7 @@
         </div>
 
         <!-- Mobile Drawer Menu -->
-        <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3">
+        <div id="mobileMenu" class="hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3">
             <a href="{{ route('units.index') }}" class="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50 hover:text-emerald-600">
                 Explore Units
             </a>
@@ -209,9 +209,64 @@
     </div>
 
     <!-- Main Content -->
-    <main class="flex-1">
+    <main class="flex-1 pb-20 md:pb-0">
         @yield('content')
     </main>
+
+    <!-- Mobile bottom navigation -->
+    <nav class="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200/80 bg-white/95 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-2 backdrop-blur-xl md:hidden" aria-label="Mobile navigation">
+        @auth
+            @if (auth()->user()->isHost())
+                <div class="grid grid-cols-4 gap-1">
+                    <a href="{{ route('host.dashboard') }}" class="mobile-nav-item {{ request()->routeIs('host.dashboard') ? 'mobile-nav-item-active' : '' }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8.5Z" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Home</span>
+                    </a>
+                    <a href="{{ route('host.units.index') }}" class="mobile-nav-item {{ request()->routeIs('host.units.*') ? 'mobile-nav-item-active' : '' }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 20V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v15M2 20h20M8 7h2m4 0h2M8 11h2m4 0h2M8 15h2m4 0h2" stroke-width="1.8" stroke-linecap="round"/></svg><span>Units</span>
+                    </a>
+                    <a href="{{ route('host.verifications.index') }}" class="mobile-nav-item {{ request()->routeIs('host.verifications.*') ? 'mobile-nav-item-active' : '' }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 12l2 2 4-4m5 2a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Review</span>
+                    </a>
+                    <form method="POST" action="{{ route('host.logout') }}">
+                        @csrf
+                        <button type="submit" class="mobile-nav-item w-full text-rose-600">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 8V6a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h5a3 3 0 0 0 3-3v-2m-5-4h10m-3-3 3 3-3 3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sign out</span>
+                        </button>
+                    </form>
+                </div>
+            @else
+                <div class="grid grid-cols-4 gap-1">
+                    <a href="{{ route('units.index') }}" class="mobile-nav-item {{ request()->routeIs('units.*') ? 'mobile-nav-item-active' : '' }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9Z" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Explore</span>
+                    </a>
+                    <a href="{{ route('customer.bookings') }}" class="mobile-nav-item {{ request()->routeIs('customer.bookings') ? 'mobile-nav-item-active' : '' }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="4" y="5" width="16" height="15" rx="2" stroke-width="1.8"/><path d="M8 3v4m8-4v4M4 10h16m-8 4h4" stroke-width="1.8" stroke-linecap="round"/></svg><span>Trips</span>
+                    </a>
+                    <a href="{{ route('customer.settings.edit') }}" class="mobile-nav-item {{ request()->routeIs('customer.settings.*') ? 'mobile-nav-item-active' : '' }}">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3.25" stroke-width="1.8"/><path d="M5 21c.7-3.3 3.1-5 7-5s6.3 1.7 7 5" stroke-width="1.8" stroke-linecap="round"/></svg><span>Account</span>
+                    </a>
+                    <form method="POST" action="{{ route('customer.logout') }}">
+                        @csrf
+                        <button type="submit" class="mobile-nav-item w-full text-rose-600">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 8V6a3 3 0 0 0-3-3H7a3 3 0 0 0 3 3h5a3 3 0 0 0 3-3v-2m-5-4h10m-3-3 3 3-3 3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sign out</span>
+                        </button>
+                    </form>
+                </div>
+            @endif
+        @else
+            <div class="grid grid-cols-3 gap-1">
+                <a href="{{ route('units.index') }}" class="mobile-nav-item {{ request()->routeIs('units.*') ? 'mobile-nav-item-active' : '' }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m3 11 9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9Z" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Explore</span>
+                </a>
+                <a href="{{ route('customer.login') }}" class="mobile-nav-item {{ request()->routeIs('customer.login*') ? 'mobile-nav-item-active' : '' }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 8V6a3 3 0 0 0-3-3H7a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h5a3 3 0 0 0 3-3v-2m-5-4h10m-3-3 3 3-3 3" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sign in</span>
+                </a>
+                <a href="{{ route('customer.register') }}" class="mobile-nav-item {{ request()->routeIs('customer.register*') ? 'mobile-nav-item-active' : '' }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="3.25" stroke-width="1.8"/><path d="M5 21c.7-3.3 3.1-5 7-5s6.3 1.7 7 5m3-10v6m3-3h-6" stroke-width="1.8" stroke-linecap="round"/></svg><span>Join</span>
+                </a>
+            </div>
+        @endauth
+    </nav>
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200/80 mt-16 py-8">

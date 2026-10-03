@@ -3,7 +3,7 @@
 @section('title', 'DirectStay - Urban Deca Homes Ortigas Direct Bookings')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+<div class="page-enter max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
 
     <!-- Hero Section -->
     <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 text-white p-6 sm:p-10 lg:p-12 mb-10 shadow-xl border border-emerald-900/40">
@@ -59,9 +59,9 @@
     </div>
 
     <!-- Units Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="stagger-enter grid grid-cols-1 lg:grid-cols-2 gap-8">
         @forelse($units as $unit)
-            <div class="flex flex-col bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 group">
+            <div class="surface-card hover-lift flex flex-col bg-white/90 rounded-3xl border overflow-hidden group">
                 <!-- Unit Card Media Container -->
                 <div class="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-100">
                     @if ($unit->cover_image)

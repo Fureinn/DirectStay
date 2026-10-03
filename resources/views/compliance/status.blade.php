@@ -3,9 +3,9 @@
 @section('title', 'Reservation Status - ' . $booking->booking_code)
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="page-enter max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-    <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm text-center">
+    <div class="surface-card soft-panel rounded-3xl border p-8 text-center">
 
         @if($booking->status === 'confirmed' || $booking->status === 'checked_in')
             <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">

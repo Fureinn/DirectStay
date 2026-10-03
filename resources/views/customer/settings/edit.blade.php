@@ -3,7 +3,7 @@
 @section('title', 'Account Settings - DirectStay')
 
 @section('content')
-<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="page-enter max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
         <div>
             <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-3">Guest account</span>
@@ -19,7 +19,7 @@
         @csrf
         @method('PUT')
 
-        <section class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+        <section class="surface-card soft-panel rounded-3xl border p-6 sm:p-8">
             <div class="mb-6">
                 <h2 class="text-lg font-bold text-slate-900">Contact details</h2>
                 <p class="text-xs text-slate-500 mt-1">These details pre-fill your next reservation. You can still use different lead-guest details for a particular stay.</p>
@@ -41,7 +41,7 @@
             </div>
         </section>
 
-        <section class="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+        <section class="surface-card soft-panel rounded-3xl border p-6 sm:p-8">
             <div class="mb-6">
                 <h2 class="text-lg font-bold text-slate-900">Change password</h2>
                 <p class="text-xs text-slate-500 mt-1">Leave these fields blank to keep your current password.</p>

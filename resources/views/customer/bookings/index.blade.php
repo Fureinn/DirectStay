@@ -3,7 +3,7 @@
 @section('title', 'My Bookings - DirectStay')
 
 @section('content')
-<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<div class="page-enter max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
@@ -49,9 +49,9 @@
             </a>
         </div>
     @else
-        <div class="space-y-6">
+        <div class="stagger-enter space-y-6">
             @foreach($bookings as $b)
-                <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="surface-card hover-lift bg-white/90 rounded-3xl border overflow-hidden">
                     <div class="p-6 sm:p-8 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
 
                         <!-- Left Info -->

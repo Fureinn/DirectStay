@@ -3,7 +3,7 @@
 @section('title', $unit->title . ' - DirectStay')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-28 lg:pb-12">
+<div class="page-enter max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-28 lg:pb-12">
 
     <!-- Breadcrumb -->
     <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6">
@@ -22,7 +22,7 @@
         }
     @endphp
 
-    <div class="mb-8 bg-white rounded-3xl border border-slate-200/80 p-4 sm:p-6 shadow-xs">
+    <div class="surface-card soft-panel mb-8 rounded-3xl border p-4 sm:p-6">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
             <!-- Main Featured Image Viewport -->
             <div class="lg:col-span-8 relative h-72 sm:h-96 lg:h-[480px] rounded-2xl overflow-hidden bg-slate-900 shadow-inner group">
@@ -75,7 +75,7 @@
 
         <!-- Left Column: Unit Information & Building Rules -->
         <div class="lg:col-span-7 space-y-6">
-            <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-xs">
+            <div class="surface-card soft-panel rounded-3xl border p-6 sm:p-8">
                 <div class="flex items-center justify-between mb-3">
                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-800">
                         {{ $unit->building ? $unit->building->name : 'Building ' . $unit->unit_number }}
@@ -146,7 +146,7 @@
 
         <!-- Right Column: Airbnb-Style Reservation Card -->
         <div class="lg:col-span-5" id="reservationWidget">
-            <div class="sticky top-24 bg-white rounded-3xl border border-slate-200 p-6 sm:p-7 shadow-xl shadow-slate-200/60">
+            <div class="surface-card sticky top-24 bg-white/95 backdrop-blur-sm rounded-3xl border p-6 sm:p-7 shadow-xl shadow-slate-200/60">
 
                 <!-- Price Header -->
                 <div class="flex items-baseline justify-between mb-5">

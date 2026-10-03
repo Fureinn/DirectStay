@@ -3,10 +3,10 @@
 @section('title', 'Security Compliance & ID Portal - ' . $booking->booking_code)
 
 @section('content')
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="page-enter max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- Header & Status Tracker -->
-    <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm mb-8">
+    <div class="surface-card soft-panel rounded-3xl border p-8 mb-8">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-6 mb-6">
             <div>
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200 mb-2">
