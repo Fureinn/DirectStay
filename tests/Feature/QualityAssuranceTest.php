@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\AddOn;
 use App\Models\Booking;
+use App\Models\ComplianceDocument;
 use App\Models\Unit;
 use App\Models\User;
 use Carbon\Carbon;
@@ -360,5 +361,104 @@ class QualityAssuranceTest extends TestCase
         ]);
 
         $responseWrongCurrent->assertSessionHasErrors('current_password');
+    }
+
+    /**
+     * Test progressive occupant ID uploads, companion roster saving, and guest document streaming.
+     */
+    public function test_identity_vault_progressive_occupant_id_uploads_and_roster(): void
+    {
+        $unit = Unit::firstOrFail();
+        $booking = Booking::create([
+            'booking_code' => 'DS-VAULT-TRIO',
+            'unit_id' => $unit->id,
+            'guest_name' => 'Danilo Reyes',
+            'guest_email' => 'danilo@example.com',
+            'guest_phone' => '09171112233',
+            'guest_count' => 3, // 3 Guests -> 3 IDs required
+            'check_in_date' => Carbon::tomorrow()->toDateString(),
+            'check_out_date' => Carbon::tomorrow()->addDays(2)->toDateString(),
+            'nights_count' => 2,
+            'base_amount' => 3000.00,
+            'add_ons_amount' => 0.00,
+            'advance_deposit_amount' => 1000.00,
+            'platform_fee' => 100.00,
+            'total_amount' => 4100.00,
+            'status' => 'pending_verification',
+            'payment_status' => 'unpaid',
+        ]);
+
+        // 1. Save Companion Roster (Phase 1)
+        $rosterResponse = $this->post(route('compliance.roster', $booking->booking_code), [
+            'lead_name' => 'Danilo Reyes',
+            'lead_phone' => '09171112233',
+            'companion_names' => ['Elena Reyes', 'Marco Reyes'],
+            'companion_relationships' => ['Spouse', 'Child'],
+            'companion_id_types' => ['Philippine Passport', 'School ID'],
+        ]);
+        $rosterResponse->assertSessionHas('success');
+        $booking->refresh();
+        $this->assertCount(2, $booking->guest_roster);
+        $this->assertEquals('Elena Reyes', $booking->guest_roster[0]['name']);
+
+        // 2. Upload Occupant 0 ID (Lead Guest) individually
+        $leadId = UploadedFile::fake()->image('danilo_passport.jpg');
+        $this->post(route('compliance.identity', $booking->booking_code), [
+            'occupant_index' => 0,
+            'id_type' => 'Philippine Passport',
+            'id_number' => 'P1234567B',
+            'gov_id_single' => $leadId,
+        ])->assertSessionHas('success');
+
+        $this->assertDatabaseHas('compliance_documents', [
+            'booking_id' => $booking->id,
+            'document_type' => 'gov_id_0',
+        ]);
+
+        // 3. Upload Occupant 1 ID (Companion 1) individually
+        $comp1Id = UploadedFile::fake()->image('elena_id.jpg');
+        $this->post(route('compliance.identity', $booking->booking_code), [
+            'occupant_index' => 1,
+            'id_type' => 'Driver\'s License',
+            'gov_id_single' => $comp1Id,
+        ])->assertSessionHas('success');
+
+        // 4. Upload Occupant 2 ID (Companion 2) individually
+        $comp2Id = UploadedFile::fake()->image('marco_id.jpg');
+        $this->post(route('compliance.identity', $booking->booking_code), [
+            'occupant_index' => 2,
+            'id_type' => 'School ID',
+            'gov_id_single' => $comp2Id,
+        ])->assertSessionHas('success');
+
+        // 5. Upload Biometric Selfie
+        $selfie = UploadedFile::fake()->image('danilo_selfie.jpg');
+        $this->post(route('compliance.identity', $booking->booking_code), [
+            'selfie' => $selfie,
+        ])->assertSessionHas('success');
+
+        $this->assertDatabaseHas('compliance_documents', [
+            'booking_id' => $booking->id,
+            'document_type' => 'gov_id_1',
+        ]);
+        $this->assertDatabaseHas('compliance_documents', [
+            'booking_id' => $booking->id,
+            'document_type' => 'gov_id_2',
+        ]);
+        $this->assertDatabaseHas('compliance_documents', [
+            'booking_id' => $booking->id,
+            'document_type' => 'selfie',
+        ]);
+
+        // 6. Test guest document stream
+        $doc = ComplianceDocument::where('booking_id', $booking->id)
+            ->where('document_type', 'gov_id_0')
+            ->firstOrFail();
+
+        $streamResponse = $this->get(route('compliance.document', [
+            'bookingCode' => $booking->booking_code,
+            'document' => $doc->id,
+        ]));
+        $streamResponse->assertStatus(200);
     }
 }

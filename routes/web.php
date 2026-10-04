@@ -26,8 +26,10 @@ Route::post('/bookings/{booking}/reviews', [ReviewController::class, 'store'])->
 
 Route::prefix('compliance')->name('compliance.')->group(function () {
     Route::get('/{bookingCode}', [ComplianceController::class, 'portal'])->name('portal');
+    Route::post('/{bookingCode}/roster', [ComplianceController::class, 'saveRoster'])->name('roster');
     Route::post('/{bookingCode}/payment', [ComplianceController::class, 'uploadPayment'])->name('payment');
     Route::post('/{bookingCode}/identity', [ComplianceController::class, 'uploadIdentity'])->name('identity');
+    Route::get('/{bookingCode}/document/{document}', [ComplianceController::class, 'streamDocument'])->name('document');
     Route::post('/{bookingCode}/waiver', [ComplianceController::class, 'acceptWaiver'])->name('waiver');
     Route::get('/{bookingCode}/status', [ComplianceController::class, 'status'])->name('status');
     Route::get('/{bookingCode}/gate-pass', [ComplianceController::class, 'downloadGatePass'])->name('downloadGatePass');
