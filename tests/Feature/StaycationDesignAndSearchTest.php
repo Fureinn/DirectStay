@@ -36,7 +36,7 @@ class StaycationDesignAndSearchTest extends TestCase
         $response->assertSee('Staycation');
         $response->assertSee('Urban Deca Homes Ortigas');
         $response->assertSee('Building N &amp; P Gate Pass Certified', false);
-        $response->assertSee('All Towers (Deca Ortigas)');
+        $response->assertSee('All Towers');
 
         $units = Unit::where('is_active', true)->get();
         foreach ($units->take(3) as $unit) {

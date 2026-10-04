@@ -41,6 +41,9 @@ Route::prefix('compliance')->name('compliance.')->group(function () {
 */
 Route::get('/register', [CustomerAuthController::class, 'showRegister'])->name('customer.register');
 Route::post('/register', [CustomerAuthController::class, 'register'])->name('customer.register.post');
+Route::get('/verify-email', [CustomerAuthController::class, 'showVerify'])->name('customer.verify.show');
+Route::post('/verify-email', [CustomerAuthController::class, 'verify'])->name('customer.verify.post');
+Route::post('/verify-email/resend', [CustomerAuthController::class, 'resendVerificationCode'])->name('customer.verify.resend');
 Route::get('/login', [CustomerAuthController::class, 'showLogin'])->name('customer.login');
 Route::post('/login', [CustomerAuthController::class, 'login'])->name('customer.login.post');
 Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('customer.logout');

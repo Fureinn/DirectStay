@@ -93,91 +93,12 @@
                 Skip commercial OTA markups. Book verified condo suites directly from unit owners across <strong>Buildings N &amp; P</strong> in Pasig City with lean <strong>5% service fee</strong> (save ~₱276 per night vs Airbnb) and guaranteed lobby clearance.
             </p>
 
-            <!-- Floating Staycation Search Capsule (Airbnb / Booking Style) -->
-            <div class="w-full max-w-4xl bg-white/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-3 sm:p-4 text-slate-900 shadow-2xl border border-white/80">
-                <form method="GET" action="{{ route('units.index') }}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 sm:gap-3 items-center">
-                    <!-- Tower / Building Dropdown -->
-                    <div class="lg:col-span-3 text-left px-3.5 py-2.5 rounded-xl bg-slate-50/80 hover:bg-slate-100/80 border border-slate-200/60 transition-colors">
-                        <label for="building" class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                            Tower / Building
-                        </label>
-                        <select name="building" id="building" class="w-full bg-transparent font-bold text-xs sm:text-sm text-slate-800 focus:outline-none cursor-pointer mt-0.5">
-                            <option value="">All Towers (Deca Ortigas)</option>
-                            @foreach($buildings as $b)
-                                <option value="{{ $b->code }}" {{ $selectedBuilding === $b->code ? 'selected' : '' }}>
-                                    Tower {{ $b->code }} ({{ $b->name }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Check-in Date -->
-                    <div class="lg:col-span-3 text-left px-3.5 py-2.5 rounded-xl bg-slate-50/80 hover:bg-slate-100/80 border border-slate-200/60 transition-colors">
-                        <label for="check_in" class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                            Check-in Date
-                        </label>
-                        <input type="date" name="check_in" id="check_in"
-                               min="{{ now()->toDateString() }}"
-                               value="{{ $checkIn ?? '' }}"
-                               class="w-full bg-transparent font-bold text-xs sm:text-sm text-slate-800 focus:outline-none cursor-pointer mt-0.5">
-                    </div>
-
-                    <!-- Check-out Date -->
-                    <div class="lg:col-span-3 text-left px-3.5 py-2.5 rounded-xl bg-slate-50/80 hover:bg-slate-100/80 border border-slate-200/60 transition-colors">
-                        <label for="check_out" class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                            Check-out Date
-                        </label>
-                        <input type="date" name="check_out" id="check_out"
-                               min="{{ now()->addDay()->toDateString() }}"
-                               value="{{ $checkOut ?? '' }}"
-                               class="w-full bg-transparent font-bold text-xs sm:text-sm text-slate-800 focus:outline-none cursor-pointer mt-0.5">
-                    </div>
-
-                    <!-- Guests -->
-                    <div class="lg:col-span-2 text-left px-3.5 py-2.5 rounded-xl bg-slate-50/80 hover:bg-slate-100/80 border border-slate-200/60 transition-colors">
-                        <label for="guests" class="block text-[10px] font-extrabold uppercase tracking-wider text-slate-400">
-                            Guests
-                        </label>
-                        <select name="guests" id="guests" class="w-full bg-transparent font-bold text-xs sm:text-sm text-slate-800 focus:outline-none cursor-pointer mt-0.5">
-                            <option value="">Any guests</option>
-                            <option value="1" {{ (string)$selectedGuests === '1' ? 'selected' : '' }}>1 Guest</option>
-                            <option value="2" {{ (string)$selectedGuests === '2' ? 'selected' : '' }}>2 Guests</option>
-                            <option value="3" {{ (string)$selectedGuests === '3' ? 'selected' : '' }}>3 Guests</option>
-                            <option value="4" {{ (string)$selectedGuests === '4' ? 'selected' : '' }}>4+ Guests</option>
-                        </select>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <div class="lg:col-span-1 flex items-center h-full">
-                        <button type="submit"
-                                class="w-full h-full min-h-[48px] rounded-xl font-bold text-xs sm:text-sm text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 shadow-md shadow-blue-500/25 flex items-center justify-center gap-1.5 transition-all btn-press cursor-pointer">
-                            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                            </svg>
-                            <span class="lg:hidden font-extrabold">Find Stays</span>
-                        </button>
-                    </div>
-                </form>
-
-                @if($selectedBuilding || $checkIn || $checkOut || $selectedGuests)
-                    <div class="mt-2.5 pt-2.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
-                        <div class="flex flex-wrap items-center gap-1.5 text-slate-600">
-                            <span class="font-bold text-slate-400">Active filters:</span>
-                            @if($selectedBuilding)
-                                <span class="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 font-semibold border border-blue-200">Tower {{ $selectedBuilding }}</span>
-                            @endif
-                            @if($checkIn && $checkOut)
-                                <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">{{ \Carbon\Carbon::parse($checkIn)->format('M d') }} – {{ \Carbon\Carbon::parse($checkOut)->format('M d') }}</span>
-                            @endif
-                            @if($selectedGuests)
-                                <span class="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 font-semibold border border-slate-200">{{ $selectedGuests }} {{ Str::plural('Guest', (int)$selectedGuests) }}</span>
-                            @endif
-                        </div>
-                        <a href="{{ route('units.index') }}" class="font-bold text-rose-600 hover:text-rose-700 text-xs flex items-center gap-1">
-                            <span>✕ Reset all filters</span>
-                        </a>
-                    </div>
-                @endif
+            <!-- Hero Action Button -->
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <a href="#featuredUnits" class="px-7 py-3.5 rounded-2xl font-black text-sm text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all flex items-center gap-2 cursor-pointer btn-press">
+                    <span>View Available Units</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                </a>
             </div>
 
             <!-- Quick Trust Badges Strip -->
@@ -272,7 +193,7 @@
     <!-- ======================================================================= -->
     <!-- 3. FILTER & VIEW SWITCHER BAR -->
     <!-- ======================================================================= -->
-    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+    <div id="featuredUnits" class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 scroll-mt-24">
         <div>
             <div class="flex items-center gap-2">
                 <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900">Featured Units in Deca Ortigas</h2>

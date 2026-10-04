@@ -10,6 +10,14 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
 
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('styles')
 </head>
@@ -154,16 +162,41 @@
                         <a href="{{ route('customer.register') }}" class="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 rounded-full shadow-sm shadow-blue-500/25 hover:shadow-md transition-all btn-press">
                             Register
                         </a>
-                        <a href="{{ route('host.login') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 bg-white/50 hover:bg-white/90 border border-white/70 rounded-full backdrop-blur-md transition-all shadow-xs">
+                        <a href="{{ route('host.login') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white/50 dark:bg-slate-800/60 hover:bg-white/90 dark:hover:bg-slate-800 border border-white/70 dark:border-slate-700 rounded-full backdrop-blur-md transition-all shadow-xs">
                             <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                             Host Portal
                         </a>
                     @endauth
+
+                    <!-- Dark Mode Toggle Button (Desktop) -->
+                    <button type="button" onclick="toggleTheme()"
+                            class="w-8 h-8 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white/60 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 backdrop-blur-md shadow-xs transition-all btn-press cursor-pointer"
+                            aria-label="Toggle dark mode" title="Toggle dark/light mode">
+                        <!-- Sun (shown in dark mode) -->
+                        <svg class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <!-- Moon (shown in light mode) -->
+                        <svg class="w-4 h-4 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </button>
                 </div>
 
-                <!-- Mobile Hamburger Button -->
-                <div class="flex md:hidden items-center">
-                    <button id="mobileMenuButton" type="button" class="p-2 rounded-xl bg-white/50 hover:bg-white/90 border border-white/60 text-slate-700 hover:text-slate-900 backdrop-blur-md shadow-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all btn-press cursor-pointer" aria-label="Toggle navigation">
+                <!-- Mobile Header Right Area (Dark Toggle + Hamburger) -->
+                <div class="flex md:hidden items-center gap-2">
+                    <button type="button" onclick="toggleTheme()"
+                            class="p-2 rounded-xl bg-white/50 dark:bg-slate-800/80 border border-white/60 dark:border-slate-700 text-slate-700 dark:text-slate-300 backdrop-blur-md shadow-xs cursor-pointer"
+                            aria-label="Toggle theme">
+                        <svg class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <svg class="w-4 h-4 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </button>
+
+                    <button id="mobileMenuButton" type="button" class="p-2 rounded-xl bg-white/50 dark:bg-slate-800/80 hover:bg-white/90 border border-white/60 dark:border-slate-700 text-slate-700 dark:text-slate-200 backdrop-blur-md shadow-xs focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all btn-press cursor-pointer" aria-label="Toggle navigation">
                         <svg id="hamburgerIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -360,6 +393,17 @@
     </footer>
 
     <script>
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        }
+        window.toggleTheme = toggleTheme;
+
         document.addEventListener('DOMContentLoaded', function () {
             const btn = document.getElementById('mobileMenuButton');
             const menu = document.getElementById('mobileMenu');

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Mail\EmailVerificationCodeMailable;
 use App\Mail\GuestGatePassMailable;
 use App\Models\AddOn;
 use App\Models\Booking;
@@ -386,12 +387,24 @@ class DirectStayWorkflowTest extends TestCase
             'password_confirmation' => 'secret123',
         ]);
 
-        $registerResponse->assertRedirect(route('customer.bookings'));
-        $this->assertAuthenticated();
+        $registerResponse->assertRedirect(route('customer.verify.show'));
+        $this->assertGuest();
 
         $user = User::where('email', 'ana@example.com')->firstOrFail();
         $this->assertEquals('guest', $user->role);
         $this->assertEquals('09179998888', $user->phone);
+        $this->assertNotNull($user->verification_code);
+
+        Mail::assertSent(EmailVerificationCodeMailable::class, function ($mail) use ($user) {
+            return $mail->hasTo('ana@example.com') && $mail->code === $user->verification_code;
+        });
+
+        // 1b. Submit Verification Code
+        $verifyResponse = $this->post(route('customer.verify.post'), [
+            'code' => $user->verification_code,
+        ]);
+        $verifyResponse->assertRedirect(route('customer.bookings'));
+        $this->assertAuthenticated();
 
         // 2. Customer can view my-bookings
         $myBookingsResponse = $this->get(route('customer.bookings'));
