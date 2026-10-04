@@ -23,7 +23,7 @@
 @endpush
 
 @php
-    $unitsMapData = ($allUnits ?? $units)->map(function ($u) use ($checkIn, $checkOut, $selectedGuests) {
+    $unitsMapData = $units->map(function ($u) use ($checkIn, $checkOut, $selectedGuests) {
         return [
             'id' => $u->id,
             'title' => $u->title,
@@ -348,7 +348,7 @@
                             class="px-2.5 py-1 rounded-lg bg-white/70 hover:bg-white text-slate-700 font-bold border border-slate-200/60 shadow-2xs transition-all">
                         Complex Overview ({{ $totalUnitsCount ?? 2 }})
                     </button>
-                    @foreach(($allUnits ?? $units) as $unit)
+                    @foreach($units as $unit)
                         <button type="button" @click="focusUnit({{ $unit->id }})"
                                 class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold border border-blue-200/60 shadow-2xs transition-all">
                             {{ $unit->unit_number }} (₱{{ number_format($unit->base_price_per_night, 0) }})

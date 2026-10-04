@@ -52,8 +52,8 @@ class BookingController extends Controller
                 if ($cIn->lt($cOut)) {
                     $bookedUnitIds = Booking::whereNotIn('status', ['cancelled'])
                         ->where(function ($q) use ($cIn, $cOut) {
-                            $q->where('check_in_date', '<', $cOut)
-                                ->where('check_out_date', '>', $cIn);
+                            $q->where('check_in_date', '<', $cOut->toDateString())
+                                ->where('check_out_date', '>', $cIn->toDateString());
                         })
                         ->pluck('unit_id');
 
