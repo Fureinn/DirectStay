@@ -133,4 +133,64 @@ class Unit extends Model
     {
         return $this->building?->longitude ?? 121.10229;
     }
+
+    /**
+     * Get list of all photos for galleries and sliders.
+     *
+     * @return array<int, string>
+     */
+    public function galleryImages(): array
+    {
+        $images = $this->images ?? [];
+        if (empty($images) && $this->cover_image) {
+            $images = [$this->cover_image];
+        }
+
+        if (empty($images)) {
+            $images = ['images/units/unit_n412.jpg'];
+        }
+
+        return array_values($images);
+    }
+
+    /**
+     * Get categorized top featured amenities for card display.
+     *
+     * @return array<int, array{icon: string, label: string, desc: string}>
+     */
+    public function featuredAmenities(): array
+    {
+        $items = collect($this->inventory_items ?? []);
+        $amenities = [];
+
+        if ($items->contains(fn ($i) => stripos($i, 'Air') !== false || stripos($i, 'Aircon') !== false)) {
+            $amenities[] = ['icon' => 'snowflake', 'label' => 'Inverter AC', 'desc' => 'Dual split-type air conditioning'];
+        }
+
+        $amenities[] = ['icon' => 'wifi', 'label' => 'High-Speed WiFi', 'desc' => 'Fast fiber internet included'];
+
+        if ($items->contains(fn ($i) => stripos($i, 'Television') !== false || stripos($i, 'TV') !== false || stripos($i, 'Android') !== false)) {
+            $amenities[] = ['icon' => 'tv', 'label' => 'Smart TV & Netflix', 'desc' => 'Android TV streaming ready'];
+        }
+
+        if ($items->contains(fn ($i) => stripos($i, 'Induction') !== false || stripos($i, 'Cooker') !== false || stripos($i, 'Kitchen') !== false)) {
+            $amenities[] = ['icon' => 'kitchen', 'label' => 'Full Kitchenette', 'desc' => 'Induction cooker & cookware'];
+        }
+
+        if ($items->contains(fn ($i) => stripos($i, 'Refrigerator') !== false || stripos($i, 'Microwave') !== false)) {
+            $amenities[] = ['icon' => 'fridge', 'label' => 'Ref & Microwave', 'desc' => 'Food storage and microwave'];
+        }
+
+        if ($items->contains(fn ($i) => stripos($i, 'Washing') !== false)) {
+            $amenities[] = ['icon' => 'washer', 'label' => 'Washing Machine', 'desc' => 'In-unit laundry washing machine'];
+        }
+
+        if ($items->contains(fn ($i) => stripos($i, 'Bed') !== false || stripos($i, 'Mattress') !== false)) {
+            $amenities[] = ['icon' => 'bed', 'label' => 'Queen & Loft Bed', 'desc' => 'Double loft & queen bed setup'];
+        }
+
+        $amenities[] = ['icon' => 'pool', 'label' => 'Deca Pool Access', 'desc' => 'Condo complex swimming pool access'];
+
+        return array_slice($amenities, 0, 6);
+    }
 }
