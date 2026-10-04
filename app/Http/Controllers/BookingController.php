@@ -29,6 +29,9 @@ class BookingController extends Controller
         $totalUnitsCount = Unit::where('is_active', true)->count();
 
         $selectedBuilding = $request->query('building');
+        $selectedGuests = $request->query('guests');
+        $checkIn = $request->query('check_in');
+        $checkOut = $request->query('check_out');
 
         $unitsQuery = Unit::with(['building', 'reviews'])->where('is_active', true);
 
@@ -36,6 +39,35 @@ class BookingController extends Controller
             $unitsQuery->whereHas('building', function ($q) use ($selectedBuilding) {
                 $q->where('code', $selectedBuilding);
             });
+        }
+
+        if ($request->filled('guests') && (int) $selectedGuests > 0) {
+            $unitsQuery->where('max_guests', '>=', (int) $selectedGuests);
+        }
+
+        if ($request->filled('check_in') && $request->filled('check_out')) {
+            try {
+                $cIn = Carbon::parse($checkIn);
+                $cOut = Carbon::parse($checkOut);
+                if ($cIn->lt($cOut)) {
+                    $bookedUnitIds = Booking::whereNotIn('status', ['cancelled'])
+                        ->where(function ($q) use ($cIn, $cOut) {
+                            $q->where('check_in_date', '<', $cOut)
+                                ->where('check_out_date', '>', $cIn);
+                        })
+                        ->pluck('unit_id');
+
+                    $blockedUnitIds = BlockedDate::where(function ($q) use ($cIn, $cOut) {
+                        $q->where('start_date', '<', $cOut->toDateString())
+                            ->where('end_date', '>=', $cIn->toDateString());
+                    })->pluck('unit_id');
+
+                    $unavailableUnitIds = $bookedUnitIds->merge($blockedUnitIds)->unique();
+                    $unitsQuery->whereNotIn('id', $unavailableUnitIds);
+                }
+            } catch (\Throwable $e) {
+                // Ignore parse errors gracefully
+            }
         }
 
         $units = $unitsQuery->get();
@@ -49,13 +81,16 @@ class BookingController extends Controller
             'allUnits' => $allUnits,
             'totalUnitsCount' => $totalUnitsCount,
             'selectedBuilding' => $selectedBuilding,
+            'selectedGuests' => $selectedGuests,
+            'checkIn' => $checkIn,
+            'checkOut' => $checkOut,
         ]);
     }
 
     /**
      * Display a specific unit booking page with live calendar & add-ons.
      */
-    public function show(Unit $unit): View
+    public function show(Unit $unit, Request $request): View
     {
         $unit->load(['building', 'reviews.user']);
 
@@ -97,6 +132,9 @@ class BookingController extends Controller
             'unit' => $unit,
             'addOns' => $addOns,
             'blockedDates' => array_values(array_unique($blockedDates)),
+            'defaultCheckIn' => $request->query('check_in'),
+            'defaultCheckOut' => $request->query('check_out'),
+            'defaultGuests' => $request->query('guests'),
         ]);
     }
 

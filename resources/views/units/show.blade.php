@@ -440,7 +440,7 @@
                                 <label for="checkInInput" class="block text-[9px] font-black uppercase tracking-wider text-slate-500">Check-in</label>
                                 <input type="date" name="check_in_date" id="checkInInput"
                                        min="{{ date('Y-m-d') }}"
-                                       value="{{ old('check_in_date', date('Y-m-d')) }}"
+                                       value="{{ old('check_in_date', $defaultCheckIn ?? date('Y-m-d')) }}"
                                        required
                                        class="w-full text-xs font-bold text-slate-900 bg-transparent border-0 p-0 focus:ring-0 cursor-pointer tabular-nums tracking-tight font-mono">
                             </div>
@@ -449,7 +449,7 @@
                                 <label for="checkOutInput" class="block text-[9px] font-black uppercase tracking-wider text-slate-500">Checkout</label>
                                 <input type="date" name="check_out_date" id="checkOutInput"
                                        min="{{ date('Y-m-d', strtotime('+1 day')) }}"
-                                       value="{{ old('check_out_date', date('Y-m-d', strtotime('+1 day'))) }}"
+                                       value="{{ old('check_out_date', $defaultCheckOut ?? date('Y-m-d', strtotime('+1 day'))) }}"
                                        required
                                        class="w-full text-xs font-bold text-slate-900 bg-transparent border-0 p-0 focus:ring-0 cursor-pointer tabular-nums tracking-tight font-mono">
                             </div>
@@ -461,7 +461,7 @@
                             <select name="guest_count" id="guestCountSelect"
                                     class="w-full text-xs font-bold text-slate-900 bg-transparent border-0 p-0 focus:ring-0 cursor-pointer">
                                 @for($i = 1; $i <= $unit->max_guests; $i++)
-                                    <option value="{{ $i }}" {{ old('guest_count') == $i ? 'selected' : '' }}>
+                                    <option value="{{ $i }}" {{ old('guest_count', $defaultGuests ?? 1) == $i ? 'selected' : '' }}>
                                         {{ $i }} guest{{ $i > 1 ? 's' : '' }} (Max {{ $unit->max_guests }})
                                     </option>
                                 @endfor
