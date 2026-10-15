@@ -54,17 +54,43 @@
         selectedUnitId: null,
         toggleView(mode) {
             this.viewMode = mode;
-            $nextTick(() => {
+            this.$nextTick(() => {
                 if (window.directStayMap) {
-                    setTimeout(() => window.directStayMap.invalidateSize(), 200);
+                    setTimeout(() => window.directStayMap.invalidateSize(), 150);
                 }
             });
         },
         focusUnit(unitId) {
             this.selectedUnitId = unitId;
             if (window.focusMapUnit) {
-                window.focusMapUnit(unitId);
+                window.focusMapUnit(unitId, { scrollToCard: false });
             }
+        },
+        locateUnit(unitId) {
+            this.selectedUnitId = unitId;
+
+            // Ensure map is visible (switch to split view so cards stay available)
+            if (this.viewMode === 'grid') {
+                this.viewMode = 'split';
+            }
+
+            this.$nextTick(() => {
+                const mapSection = document.getElementById('mapSection') || document.getElementById('interactiveMap');
+                if (mapSection) {
+                    mapSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+
+                const tryFocus = (attempts = 0) => {
+                    if (window.directStayMap && window.focusMapUnit) {
+                        window.directStayMap.invalidateSize();
+                        window.focusMapUnit(unitId, { scrollToCard: false });
+                    } else if (attempts < 10) {
+                        setTimeout(() => tryFocus(attempts + 1), 100);
+                    }
+                };
+
+                setTimeout(() => tryFocus(), 200);
+            });
         }
      }">
 
@@ -254,11 +280,12 @@
     <!-- ======================================================================= -->
     <!-- 4. INTERACTIVE MAP SECTION (Shown in 'map' or 'split' view) -->
     <!-- ======================================================================= -->
-    <div x-show="viewMode === 'map' || viewMode === 'split'"
+    <div id="mapSection"
+         x-show="viewMode === 'map' || viewMode === 'split'"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0 -translate-y-2"
          x-transition:enter-end="opacity-100 translate-y-0"
-         class="mb-10">
+         class="mb-10 scroll-mt-24">
 
         <div class="glass-surface p-4 sm:p-5 rounded-3xl border border-white/60 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] relative overflow-hidden">
             <!-- Top Map Bar & Quick Focus Chips -->
@@ -556,8 +583,8 @@
                         </div>
 
                         <div class="flex items-center gap-2">
-                            <button type="button" @click="focusUnit({{ $unit->id }}); toggleView('map');"
-                                    class="hidden sm:inline-flex items-center gap-1 px-3 py-3 rounded-xl font-bold text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
+                            <button type="button" @click="locateUnit({{ $unit->id }})"
+                                    class="inline-flex items-center justify-center gap-1.5 px-3.5 py-3 rounded-xl font-bold text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/80 dark:border-slate-700 shadow-2xs transition-all cursor-pointer btn-press"
                                     title="View location on map">
                                 <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 <span>Locate</span>
@@ -725,27 +752,57 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         marker.on('mouseout', function () {
+            if (window.selectedDirectStayUnitId !== unit.id) {
+                const el = document.getElementById(`marker-${unit.id}`);
+                if (el) el.classList.remove('is-selected');
+            }
+        });
+
+        marker.on('click', function () {
+            window.selectedDirectStayUnitId = unit.id;
+            document.querySelectorAll('.map-price-marker').forEach(e => e.classList.remove('is-selected'));
             const el = document.getElementById(`marker-${unit.id}`);
-            if (el) el.classList.remove('is-selected');
+            if (el) el.classList.add('is-selected');
         });
     });
 
     // Global helper to focus a specific unit or zoom to fit all
-    window.focusMapUnit = function (unitId) {
+    window.focusMapUnit = function (unitId, options = {}) {
+        const scrollToCard = options.scrollToCard ?? false;
+
+        if (map) {
+            map.invalidateSize();
+        }
+
         if (unitId === 'all') {
+            window.selectedDirectStayUnitId = null;
+            document.querySelectorAll('.map-price-marker').forEach(el => el.classList.remove('is-selected'));
+            map.closePopup();
             map.flyTo(defaultCenter, 16, { duration: 1 });
             return;
         }
 
         const marker = markers[unitId];
         if (marker) {
-            map.flyTo(marker.getLatLng(), 18, { duration: 1.2 });
-            marker.openPopup();
+            window.selectedDirectStayUnitId = unitId;
 
-            // Scroll smoothly to unit card if visible
-            const card = document.getElementById(`unitCard-${unitId}`);
-            if (card) {
-                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Highlight target marker and reset others
+            document.querySelectorAll('.map-price-marker').forEach(el => el.classList.remove('is-selected'));
+            const targetEl = document.getElementById(`marker-${unitId}`);
+            if (targetEl) targetEl.classList.add('is-selected');
+
+            map.flyTo(marker.getLatLng(), 18, { duration: 1.0 });
+
+            // Open popup smoothly as camera approaches
+            setTimeout(() => {
+                marker.openPopup();
+            }, 450);
+
+            if (scrollToCard) {
+                const card = document.getElementById(`unitCard-${unitId}`);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
             }
         }
     };
