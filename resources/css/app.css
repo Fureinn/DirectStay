@@ -555,9 +555,34 @@
     border-top-color: #2563eb;
 }
 
+/* Dark Mode Map Price Markers */
+.dark .map-price-marker {
+    background: #1e293b;
+    color: #f8fafc;
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.dark .map-price-marker::after {
+    border-top-color: #1e293b;
+}
+
+.dark .map-price-marker:hover,
+.dark .map-price-marker.is-selected {
+    background: #2563eb;
+    color: #ffffff;
+    border-color: #3b82f6;
+    box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.5);
+}
+
+.dark .map-price-marker:hover::after,
+.dark .map-price-marker.is-selected::after {
+    border-top-color: #2563eb;
+}
+
 /* Glassmorphic Leaflet Popup Overrides */
 .leaflet-popup-content-wrapper {
-    background: rgba(255, 255, 255, 0.88) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(24px) saturate(190%) !important;
     -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
     border: 1px solid rgba(255, 255, 255, 0.8) !important;
@@ -565,6 +590,13 @@
     box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.18), 0 1px 3px rgba(15, 23, 42, 0.05) !important;
     padding: 0 !important;
     overflow: hidden !important;
+}
+
+.dark .leaflet-popup-content-wrapper {
+    background: rgba(15, 23, 42, 0.95) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+    color: #f1f5f9 !important;
 }
 
 .leaflet-popup-content {
@@ -577,11 +609,48 @@
 }
 
 .leaflet-popup-tip {
-    background: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
     box-shadow: none !important;
+}
+
+.dark .leaflet-popup-tip {
+    background: rgba(15, 23, 42, 0.95) !important;
+}
+
+/* Fix: Leaflet's default `.leaflet-container a` has high specificity (#0078A8), causing white text on blue buttons to be overridden */
+.leaflet-container a.btn-popup-view,
+.leaflet-popup-content a.btn-popup-view,
+.leaflet-popup-content a[href*="/units/"] {
+    color: #ffffff !important;
+    text-decoration: none !important;
 }
 
 .leaflet-container {
     font-family: inherit !important;
     z-index: 10;
+}
+
+/* Dark Mode Leaflet Map Tiles & Controls */
+.dark .leaflet-tile {
+    filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7);
+}
+
+.dark .leaflet-container {
+    background: #0b0f19 !important;
+}
+
+.dark .leaflet-control-zoom-in,
+.dark .leaflet-control-zoom-out {
+    background-color: #1e293b !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+.dark .leaflet-control-attribution {
+    background-color: rgba(15, 23, 42, 0.85) !important;
+    color: #94a3b8 !important;
+}
+
+.dark .leaflet-control-attribution a {
+    color: #60a5fa !important;
 }

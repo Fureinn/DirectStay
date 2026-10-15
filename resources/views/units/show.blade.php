@@ -212,16 +212,16 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
     <!-- 3. MAIN CONTENT: 2-COLUMN SPLIT (LEFT DETAILS, RIGHT STICKY WIDGET)     -->
     <!-- ======================================================================= -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-start">
 
             <!-- =================================================================== -->
             <!-- LEFT COLUMN (7 COLS): UNIT INTRO, PROCESS, AMENITIES, REVIEWS, MAP  -->
             <!-- =================================================================== -->
-            <div class="lg:col-span-7 space-y-8">
+            <div class="lg:col-span-7 space-y-6 sm:space-y-8 order-2 lg:order-1">
 
                 <!-- Unit Host & Core Specs Bento Card -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs space-y-6">
-                    <div class="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 lg:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs space-y-5 sm:space-y-6">
+                    <div class="flex items-center justify-between pb-4 sm:pb-6 border-b border-slate-100 dark:border-slate-800">
                         <div>
                             <span class="text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
                                 Verified DirectStay Property
@@ -239,23 +239,23 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                     </div>
 
                     <!-- 4 Key Specs Strip -->
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                        <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 text-center">
+                        <div class="p-2.5 sm:p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
                             <span class="text-slate-400 block mb-1 text-base">👥</span>
                             <span class="text-xs font-black text-slate-900 dark:text-white block">{{ $unit->max_guests }} Guests</span>
                             <span class="text-[10px] text-slate-400 dark:text-slate-500">Max capacity</span>
                         </div>
-                        <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
+                        <div class="p-2.5 sm:p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
                             <span class="text-slate-400 block mb-1 text-base">🛏️</span>
                             <span class="text-xs font-black text-slate-900 dark:text-white block">Loft &amp; Queen</span>
                             <span class="text-[10px] text-slate-400 dark:text-slate-500">Sleeping setup</span>
                         </div>
-                        <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
+                        <div class="p-2.5 sm:p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
                             <span class="text-slate-400 block mb-1 text-base">🚿</span>
                             <span class="text-xs font-black text-slate-900 dark:text-white block">1 Bath</span>
                             <span class="text-[10px] text-slate-400 dark:text-slate-500">Private hot shower</span>
                         </div>
-                        <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
+                        <div class="p-2.5 sm:p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
                             <span class="text-slate-400 block mb-1 text-base">🏢</span>
                             <span class="text-xs font-black text-slate-900 dark:text-white block">Lobby Check-in</span>
                             <span class="text-[10px] text-slate-400 dark:text-slate-500">Gate Pass &amp; Key/RFID</span>
@@ -266,7 +266,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                 <!-- =============================================================== -->
                 <!-- DIRECTSTAY 3-STEP SEAMLESS GATE PASS & BOOKING JOURNEY          -->
                 <!-- =============================================================== -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs relative overflow-hidden">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 lg:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs relative overflow-hidden">
                     <div class="relative z-10">
                         <div class="flex items-center gap-2 mb-2">
                             <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
@@ -329,7 +329,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                 </div>
 
                 <!-- Unit Description Card -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs space-y-4">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 lg:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs space-y-4">
                     <h3 class="text-base font-black text-slate-900 dark:text-white tracking-tight">About this space</h3>
                     <div class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed space-y-3">
                         <p>{{ $unit->description }}</p>
@@ -339,7 +339,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                 <!-- =============================================================== -->
                 <!-- ICON-BACKED FEATURED AMENITIES                                 -->
                 <!-- =============================================================== -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs space-y-5">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 sm:p-6 lg:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs space-y-5">
                     <div class="flex items-center justify-between">
                         <div>
                             <h3 class="text-base font-black text-slate-900 dark:text-white tracking-tight">Featured Amenities</h3>
@@ -599,8 +599,8 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
             <!-- =================================================================== -->
             <!-- RIGHT COLUMN (5 COLS): STICKY RESERVATION & INSTANT PRICING WIDGET  -->
             <!-- =================================================================== -->
-            <div class="lg:col-span-5" id="reservationWidget">
-                <div class="sticky top-24 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl border border-slate-200 dark:border-white/10 shadow-xl p-6 sm:p-7 relative overflow-hidden">
+            <div class="lg:col-span-5 order-1 lg:order-2" id="reservationWidget">
+                <div class="sticky top-20 sm:top-24 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl border border-slate-200 dark:border-white/10 shadow-xl p-4 sm:p-6 lg:p-7 relative overflow-hidden">
                     <!-- Soft decorative gradient corner -->
                     <div class="absolute -top-16 -right-16 w-44 h-44 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -750,7 +750,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                                     @enderror
                                 </div>
 
-                                <div class="grid grid-cols-2 gap-2.5">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                                     <div>
                                         <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
                                         <input type="email" name="guest_email" id="guestEmailInput"

@@ -257,24 +257,24 @@
          x-transition:enter-end="opacity-100 translate-y-0"
          class="mb-10">
 
-        <div class="glass-surface p-4 sm:p-5 rounded-3xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.06)] relative overflow-hidden">
+        <div class="glass-surface p-4 sm:p-5 rounded-3xl border border-white/60 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] relative overflow-hidden">
             <!-- Top Map Bar & Quick Focus Chips -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-2">
                     <span class="w-2.5 h-2.5 rounded-full bg-blue-600 status-beacon"></span>
-                    <span class="text-xs font-bold text-slate-900">Interactive Deca Ortigas Map:</span>
-                    <span class="text-xs text-slate-500">Click any price pin to view unit details</span>
+                    <span class="text-xs font-bold text-slate-900 dark:text-white">Interactive Deca Ortigas Map:</span>
+                    <span class="text-xs text-slate-500 dark:text-slate-400">Click any price pin to view unit details</span>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-1.5 text-[11px]">
-                    <span class="text-slate-400 font-medium">Quick jump:</span>
+                    <span class="text-slate-400 dark:text-slate-500 font-medium">Quick jump:</span>
                     <button type="button" @click="focusUnit('all')"
-                            class="px-2.5 py-1 rounded-lg bg-white/70 hover:bg-white text-slate-700 font-bold border border-slate-200/60 shadow-2xs transition-all">
+                            class="px-2.5 py-1 rounded-lg bg-white/70 dark:bg-slate-800 hover:bg-white dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold border border-slate-200/60 dark:border-slate-700 shadow-2xs transition-all cursor-pointer">
                         Complex Overview ({{ $totalUnitsCount ?? 2 }})
                     </button>
                     @foreach($units as $unit)
                         <button type="button" @click="focusUnit({{ $unit->id }})"
-                                class="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold border border-blue-200/60 shadow-2xs transition-all">
+                                class="px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-950/80 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-700 dark:text-blue-300 font-bold border border-blue-200/60 dark:border-blue-800 shadow-2xs transition-all cursor-pointer">
                             {{ $unit->unit_number }} (₱{{ number_format($unit->base_price_per_night, 0) }})
                         </button>
                     @endforeach
@@ -282,43 +282,43 @@
             </div>
 
             <!-- Leaflet Map Container -->
-            <div id="interactiveMap" class="w-full h-[420px] sm:h-[480px] rounded-2xl border border-white/80 shadow-inner relative z-10"></div>
+            <div id="interactiveMap" class="w-full h-[420px] sm:h-[480px] rounded-2xl border border-white/80 dark:border-slate-700 shadow-inner relative z-10"></div>
 
             <!-- Vicinity Landmarks & Commute Guide -->
-            <div class="mt-4 pt-4 border-t border-slate-200/50">
-                <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-2">
+            <div class="mt-4 pt-4 border-t border-slate-200/50 dark:border-slate-800">
+                <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-2">
                     Prime Ortigas Location &amp; Vicinity Distances:
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs">
-                    <div class="p-2.5 rounded-xl bg-white/50 border border-white/60 shadow-2xs">
-                        <span class="text-[10px] text-slate-400 block font-semibold">Deca Complex</span>
-                        <strong class="text-slate-900 block truncate">KM 19 Ortigas Ave</strong>
-                        <span class="text-[10px] text-blue-600 font-bold">Main Gate &bull; Pasig</span>
+                    <div class="p-2.5 rounded-xl bg-white/60 dark:bg-slate-800/80 border border-white/60 dark:border-white/5 shadow-2xs">
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Deca Complex</span>
+                        <strong class="text-slate-900 dark:text-white block truncate">KM 19 Ortigas Ave</strong>
+                        <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Main Gate &bull; Pasig</span>
                     </div>
-                    <div class="p-2.5 rounded-xl bg-white/50 border border-white/60 shadow-2xs">
-                        <span class="text-[10px] text-slate-400 block font-semibold">Shopping Mall</span>
-                        <strong class="text-slate-900 block truncate">SM City East Ortigas</strong>
-                        <span class="text-[10px] text-emerald-600 font-bold">1.2 km &bull; 5 mins</span>
+                    <div class="p-2.5 rounded-xl bg-white/60 dark:bg-slate-800/80 border border-white/60 dark:border-white/5 shadow-2xs">
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Shopping Mall</span>
+                        <strong class="text-slate-900 dark:text-white block truncate">SM City East Ortigas</strong>
+                        <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">1.2 km &bull; 5 mins</span>
                     </div>
-                    <div class="p-2.5 rounded-xl bg-white/50 border border-white/60 shadow-2xs">
-                        <span class="text-[10px] text-slate-400 block font-semibold">Lifestyle Estate</span>
-                        <strong class="text-slate-900 block truncate">Bridgetowne &amp; Victor</strong>
-                        <span class="text-[10px] text-emerald-600 font-bold">2.5 km &bull; 8 mins</span>
+                    <div class="p-2.5 rounded-xl bg-white/60 dark:bg-slate-800/80 border border-white/60 dark:border-white/5 shadow-2xs">
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Lifestyle Estate</span>
+                        <strong class="text-slate-900 dark:text-white block truncate">Bridgetowne &amp; Victor</strong>
+                        <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">2.5 km &bull; 8 mins</span>
                     </div>
-                    <div class="p-2.5 rounded-xl bg-white/50 border border-white/60 shadow-2xs">
-                        <span class="text-[10px] text-slate-400 block font-semibold">Commercial Hub</span>
-                        <strong class="text-slate-900 block truncate">Eastwood City Libis</strong>
-                        <span class="text-[10px] text-emerald-600 font-bold">3.8 km &bull; 12 mins</span>
+                    <div class="p-2.5 rounded-xl bg-white/60 dark:bg-slate-800/80 border border-white/60 dark:border-white/5 shadow-2xs">
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Commercial Hub</span>
+                        <strong class="text-slate-900 dark:text-white block truncate">Eastwood City Libis</strong>
+                        <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">3.8 km &bull; 12 mins</span>
                     </div>
-                    <div class="p-2.5 rounded-xl bg-white/50 border border-white/60 shadow-2xs">
-                        <span class="text-[10px] text-slate-400 block font-semibold">Hospital</span>
-                        <strong class="text-slate-900 block truncate">The Medical City</strong>
-                        <span class="text-[10px] text-blue-600 font-bold">4.2 km &bull; 15 mins</span>
+                    <div class="p-2.5 rounded-xl bg-white/60 dark:bg-slate-800/80 border border-white/60 dark:border-white/5 shadow-2xs">
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Hospital</span>
+                        <strong class="text-slate-900 dark:text-white block truncate">The Medical City</strong>
+                        <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold">4.2 km &bull; 15 mins</span>
                     </div>
-                    <div class="p-2.5 rounded-xl bg-white/50 border border-white/60 shadow-2xs">
-                        <span class="text-[10px] text-slate-400 block font-semibold">Business District</span>
-                        <strong class="text-slate-900 block truncate">Ortigas Center CBD</strong>
-                        <span class="text-[10px] text-blue-600 font-bold">5.5 km &bull; 20 mins</span>
+                    <div class="p-2.5 rounded-xl bg-white/60 dark:bg-slate-800/80 border border-white/60 dark:border-white/5 shadow-2xs">
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Business District</span>
+                        <strong class="text-slate-900 dark:text-white block truncate">Ortigas Center CBD</strong>
+                        <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold">5.5 km &bull; 20 mins</span>
                     </div>
                 </div>
             </div>
@@ -458,35 +458,35 @@
                 </div>
 
                 <!-- Unit Details Body -->
-                <div class="p-6 flex-1 flex flex-col justify-between relative z-10">
+                <div class="p-4 sm:p-6 flex-1 flex flex-col justify-between relative z-10">
                     <div>
-                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-5 leading-relaxed line-clamp-2">
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-4 sm:mb-5 leading-relaxed line-clamp-2">
                             {{ $unit->description }}
                         </p>
 
                         <!-- Key Specs Grid -->
-                        <div class="grid grid-cols-2 gap-3 mb-5 text-xs">
-                            <div class="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700/80 flex items-center gap-3 shadow-2xs">
+                        <div class="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-5 text-xs">
+                            <div class="p-2.5 sm:p-3 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700/80 flex items-center gap-2 sm:gap-3 shadow-2xs">
                                 <div class="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-400/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
                                 </div>
-                                <div>
+                                <div class="min-w-0">
                                     <span class="text-slate-400 dark:text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Capacity</span>
-                                    <span class="font-extrabold text-slate-900 dark:text-white">Up to {{ $unit->max_guests }} Guests</span>
+                                    <span class="font-extrabold text-slate-900 dark:text-white truncate block text-[11px] sm:text-xs">Up to {{ $unit->max_guests }} Guests</span>
                                 </div>
                             </div>
 
-                            <div class="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700/80 flex items-center gap-3 shadow-2xs">
+                            <div class="p-2.5 sm:p-3 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700/80 flex items-center gap-2 sm:gap-3 shadow-2xs">
                                 <div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                                     </svg>
                                 </div>
-                                <div>
-                                    <span class="text-slate-400 dark:text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Security Deposit</span>
-                                    <span class="font-extrabold text-slate-900 dark:text-white tabular-nums font-mono">₱{{ number_format($unit->advance_deposit_required, 0) }} (Refundable)</span>
+                                <div class="min-w-0">
+                                    <span class="text-slate-400 dark:text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Deposit</span>
+                                    <span class="font-extrabold text-slate-900 dark:text-white tabular-nums font-mono truncate block text-[11px] sm:text-xs">₱{{ number_format($unit->advance_deposit_required, 0) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -693,17 +693,17 @@ document.addEventListener('DOMContentLoaded', function () {
                             <span class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">${unit.building_name}</span>
                             <span class="text-xs font-bold text-amber-500">★ ${unit.rating}</span>
                         </div>
-                        <h4 class="text-xs font-bold text-slate-900 truncate mt-0.5">${unit.title}</h4>
-                        <p class="text-[10px] text-slate-500 truncate">${unit.address}</p>
+                        <h4 class="text-xs font-bold text-slate-900 dark:text-white truncate mt-0.5">${unit.title}</h4>
+                        <p class="text-[10px] text-slate-500 dark:text-slate-400 truncate">${unit.address}</p>
                     </div>
 
-                    <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                    <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
                         <div>
-                            <span class="text-sm font-black text-slate-900 font-mono">${unit.price_formatted}</span>
+                            <span class="text-sm font-black text-slate-900 dark:text-white font-mono">${unit.price_formatted}</span>
                             <span class="text-[10px] text-slate-400">/night</span>
                         </div>
-                        <a href="${unit.url}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-xs">
-                            View Unit &rarr;
+                        <a href="${unit.url}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-xs btn-popup-view" style="color: #ffffff !important;">
+                            <span>View Unit &rarr;</span>
                         </a>
                     </div>
                 </div>
