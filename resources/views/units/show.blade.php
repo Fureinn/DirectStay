@@ -27,7 +27,7 @@
     activePhotoIndex: 0,
     amenitiesModalOpen: false,
     showCalendar: false,
-    breakdownOpen: true,
+    breakdownOpen: false,
     copiedShare: false,
     openGallery(index = 0) {
         this.activePhotoIndex = index;
@@ -256,9 +256,9 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                             <span class="text-[10px] text-slate-400 dark:text-slate-500">Private hot shower</span>
                         </div>
                         <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
-                            <span class="text-slate-400 block mb-1 text-base">🔑</span>
-                            <span class="text-xs font-black text-slate-900 dark:text-white block">Self Check-in</span>
-                            <span class="text-[10px] text-slate-400 dark:text-slate-500">Smartlock &amp; Pass</span>
+                            <span class="text-slate-400 block mb-1 text-base">🏢</span>
+                            <span class="text-xs font-black text-slate-900 dark:text-white block">Lobby Check-in</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">Gate Pass &amp; Key/RFID</span>
                         </div>
                     </div>
                 </div>
@@ -266,66 +266,63 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                 <!-- =============================================================== -->
                 <!-- DIRECTSTAY 3-STEP SEAMLESS GATE PASS & BOOKING JOURNEY          -->
                 <!-- =============================================================== -->
-                <div class="bg-gradient-to-br from-blue-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-xl relative overflow-hidden border border-white/10">
-                    <!-- Subtle background glow -->
-                    <div class="absolute -top-12 -right-12 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
-
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs relative overflow-hidden">
                     <div class="relative z-10">
                         <div class="flex items-center gap-2 mb-2">
-                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                                 Hassle-Free Arrival
                             </span>
-                            <span class="text-xs text-blue-200/80 font-medium">Urban Deca Homes Ortigas PMO Process</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Urban Deca Homes Ortigas PMO Process</span>
                         </div>
-                        <h3 class="text-lg sm:text-xl font-black text-white tracking-tight mb-2">
+                        <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
                             How Your DirectStay Reservation Works
                         </h3>
-                        <p class="text-xs text-slate-300 mb-6 max-w-xl leading-relaxed">
+                        <p class="text-xs text-slate-600 dark:text-slate-300 mb-6 max-w-xl leading-relaxed">
                             No confusing paperwork or security hold-ups at the gate. We automate the Pasig PMO gate pass clearance so your stay is 100% compliant and ready on arrival.
                         </p>
 
                         <!-- 3-Step Illustrated Cards -->
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                             <!-- Step 1 -->
-                            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15 flex flex-col justify-between">
+                            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-4 border border-slate-200/60 dark:border-white/5 flex flex-col justify-between">
                                 <div>
-                                    <div class="w-8 h-8 rounded-xl bg-blue-500 text-white font-black text-xs flex items-center justify-center mb-3 shadow-md">
+                                    <div class="w-8 h-8 rounded-xl bg-blue-600 text-white font-black text-xs flex items-center justify-center mb-3 shadow-xs">
                                         1
                                     </div>
-                                    <h4 class="text-xs font-black text-white mb-1">Instant Direct Booking</h4>
-                                    <p class="text-[11px] text-slate-300 leading-normal">
+                                    <h4 class="text-xs font-black text-slate-900 dark:text-white mb-1">Instant Direct Booking</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
                                         Select your dates and lock your staycation with transparent pricing and escrow deposit protection.
                                     </p>
                                 </div>
-                                <span class="text-[10px] text-emerald-300 font-bold mt-3 block">✓ Zero OTA Markups</span>
+                                <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold mt-3 block">✓ Zero OTA Markups</span>
                             </div>
 
                             <!-- Step 2 -->
-                            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15 flex flex-col justify-between">
+                            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-4 border border-slate-200/60 dark:border-white/5 flex flex-col justify-between">
                                 <div>
-                                    <div class="w-8 h-8 rounded-xl bg-indigo-500 text-white font-black text-xs flex items-center justify-center mb-3 shadow-md">
+                                    <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white font-black text-xs flex items-center justify-center mb-3 shadow-xs">
                                         2
                                     </div>
-                                    <h4 class="text-xs font-black text-white mb-1">ID Upload &amp; Clearance</h4>
-                                    <p class="text-[11px] text-slate-300 leading-normal">
+                                    <h4 class="text-xs font-black text-slate-900 dark:text-white mb-1">ID Upload &amp; Clearance</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
                                         Submit government IDs securely online. DirectStay generates your official Deca Gate Pass PDF.
                                     </p>
                                 </div>
-                                <span class="text-[10px] text-blue-300 font-bold mt-3 block">✓ PMO Security Approved</span>
+                                <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold mt-3 block">✓ PMO Security Approved</span>
                             </div>
 
                             <!-- Step 3 -->
-                            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15 flex flex-col justify-between">
+                            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-4 border border-slate-200/60 dark:border-white/5 flex flex-col justify-between">
                                 <div>
-                                    <div class="w-8 h-8 rounded-xl bg-teal-500 text-white font-black text-xs flex items-center justify-center mb-3 shadow-md">
+                                    <div class="w-8 h-8 rounded-xl bg-teal-600 text-white font-black text-xs flex items-center justify-center mb-3 shadow-xs">
                                         3
                                     </div>
-                                    <h4 class="text-xs font-black text-white mb-1">Express Check-in</h4>
-                                    <p class="text-[11px] text-slate-300 leading-normal">
-                                        Present your QR pass at the Ortigas Ave Ext gate and enter your unit with digital smartlock PIN.
+                                    <h4 class="text-xs font-black text-slate-900 dark:text-white mb-1">Gate Pass &amp; Key Turnover</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
+                                        Present your gate pass at the Ortigas Ave Ext gate and receive your unit key and elevator RFID.
                                     </p>
                                 </div>
-                                <span class="text-[10px] text-teal-300 font-bold mt-3 block">✓ Keyless &amp; Seamless</span>
+                                <span class="text-[10px] text-teal-600 dark:text-teal-400 font-bold mt-3 block">✓ Verified PMO Clearance</span>
                             </div>
                         </div>
                     </div>
@@ -391,7 +388,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                                         </svg>
                                     @else
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2 17c1.5 0 2.5-1 4-1s2.5 1 4 1 2.5-1 4-1 2.5-1 4-1M2 21c1.5 0 2.5-1 4-1s2.5 1 4 1 2.5-1 4-1 2.5-1 4-1M18 10a4 4 0 10-8 0v2h8v-2z"/>
                                         </svg>
                                     @endif
                                 </div>
