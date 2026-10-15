@@ -10,6 +10,9 @@
         background: #f1f5f9;
         border-radius: 1.25rem;
     }
+    .dark .leaflet-container {
+        background: #0b0f19 !important;
+    }
 </style>
 @endpush
 
@@ -1448,9 +1451,9 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
         L.marker([unitLat, unitLng], { icon: pricePin }).addTo(map)
             .bindPopup(`
                 <div class="p-3 text-left">
-                    <span class="text-[10px] font-bold uppercase text-slate-400">{{ $unit->building?->code ?? 'UDH' }} &bull; {{ $unit->unit_number }}</span>
-                    <h4 class="text-xs font-bold text-slate-900 mt-0.5">{{ $unit->title }}</h4>
-                    <p class="text-[10px] text-slate-500 mt-1">{{ $unit->building?->address ?? 'KM 19 Ortigas Ave Ext, Pasig' }}</p>
+                    <span class="text-[10px] font-bold uppercase text-slate-400 dark:text-slate-500">{{ $unit->building?->code ?? 'UDH' }} &bull; {{ $unit->unit_number }}</span>
+                    <h4 class="text-xs font-bold text-slate-900 dark:text-white mt-0.5">{{ $unit->title }}</h4>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">{{ $unit->building?->address ?? 'KM 19 Ortigas Ave Ext, Pasig' }}</p>
                 </div>
             `, { className: 'custom-map-popup' })
             .openPopup();

@@ -10,6 +10,9 @@
         background: #f1f5f9;
         border-radius: 1.5rem;
     }
+    .dark .leaflet-container {
+        background: #0b0f19 !important;
+    }
     .custom-map-popup .leaflet-popup-content-wrapper {
         padding: 0;
         overflow: hidden;
@@ -703,7 +706,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <span class="text-[10px] text-slate-400">/night</span>
                         </div>
                         <a href="${unit.url}" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-xs btn-popup-view" style="color: #ffffff !important;">
-                            <span>View Unit &rarr;</span>
+                            <span style="color: #ffffff !important;">View Unit &rarr;</span>
                         </a>
                     </div>
                 </div>

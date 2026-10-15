@@ -542,7 +542,8 @@
 }
 
 .map-price-marker:hover,
-.map-price-marker.is-selected {
+.map-price-marker.is-selected,
+.map-price-marker.active {
     background: #2563eb;
     color: #ffffff;
     transform: scale(1.15) translateY(-2px);
@@ -551,7 +552,8 @@
 }
 
 .map-price-marker:hover::after,
-.map-price-marker.is-selected::after {
+.map-price-marker.is-selected::after,
+.map-price-marker.active::after {
     border-top-color: #2563eb;
 }
 
@@ -568,7 +570,8 @@
 }
 
 .dark .map-price-marker:hover,
-.dark .map-price-marker.is-selected {
+.dark .map-price-marker.is-selected,
+.dark .map-price-marker.active {
     background: #2563eb;
     color: #ffffff;
     border-color: #3b82f6;
@@ -576,7 +579,8 @@
 }
 
 .dark .map-price-marker:hover::after,
-.dark .map-price-marker.is-selected::after {
+.dark .map-price-marker.is-selected::after,
+.dark .map-price-marker.active::after {
     border-top-color: #2563eb;
 }
 
@@ -620,7 +624,9 @@
 /* Fix: Leaflet's default `.leaflet-container a` has high specificity (#0078A8), causing white text on blue buttons to be overridden */
 .leaflet-container a.btn-popup-view,
 .leaflet-popup-content a.btn-popup-view,
-.leaflet-popup-content a[href*="/units/"] {
+.leaflet-popup-content a[href*="/units/"],
+.leaflet-container a.btn-popup-view *,
+.leaflet-popup-content a.btn-popup-view * {
     color: #ffffff !important;
     text-decoration: none !important;
 }
