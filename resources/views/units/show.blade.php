@@ -50,7 +50,7 @@
 @keydown.window.escape="galleryOpen = false; amenitiesModalOpen = false"
 @keydown.window.arrow-left="if (galleryOpen) prevPhoto()"
 @keydown.window.arrow-right="if (galleryOpen) nextPhoto()"
-class="min-h-screen bg-slate-50/60 pb-20">
+class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
 
     <!-- ======================================================================= -->
     <!-- 1. TOP HEADER & BREADCRUMBS BAR                                         -->
@@ -58,23 +58,23 @@ class="min-h-screen bg-slate-50/60 pb-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
         <!-- Top Breadcrumbs & Utility Actions -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
-            <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500">
-                <a href="{{ route('units.index') }}" class="hover:text-blue-600 transition-colors flex items-center gap-1.5">
+            <nav class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                <a href="{{ route('units.index') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors flex items-center gap-1.5">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                     <span>All Staycations</span>
                 </a>
-                <span class="text-slate-300">/</span>
-                <span class="text-slate-700">{{ $unit->building ? $unit->building->name : 'Urban Deca Homes Ortigas' }}</span>
-                <span class="text-slate-300">/</span>
-                <span class="text-blue-600 font-bold">Tower {{ $unit->building ? $unit->building->code : 'UDH' }} &bull; Unit {{ $unit->unit_number }}</span>
+                <span class="text-slate-300 dark:text-slate-700">/</span>
+                <span class="text-slate-700 dark:text-slate-300">{{ $unit->building ? $unit->building->name : 'Urban Deca Homes Ortigas' }}</span>
+                <span class="text-slate-300 dark:text-slate-700">/</span>
+                <span class="text-blue-600 dark:text-blue-400 font-bold">Tower {{ $unit->building ? $unit->building->code : 'UDH' }} &bull; Unit {{ $unit->unit_number }}</span>
             </nav>
 
             <div class="flex items-center gap-2">
                 <!-- Direct Booking Advantage Pill -->
-                <span class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80">
-                    <svg class="w-3.5 h-3.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
+                <span class="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/80 dark:border-emerald-800/60">
+                    <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
                     </svg>
                     <span>Zero Airbnb 15% Markup</span>
@@ -82,8 +82,8 @@ class="min-h-screen bg-slate-50/60 pb-20">
 
                 <!-- Share Button -->
                 <button type="button" @click="shareListing()"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-2xs cursor-pointer">
+                    <svg class="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
                     </svg>
                     <span x-text="copiedShare ? 'Copied Link!' : 'Share'"></span>
@@ -93,33 +93,33 @@ class="min-h-screen bg-slate-50/60 pb-20">
 
         <!-- Listing Main Title & Subtitle Meta -->
         <div>
-            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                 {{ $unit->title }}
             </h1>
-            <div class="flex flex-wrap items-center gap-y-2 gap-x-4 mt-2 text-xs text-slate-600">
+            <div class="flex flex-wrap items-center gap-y-2 gap-x-4 mt-2 text-xs text-slate-600 dark:text-slate-400">
                 <!-- Star Rating -->
-                <a href="#reviewsSection" class="flex items-center gap-1.5 font-bold text-slate-900 hover:text-blue-600 transition-colors">
+                <a href="#reviewsSection" class="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     <span class="text-amber-500 text-sm">★</span>
                     <span class="tabular-nums">{{ number_format($unit->averageRating(), 1) }}</span>
-                    <span class="text-slate-400 font-normal">({{ $unit->reviewsCount() }} reviews)</span>
+                    <span class="text-slate-400 dark:text-slate-500 font-normal">({{ $unit->reviewsCount() }} reviews)</span>
                 </a>
 
-                <span class="text-slate-300">&bull;</span>
+                <span class="text-slate-300 dark:text-slate-700">&bull;</span>
 
                 <!-- Location link -->
-                <span class="flex items-center gap-1 text-slate-700 font-medium">
-                    <svg class="w-3.5 h-3.5 text-blue-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span class="flex items-center gap-1 text-slate-700 dark:text-slate-300 font-medium">
+                    <svg class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     <span>{{ $unit->building ? $unit->building->name : 'Urban Deca Homes Ortigas' }} &bull; Tower {{ $unit->building ? $unit->building->code : 'UDH' }} &bull; Pasig City</span>
                 </span>
 
-                <span class="text-slate-300">&bull;</span>
+                <span class="text-slate-300 dark:text-slate-700">&bull;</span>
 
                 <!-- Instant Pass Badge -->
-                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-100">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></span>
+                <span class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2.5 py-0.5 rounded-full border border-blue-100 dark:border-blue-800/60">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
                     Deca PMO Gate Pass Ready
                 </span>
             </div>
@@ -220,16 +220,16 @@ class="min-h-screen bg-slate-50/60 pb-20">
             <div class="lg:col-span-7 space-y-8">
 
                 <!-- Unit Host & Core Specs Bento Card -->
-                <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-6">
-                    <div class="flex items-center justify-between pb-6 border-b border-slate-100">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs space-y-6">
+                    <div class="flex items-center justify-between pb-6 border-b border-slate-100 dark:border-slate-800">
                         <div>
-                            <span class="text-[11px] font-black uppercase tracking-wider text-blue-600 block mb-1">
+                            <span class="text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400 block mb-1">
                                 Verified DirectStay Property
                             </span>
-                            <h2 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight">
+                            <h2 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight">
                                 Hosted by {{ $unit->host ? $unit->host->name : 'DirectStay Superhost Team' }}
                             </h2>
-                            <p class="text-xs text-slate-500 mt-0.5">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                                 Urban Deca Homes Ortigas PMO-Accredited Host &bull; Fast response in under 15 mins
                             </p>
                         </div>
@@ -240,25 +240,25 @@ class="min-h-screen bg-slate-50/60 pb-20">
 
                     <!-- 4 Key Specs Strip -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
                             <span class="text-slate-400 block mb-1 text-base">👥</span>
-                            <span class="text-xs font-black text-slate-900 block">{{ $unit->max_guests }} Guests</span>
-                            <span class="text-[10px] text-slate-400">Max capacity</span>
+                            <span class="text-xs font-black text-slate-900 dark:text-white block">{{ $unit->max_guests }} Guests</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">Max capacity</span>
                         </div>
-                        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
                             <span class="text-slate-400 block mb-1 text-base">🛏️</span>
-                            <span class="text-xs font-black text-slate-900 block">Loft &amp; Queen</span>
-                            <span class="text-[10px] text-slate-400">Sleeping setup</span>
+                            <span class="text-xs font-black text-slate-900 dark:text-white block">Loft &amp; Queen</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">Sleeping setup</span>
                         </div>
-                        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
                             <span class="text-slate-400 block mb-1 text-base">🚿</span>
-                            <span class="text-xs font-black text-slate-900 block">1 Bath</span>
-                            <span class="text-[10px] text-slate-400">Private hot shower</span>
+                            <span class="text-xs font-black text-slate-900 dark:text-white block">1 Bath</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">Private hot shower</span>
                         </div>
-                        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5">
                             <span class="text-slate-400 block mb-1 text-base">🔑</span>
-                            <span class="text-xs font-black text-slate-900 block">Self Check-in</span>
-                            <span class="text-[10px] text-slate-400">Smartlock &amp; Pass</span>
+                            <span class="text-xs font-black text-slate-900 dark:text-white block">Self Check-in</span>
+                            <span class="text-[10px] text-slate-400 dark:text-slate-500">Smartlock &amp; Pass</span>
                         </div>
                     </div>
                 </div>
@@ -266,7 +266,7 @@ class="min-h-screen bg-slate-50/60 pb-20">
                 <!-- =============================================================== -->
                 <!-- DIRECTSTAY 3-STEP SEAMLESS GATE PASS & BOOKING JOURNEY          -->
                 <!-- =============================================================== -->
-                <div class="bg-gradient-to-br from-blue-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-xl relative overflow-hidden">
+                <div class="bg-gradient-to-br from-blue-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-7 text-white shadow-xl relative overflow-hidden border border-white/10">
                     <!-- Subtle background glow -->
                     <div class="absolute -top-12 -right-12 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -332,9 +332,9 @@ class="min-h-screen bg-slate-50/60 pb-20">
                 </div>
 
                 <!-- Unit Description Card -->
-                <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-4">
-                    <h3 class="text-base font-black text-slate-900 tracking-tight">About this space</h3>
-                    <div class="text-sm text-slate-600 leading-relaxed space-y-3">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs space-y-4">
+                    <h3 class="text-base font-black text-slate-900 dark:text-white tracking-tight">About this space</h3>
+                    <div class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed space-y-3">
                         <p>{{ $unit->description }}</p>
                     </div>
                 </div>
@@ -342,15 +342,15 @@ class="min-h-screen bg-slate-50/60 pb-20">
                 <!-- =============================================================== -->
                 <!-- ICON-BACKED FEATURED AMENITIES                                 -->
                 <!-- =============================================================== -->
-                <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs space-y-5">
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-white/10 shadow-xs space-y-5">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h3 class="text-base font-black text-slate-900 tracking-tight">Featured Amenities</h3>
-                            <p class="text-xs text-slate-500 mt-0.5">Everything you need for a comfortable staycation or workation</p>
+                            <h3 class="text-base font-black text-slate-900 dark:text-white tracking-tight">Featured Amenities</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Everything you need for a comfortable staycation or workation</p>
                         </div>
                         @if(count($inventoryItems) > 6)
                             <button type="button" @click="amenitiesModalOpen = true"
-                                    class="text-xs font-bold text-blue-600 hover:text-blue-800 transition-colors cursor-pointer">
+                                    class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors cursor-pointer">
                                 View all ({{ count($inventoryItems) }})
                             </button>
                         @endif
@@ -359,8 +359,8 @@ class="min-h-screen bg-slate-50/60 pb-20">
                     <!-- 6 Highlighted Amenity Cards -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                         @foreach($featuredAmenities as $amenity)
-                            <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50/80 border border-slate-100 hover:bg-slate-50 transition-all">
-                                <div class="w-9 h-9 rounded-xl bg-blue-100/70 text-blue-700 flex items-center justify-center shrink-0">
+                            <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-slate-50/80 dark:bg-slate-800/60 border border-slate-100 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                                <div class="w-9 h-9 rounded-xl bg-blue-100/70 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 flex items-center justify-center shrink-0">
                                     @if($amenity['icon'] === 'snowflake')
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v18m0-18l-3 3m3-3l3 3m-3 15l-3-3m3 3l3-3m-9-6h18m-18 0l3-3m-3 3l3 3m15-3l-3-3m3 3l3 3"/>
@@ -396,8 +396,8 @@ class="min-h-screen bg-slate-50/60 pb-20">
                                     @endif
                                 </div>
                                 <div>
-                                    <h4 class="text-xs font-black text-slate-900">{{ $amenity['label'] }}</h4>
-                                    <p class="text-[11px] text-slate-500 mt-0.5">{{ $amenity['desc'] }}</p>
+                                    <h4 class="text-xs font-black text-slate-900 dark:text-white">{{ $amenity['label'] }}</h4>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{{ $amenity['desc'] }}</p>
                                 </div>
                             </div>
                         @endforeach
@@ -406,9 +406,9 @@ class="min-h-screen bg-slate-50/60 pb-20">
                     @if(!empty($inventoryItems))
                         <div class="pt-3">
                             <button type="button" @click="amenitiesModalOpen = true"
-                                    class="w-full py-3 px-4 rounded-2xl bg-slate-100 hover:bg-slate-200/80 text-xs font-black text-slate-800 transition-all cursor-pointer flex items-center justify-center gap-2">
+                                    class="w-full py-3 px-4 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 text-xs font-black text-slate-800 dark:text-slate-200 transition-all cursor-pointer flex items-center justify-center gap-2">
                                 <span>Show all {{ count($inventoryItems) }} amenities &amp; unit inventory</span>
-                                <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <svg class="w-4 h-4 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                 </svg>
                             </button>
@@ -417,17 +417,17 @@ class="min-h-screen bg-slate-50/60 pb-20">
                 </div>
 
                 <!-- Building Security House Rules Policy -->
-                <div class="p-6 rounded-3xl bg-amber-50/70 border border-amber-200/80 text-xs text-slate-800 relative">
-                    <div class="flex items-center gap-2 font-black text-sm text-amber-950 mb-2">
-                        <svg class="w-5 h-5 text-amber-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <div class="p-6 rounded-3xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-900/60 text-xs text-slate-800 dark:text-amber-200 relative">
+                    <div class="flex items-center gap-2 font-black text-sm text-amber-950 dark:text-amber-300 mb-2">
+                        <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                         </svg>
                         Urban Deca Homes Ortigas PMO Gate Pass &amp; House Rules
                     </div>
-                    <p class="text-slate-700 leading-relaxed font-sans mb-3">
+                    <p class="text-slate-700 dark:text-slate-300 leading-relaxed font-sans mb-3">
                         {{ $unit->building ? $unit->building->house_rules : 'All guests must submit valid government-issued IDs for security gate pass clearance prior to building entry.' }}
                     </p>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center pt-2 border-t border-amber-200/60 font-semibold text-[11px] text-amber-900">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center pt-2 border-t border-amber-200/60 dark:border-amber-900/40 font-semibold text-[11px] text-amber-900 dark:text-amber-300">
                         <div>Check-in: <strong>2:00 PM</strong></div>
                         <div>Check-out: <strong>12:00 PM</strong></div>
                         <div>Quiet: <strong>10:00 PM</strong></div>
@@ -436,19 +436,19 @@ class="min-h-screen bg-slate-50/60 pb-20">
                 </div>
 
                 <!-- Guest Ratings & Verified Reviews Section -->
-                <div id="reviewsSection" class="rounded-3xl bg-white border border-slate-200/80 shadow-xs p-6 sm:p-7 relative space-y-6">
+                <div id="reviewsSection" class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-white/10 shadow-xs p-6 sm:p-7 relative space-y-6">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div>
                             <div class="flex items-center gap-2.5 mb-1">
-                                <span class="text-3xl font-black text-slate-900 tracking-tight flex items-center gap-1.5 tabular-nums">
+                                <span class="text-3xl font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 tabular-nums">
                                     <span class="text-amber-500 text-2xl">★</span>
                                     <span>{{ number_format($unit->averageRating(), 1) }}</span>
                                 </span>
-                                <span class="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full bg-amber-50 text-amber-900 border border-amber-200">
+                                <span class="text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950/50 text-amber-900 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60">
                                     Guest Favorite
                                 </span>
                             </div>
-                            <p class="text-xs text-slate-500 font-medium">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">
                                 Based on {{ $unit->reviewsCount() }} verified guest review{{ $unit->reviewsCount() === 1 ? '' : 's' }}
                             </p>
                         </div>
@@ -472,40 +472,40 @@ class="min-h-screen bg-slate-50/60 pb-20">
                     </div>
 
                     <!-- Rating Criteria Breakdown Grid -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 p-4 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5 text-xs">
                         <div>
-                            <div class="flex justify-between font-semibold text-slate-700 mb-1">
+                            <div class="flex justify-between font-semibold text-slate-700 dark:text-slate-300 mb-1">
                                 <span>Cleanliness</span>
-                                <span class="font-bold text-slate-900 tabular-nums">5.0</span>
+                                <span class="font-bold text-slate-900 dark:text-white tabular-nums">5.0</span>
                             </div>
-                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                                 <div class="bg-emerald-500 h-full rounded-full" style="width: 100%;"></div>
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between font-semibold text-slate-700 mb-1">
+                            <div class="flex justify-between font-semibold text-slate-700 dark:text-slate-300 mb-1">
                                 <span>Host Communication</span>
-                                <span class="font-bold text-slate-900 tabular-nums">5.0</span>
+                                <span class="font-bold text-slate-900 dark:text-white tabular-nums">5.0</span>
                             </div>
-                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                                 <div class="bg-emerald-500 h-full rounded-full" style="width: 100%;"></div>
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between font-semibold text-slate-700 mb-1">
+                            <div class="flex justify-between font-semibold text-slate-700 dark:text-slate-300 mb-1">
                                 <span>Amenities &amp; WiFi Speed</span>
-                                <span class="font-bold text-slate-900 tabular-nums">4.9</span>
+                                <span class="font-bold text-slate-900 dark:text-white tabular-nums">4.9</span>
                             </div>
-                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                                 <div class="bg-emerald-500 h-full rounded-full" style="width: 98%;"></div>
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between font-semibold text-slate-700 mb-1">
+                            <div class="flex justify-between font-semibold text-slate-700 dark:text-slate-300 mb-1">
                                 <span>Value for Money</span>
-                                <span class="font-bold text-slate-900 tabular-nums">5.0</span>
+                                <span class="font-bold text-slate-900 dark:text-white tabular-nums">5.0</span>
                             </div>
-                            <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                                 <div class="bg-emerald-500 h-full rounded-full" style="width: 100%;"></div>
                             </div>
                         </div>
@@ -514,7 +514,7 @@ class="min-h-screen bg-slate-50/60 pb-20">
                     <!-- Individual Reviews Feed -->
                     <div class="space-y-3.5">
                         @forelse($unit->reviews as $review)
-                            <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:bg-slate-100/60 transition-all">
+                            <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-white/5 hover:bg-slate-100/60 dark:hover:bg-slate-800/80 transition-all">
                                 <div class="flex items-start justify-between gap-4 mb-2">
                                     <div class="flex items-center gap-3">
                                         <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
@@ -522,26 +522,26 @@ class="min-h-screen bg-slate-50/60 pb-20">
                                         </div>
                                         <div>
                                             <div class="flex items-center gap-2">
-                                                <span class="text-xs font-bold text-slate-900">{{ $review->guest_name }}</span>
-                                                <span class="text-[10px] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-bold border border-emerald-200">Verified Stay</span>
+                                                <span class="text-xs font-bold text-slate-900 dark:text-white">{{ $review->guest_name }}</span>
+                                                <span class="text-[10px] text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full font-bold border border-emerald-200 dark:border-emerald-800/60">Verified Stay</span>
                                             </div>
-                                            <span class="text-[10px] text-slate-400">{{ $review->created_at->diffForHumans() }}</span>
+                                            <span class="text-[10px] text-slate-400 dark:text-slate-500">{{ $review->created_at->diffForHumans() }}</span>
                                         </div>
                                     </div>
                                     <div class="flex items-center gap-0.5 text-amber-500 text-xs">
                                         @for($s = 1; $s <= 5; $s++)
-                                            <span>{{ $s <= $review->rating ? '★' : '☆' }}</span>
+                                             <span>{{ $s <= $review->rating ? '★' : '☆' }}</span>
                                         @endfor
                                     </div>
                                 </div>
                                 @if($review->comment)
-                                    <p class="text-xs text-slate-600 leading-relaxed pl-11">
+                                    <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pl-11">
                                         &ldquo;{{ $review->comment }}&rdquo;
                                     </p>
                                 @endif
                             </div>
                         @empty
-                            <p class="text-center py-6 text-slate-400 text-xs">
+                            <p class="text-center py-6 text-slate-400 dark:text-slate-500 text-xs">
                                 No guest reviews logged yet. Be the first to book and review!
                             </p>
                         @endforelse
@@ -549,24 +549,24 @@ class="min-h-screen bg-slate-50/60 pb-20">
                 </div>
 
                 <!-- Location & Neighborhood Map Section -->
-                <div class="rounded-3xl bg-white border border-slate-200/80 shadow-xs p-6 sm:p-7 relative overflow-hidden space-y-4">
+                <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-white/10 shadow-xs p-6 sm:p-7 relative overflow-hidden space-y-4">
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                         <div>
-                            <h3 class="text-base font-black text-slate-900 tracking-tight flex items-center gap-2">
-                                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <h3 class="text-base font-black text-slate-900 dark:text-white tracking-tight flex items-center gap-2">
+                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                                 </svg>
                                 Location &amp; Pasig Neighborhood Guide
                             </h3>
-                            <p class="text-xs text-slate-500 mt-0.5">
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                                 {{ $unit->building ? $unit->building->name : 'Urban Deca Homes Ortigas' }} &bull; Tower {{ $unit->building ? $unit->building->code : 'UDH' }} &bull; Unit {{ $unit->unit_number }}
                             </p>
                         </div>
 
                         <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode(($unit->building ? $unit->building->name : 'Urban Deca Homes Ortigas') . ' ' . ($unit->building->address ?? 'KM 19 Ortigas Avenue Extension Pasig City')) }}"
                            target="_blank" rel="noopener noreferrer"
-                           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-xs font-bold text-blue-600 transition-colors">
+                           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-bold text-blue-600 dark:text-blue-400 transition-colors">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                             </svg>
@@ -575,24 +575,24 @@ class="min-h-screen bg-slate-50/60 pb-20">
                     </div>
 
                     <!-- Unit Location Leaflet Map Container -->
-                    <div id="unitLocationMap" class="w-full h-72 sm:h-80 rounded-2xl border border-slate-200 shadow-inner relative z-10"></div>
+                    <div id="unitLocationMap" class="w-full h-72 sm:h-80 rounded-2xl border border-slate-200 dark:border-white/10 shadow-inner relative z-10"></div>
 
                     <!-- Neighborhood Transit & Distances Guide -->
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs pt-1">
-                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-white/5">
                             <span class="text-[10px] text-slate-400 block font-semibold">Deca Main Gate</span>
-                            <strong class="text-slate-900 block truncate">Ortigas Ave Extension</strong>
-                            <span class="text-[10px] text-blue-600 font-bold">Pass Verification Point</span>
+                            <strong class="text-slate-900 dark:text-white block truncate">Ortigas Ave Extension</strong>
+                            <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Pass Verification Point</span>
                         </div>
-                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-white/5">
                             <span class="text-[10px] text-slate-400 block font-semibold">Commercial Hub</span>
-                            <strong class="text-slate-900 block truncate">SM City East Ortigas</strong>
-                            <span class="text-[10px] text-emerald-600 font-bold">1.2 km &bull; 5 mins</span>
+                            <strong class="text-slate-900 dark:text-white block truncate">SM City East Ortigas</strong>
+                            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">1.2 km &bull; 5 mins</span>
                         </div>
-                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-100">
+                        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-white/5">
                             <span class="text-[10px] text-slate-400 block font-semibold">Lifestyle Estate</span>
-                            <strong class="text-slate-900 block truncate">Bridgetowne / Victor</strong>
-                            <span class="text-[10px] text-emerald-600 font-bold">2.5 km &bull; 8 mins</span>
+                            <strong class="text-slate-900 dark:text-white block truncate">Bridgetowne / Victor</strong>
+                            <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">2.5 km &bull; 8 mins</span>
                         </div>
                     </div>
                 </div>
@@ -603,23 +603,23 @@ class="min-h-screen bg-slate-50/60 pb-20">
             <!-- RIGHT COLUMN (5 COLS): STICKY RESERVATION & INSTANT PRICING WIDGET  -->
             <!-- =================================================================== -->
             <div class="lg:col-span-5" id="reservationWidget">
-                <div class="sticky top-24 bg-white/95 backdrop-blur-xl rounded-3xl border border-slate-200 shadow-xl p-6 sm:p-7 relative overflow-hidden">
+                <div class="sticky top-24 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl border border-slate-200 dark:border-white/10 shadow-xl p-6 sm:p-7 relative overflow-hidden">
                     <!-- Soft decorative gradient corner -->
                     <div class="absolute -top-16 -right-16 w-44 h-44 bg-blue-500/10 rounded-full blur-2xl pointer-events-none"></div>
 
                     <!-- Price Header -->
                     <div class="flex items-baseline justify-between mb-5">
                         <div class="flex items-baseline gap-1.5">
-                            <span class="text-3xl font-black text-slate-900 tabular-nums tracking-tight font-mono">
+                            <span class="text-3xl font-black text-slate-900 dark:text-white tabular-nums tracking-tight font-mono">
                                 ₱{{ number_format($unit->base_price_per_night, 0) }}
                             </span>
-                            <span class="text-xs font-semibold text-slate-500">/ night</span>
+                            <span class="text-xs font-semibold text-slate-500 dark:text-slate-400">/ night</span>
                         </div>
-                        <div class="flex items-center gap-1.5 text-xs text-slate-700 font-semibold bg-slate-50 border border-slate-200 px-3 py-1 rounded-full shadow-2xs">
+                        <div class="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-white/10 px-3 py-1 rounded-full shadow-2xs">
                             <span class="text-amber-500 font-bold">★</span>
                             <span class="tabular-nums font-bold">{{ number_format($unit->averageRating(), 1) }}</span>
-                            <span class="text-slate-300">&bull;</span>
-                            <a href="#reviewsSection" class="text-slate-600 hover:text-slate-900 underline">{{ $unit->reviewsCount() }} reviews</a>
+                            <span class="text-slate-300 dark:text-slate-600">&bull;</span>
+                            <a href="#reviewsSection" class="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white underline">{{ $unit->reviewsCount() }} reviews</a>
                         </div>
                     </div>
 
@@ -629,21 +629,21 @@ class="min-h-screen bg-slate-50/60 pb-20">
                         <input type="hidden" name="unit_id" value="{{ $unit->id }}">
 
                         <!-- DirectStay Guarantee Banner -->
-                        <div class="rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 p-3.5 text-xs">
-                            <div class="flex items-center gap-2 font-black text-blue-950">
-                                <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                        <div class="rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/60 dark:to-indigo-950/60 border border-blue-200/80 dark:border-blue-800/50 p-3.5 text-xs">
+                            <div class="flex items-center gap-2 font-black text-blue-950 dark:text-blue-200">
+                                <span class="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
                                 <span>Pasig PMO Gate Pass Included</span>
                             </div>
-                            <p class="text-[11px] text-blue-800/80 mt-1 leading-normal">
+                            <p class="text-[11px] text-blue-800/80 dark:text-blue-300/80 mt-1 leading-normal">
                                 Automated digital clearance issued upon ID confirmation. Escrow holds deposit safely.
                             </p>
                         </div>
 
                         <!-- Date Picker Toggle & Header -->
                         <div class="flex items-center justify-between pt-1">
-                            <span class="text-[11px] font-black uppercase tracking-wider text-slate-500">Stay Dates</span>
+                            <span class="text-[11px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">Stay Dates</span>
                             <button type="button" @click="showCalendar = !showCalendar"
-                                    class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-700 transition-colors cursor-pointer">
+                                    class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-colors cursor-pointer">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
@@ -659,15 +659,15 @@ class="min-h-screen bg-slate-50/60 pb-20">
                              x-transition:leave="transition ease-in duration-150"
                              x-transition:leave-start="opacity-100 translate-y-0"
                              x-transition:leave-end="opacity-0 -translate-y-2"
-                             class="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-xs relative shadow-xs">
+                             class="p-4 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200 dark:border-white/10 text-xs relative shadow-xs">
                             <div class="flex items-center justify-between mb-3">
-                                <span class="font-bold text-slate-900" id="calMonthTitle">{{ date('F Y') }}</span>
-                                <div class="flex items-center gap-2.5 text-[10px] font-semibold text-slate-500">
+                                <span class="font-bold text-slate-900 dark:text-white" id="calMonthTitle">{{ date('F Y') }}</span>
+                                <div class="flex items-center gap-2.5 text-[10px] font-semibold text-slate-500 dark:text-slate-400">
                                     <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-emerald-500"></span> Open</span>
-                                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-slate-300"></span> Booked</span>
+                                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-slate-300 dark:bg-slate-600"></span> Booked</span>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-7 gap-1 text-center font-bold text-[10px] text-slate-400 mb-1">
+                            <div class="grid grid-cols-7 gap-1 text-center font-bold text-[10px] text-slate-400 dark:text-slate-500 mb-1">
                                 <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
                             </div>
                             <div id="interactiveCalendarDays" class="grid grid-cols-7 gap-1 text-center text-xs">
@@ -676,35 +676,35 @@ class="min-h-screen bg-slate-50/60 pb-20">
                         </div>
 
                         <!-- Grouped Date/Guest Picker Box -->
-                        <div class="rounded-2xl border border-slate-200 overflow-hidden shadow-2xs focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all bg-white">
-                            <div class="grid grid-cols-2 divide-x divide-slate-200 border-b border-slate-200">
+                        <div class="rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-2xs focus-within:border-blue-600 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all bg-white dark:bg-slate-800/60">
+                            <div class="grid grid-cols-2 divide-x divide-slate-200 dark:divide-slate-700 border-b border-slate-200 dark:border-slate-700">
                                 <!-- Check-in -->
-                                <div class="p-3 hover:bg-slate-50/80 transition cursor-pointer">
-                                    <label for="checkInInput" class="block text-[9px] font-black uppercase tracking-wider text-slate-500">Check-in</label>
+                                <div class="p-3 hover:bg-slate-50/80 dark:hover:bg-slate-800/80 transition cursor-pointer">
+                                    <label for="checkInInput" class="block text-[9px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">Check-in</label>
                                     <input type="date" name="check_in_date" id="checkInInput"
                                            min="{{ date('Y-m-d') }}"
                                            value="{{ old('check_in_date', $defaultCheckIn ?? date('Y-m-d')) }}"
                                            required
-                                           class="w-full text-xs font-bold text-slate-900 bg-transparent border-0 p-0 focus:ring-0 cursor-pointer tabular-nums tracking-tight font-mono">
+                                           class="w-full text-xs font-bold text-slate-900 dark:text-white bg-transparent border-0 p-0 focus:ring-0 cursor-pointer tabular-nums tracking-tight font-mono">
                                 </div>
                                 <!-- Checkout -->
-                                <div class="p-3 hover:bg-slate-50/80 transition cursor-pointer">
-                                    <label for="checkOutInput" class="block text-[9px] font-black uppercase tracking-wider text-slate-500">Checkout</label>
+                                <div class="p-3 hover:bg-slate-50/80 dark:hover:bg-slate-800/80 transition cursor-pointer">
+                                    <label for="checkOutInput" class="block text-[9px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">Checkout</label>
                                     <input type="date" name="check_out_date" id="checkOutInput"
                                            min="{{ date('Y-m-d', strtotime('+1 day')) }}"
                                            value="{{ old('check_out_date', $defaultCheckOut ?? date('Y-m-d', strtotime('+1 day'))) }}"
                                            required
-                                           class="w-full text-xs font-bold text-slate-900 bg-transparent border-0 p-0 focus:ring-0 cursor-pointer tabular-nums tracking-tight font-mono">
+                                           class="w-full text-xs font-bold text-slate-900 dark:text-white bg-transparent border-0 p-0 focus:ring-0 cursor-pointer tabular-nums tracking-tight font-mono">
                                 </div>
                             </div>
 
                             <!-- Guests Selector -->
-                            <div class="p-3 hover:bg-slate-50/80 transition">
-                                <label for="guestCountSelect" class="block text-[9px] font-black uppercase tracking-wider text-slate-500">Guests</label>
+                            <div class="p-3 hover:bg-slate-50/80 dark:hover:bg-slate-800/80 transition">
+                                <label for="guestCountSelect" class="block text-[9px] font-black uppercase tracking-wider text-slate-500 dark:text-slate-400">Guests</label>
                                 <select name="guest_count" id="guestCountSelect"
-                                        class="w-full text-xs font-bold text-slate-900 bg-transparent border-0 p-0 focus:ring-0 cursor-pointer">
+                                        class="w-full text-xs font-bold text-slate-900 dark:text-white bg-transparent border-0 p-0 focus:ring-0 cursor-pointer dark:bg-slate-800">
                                     @for($i = 1; $i <= $unit->max_guests; $i++)
-                                        <option value="{{ $i }}" {{ old('guest_count', $defaultGuests ?? 1) == $i ? 'selected' : '' }}>
+                                        <option value="{{ $i }}" {{ old('guest_count', $defaultGuests ?? 1) == $i ? 'selected' : '' }} class="dark:bg-slate-900">
                                             {{ $i }} guest{{ $i > 1 ? 's' : '' }} (Max {{ $unit->max_guests }})
                                         </option>
                                     @endfor
@@ -713,17 +713,17 @@ class="min-h-screen bg-slate-50/60 pb-20">
                         </div>
 
                         @error('check_in_date')
-                            <p class="text-xs text-rose-600 font-semibold p-2 bg-rose-50 border border-rose-200 rounded-xl">{{ $message }}</p>
+                            <p class="text-xs text-rose-600 font-semibold p-2 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-xl">{{ $message }}</p>
                         @enderror
                         @error('check_out_date')
-                            <p class="text-xs text-rose-600 font-semibold p-2 bg-rose-50 border border-rose-200 rounded-xl">{{ $message }}</p>
+                            <p class="text-xs text-rose-600 font-semibold p-2 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-xl">{{ $message }}</p>
                         @enderror
                         @error('guest_count')
-                            <p class="text-xs text-rose-600 font-semibold p-2 bg-rose-50 border border-rose-200 rounded-xl">{{ $message }}</p>
+                            <p class="text-xs text-rose-600 font-semibold p-2 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-xl">{{ $message }}</p>
                         @enderror
 
                         <!-- Date Conflict Alert -->
-                        <div id="dateAlert" class="hidden text-xs text-rose-600 font-bold p-3 bg-rose-50 border border-rose-200 rounded-xl flex items-center gap-2">
+                        <div id="dateAlert" class="hidden text-xs text-rose-600 dark:text-rose-400 font-bold p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/50 rounded-xl flex items-center gap-2">
                             <svg class="w-4 h-4 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                             </svg>
@@ -731,23 +731,23 @@ class="min-h-screen bg-slate-50/60 pb-20">
                         </div>
 
                         <!-- Step 2: Lead guest details (revealed after clicking Reserve or if validation errors exist) -->
-                        <div id="confirmAndPaySection" class="{{ ($errors->any() || old('guest_name')) ? '' : 'hidden' }} space-y-3.5 pt-3 border-t border-slate-200">
+                        <div id="confirmAndPaySection" class="{{ ($errors->any() || old('guest_name')) ? '' : 'hidden' }} space-y-3.5 pt-3 border-t border-slate-200 dark:border-slate-800">
                             <div class="flex items-center justify-between">
-                                <h3 class="text-xs font-black uppercase tracking-wider text-slate-900">Lead Guest Details</h3>
+                                <h3 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">Lead Guest Details</h3>
                                 @auth
-                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">Logged in</span>
+                                    <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-800/60">Logged in</span>
                                 @else
-                                    <a href="{{ route('customer.login') }}" class="text-[10px] text-blue-600 hover:text-blue-800 font-bold underline">Quick Login</a>
+                                    <a href="{{ route('customer.login') }}" class="text-[10px] text-blue-600 dark:text-blue-400 hover:text-blue-800 font-bold underline">Quick Login</a>
                                 @endauth
                             </div>
 
                             <div class="space-y-3">
                                 <div>
-                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">Full Legal Name</label>
+                                    <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Full Legal Name</label>
                                     <input type="text" name="guest_name" id="guestNameInput"
                                            value="{{ old('guest_name', auth()->check() ? auth()->user()->name : '') }}"
                                            placeholder="Must match government ID for Deca Gate Pass" required
-                                           class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_name') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                                           class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_name') border-rose-400 bg-rose-50/30 @else border-slate-300 dark:border-slate-700 @enderror focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white dark:bg-slate-800 dark:text-white">
                                     @error('guest_name')
                                         <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
                                     @enderror
@@ -755,21 +755,21 @@ class="min-h-screen bg-slate-50/60 pb-20">
 
                                 <div class="grid grid-cols-2 gap-2.5">
                                     <div>
-                                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Email Address</label>
+                                        <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Email Address</label>
                                         <input type="email" name="guest_email" id="guestEmailInput"
                                                value="{{ old('guest_email', auth()->check() ? auth()->user()->email : '') }}"
                                                placeholder="For PDF pass" required
-                                               class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_email') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                                               class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_email') border-rose-400 bg-rose-50/30 @else border-slate-300 dark:border-slate-700 @enderror focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white dark:bg-slate-800 dark:text-white">
                                         @error('guest_email')
                                             <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
                                         @enderror
                                     </div>
                                     <div>
-                                        <label class="block text-[11px] font-bold text-slate-700 mb-1">Mobile Phone</label>
+                                        <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Mobile Phone</label>
                                         <input type="text" name="guest_phone" id="guestPhoneInput"
                                                value="{{ old('guest_phone', auth()->check() ? (auth()->user()->phone ?? '') : '') }}"
                                                placeholder="0917XXXXXXX" required
-                                               class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_phone') border-rose-400 bg-rose-50/30 @else border-slate-300 @enderror focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white">
+                                               class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_phone') border-rose-400 bg-rose-50/30 @else border-slate-300 dark:border-slate-700 @enderror focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white dark:bg-slate-800 dark:text-white">
                                         @error('guest_phone')
                                             <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>
                                         @enderror
@@ -780,17 +780,17 @@ class="min-h-screen bg-slate-50/60 pb-20">
                             <!-- Optional Stay Add-ons -->
                             @if($addOns->count() > 0)
                                 <div class="pt-2">
-                                    <label class="block text-[11px] font-black uppercase tracking-wider text-slate-800 mb-2">Optional Stay Enhancements</label>
+                                    <label class="block text-[11px] font-black uppercase tracking-wider text-slate-800 dark:text-slate-200 mb-2">Optional Stay Enhancements</label>
                                     <div class="space-y-2">
                                         @foreach($addOns as $addon)
-                                            <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+                                            <div class="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-white/10 text-xs">
                                                 <div>
-                                                    <span class="font-bold text-slate-800">{{ $addon->name }}</span>
-                                                    <span class="text-slate-400 block text-[11px] tabular-nums tracking-tight">+₱{{ number_format($addon->price, 2) }}</span>
+                                                    <span class="font-bold text-slate-800 dark:text-white">{{ $addon->name }}</span>
+                                                    <span class="text-slate-400 dark:text-slate-500 block text-[11px] tabular-nums tracking-tight">+₱{{ number_format($addon->price, 2) }}</span>
                                                 </div>
                                                 <input type="number" name="add_ons[{{ $addon->id }}]" min="0" max="10" value="0"
                                                        data-price="{{ $addon->price }}"
-                                                       class="addon-input w-14 text-center text-xs font-bold py-1 px-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-600 tabular-nums">
+                                                       class="addon-input w-14 text-center text-xs font-bold py-1 px-2 rounded-lg border border-slate-300 dark:border-slate-700 focus:ring-2 focus:ring-blue-600 tabular-nums dark:bg-slate-800 dark:text-white">
                                             </div>
                                         @endforeach
                                     </div>
@@ -816,52 +816,52 @@ class="min-h-screen bg-slate-50/60 pb-20">
                                 </svg>
                             </button>
 
-                            <p class="text-[11px] text-center text-slate-400 mt-2 font-medium" id="notChargedNotice">
+                            <p class="text-[11px] text-center text-slate-400 dark:text-slate-500 mt-2 font-medium" id="notChargedNotice">
                                 No instant card charge. Clear ID verification on the next step.
                             </p>
                         </div>
 
                         <!-- Dynamic Price Summary & Itemized Breakdown -->
-                        <div class="pt-4 border-t border-slate-200 space-y-3">
+                        <div class="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-3">
                             <div class="flex justify-between items-baseline">
                                 <div>
-                                    <span class="text-sm font-black text-slate-900">Total Amount</span>
+                                    <span class="text-sm font-black text-slate-900 dark:text-white">Total Amount</span>
                                     <button type="button" @click="breakdownOpen = !breakdownOpen"
-                                            class="block text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors mt-0.5 cursor-pointer">
+                                            class="block text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors mt-0.5 cursor-pointer">
                                         <span x-text="breakdownOpen ? 'Hide breakdown ▲' : 'Show breakdown ▼'"></span>
                                     </button>
                                 </div>
-                                <span class="text-2xl font-black text-slate-900 tabular-nums tracking-tight font-mono" id="calcGrandTotal">₱0.00</span>
+                                <span class="text-2xl font-black text-slate-900 dark:text-white tabular-nums tracking-tight font-mono" id="calcGrandTotal">₱0.00</span>
                             </div>
 
                             <div x-show="breakdownOpen" x-cloak
                                  x-transition:enter="transition ease-out duration-200"
                                  x-transition:enter-start="opacity-0 -translate-y-1"
                                  x-transition:enter-end="opacity-100 translate-y-0"
-                                 class="pt-3 border-t border-slate-100 space-y-2 text-xs text-slate-600">
+                                 class="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2 text-xs text-slate-600 dark:text-slate-400">
                                 <div class="flex justify-between">
                                     <span>₱{{ number_format($unit->base_price_per_night, 0) }} x <span id="calcNights">1</span> night(s)</span>
-                                    <span class="font-bold text-slate-900 tabular-nums tracking-tight font-mono" id="calcRoomTotal">₱0.00</span>
+                                    <span class="font-bold text-slate-900 dark:text-white tabular-nums tracking-tight font-mono" id="calcRoomTotal">₱0.00</span>
                                 </div>
 
                                 <div id="addonsRow" class="hidden flex justify-between">
                                     <span>Add-ons Subtotal</span>
-                                    <span class="font-bold text-slate-900 tabular-nums tracking-tight font-mono" id="calcAddonsTotal">₱0.00</span>
+                                    <span class="font-bold text-slate-900 dark:text-white tabular-nums tracking-tight font-mono" id="calcAddonsTotal">₱0.00</span>
                                 </div>
 
                                 <div class="flex justify-between">
                                     <span class="flex items-center gap-1">
                                         DirectStay platform fee (5%)
-                                        <span class="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Save 10% vs OTA</span>
+                                        <span class="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-200 dark:border-emerald-800/60">Save 10% vs OTA</span>
                                     </span>
-                                    <span class="font-bold text-blue-600 tabular-nums tracking-tight font-mono" id="calcPlatformFee">₱0.00</span>
+                                    <span class="font-bold text-blue-600 dark:text-blue-400 tabular-nums tracking-tight font-mono" id="calcPlatformFee">₱0.00</span>
                                 </div>
 
-                                <div class="flex justify-between border-t border-slate-100 pt-2">
-                                    <span class="font-medium text-slate-700">Refundable security deposit</span>
-                                    <span class="font-bold text-slate-900 tabular-nums tracking-tight font-mono">₱{{ number_format($unit->advance_deposit_required, 2) }}</span>
+                                <div class="flex justify-between border-t border-slate-100 dark:border-slate-800 pt-2">
+                                    <span class="font-medium text-slate-700 dark:text-slate-300">Refundable security deposit</span>
+                                    <span class="font-bold text-slate-900 dark:text-white tabular-nums tracking-tight font-mono">₱{{ number_format($unit->advance_deposit_required, 2) }}</span>
                                 </div>
-                                <p class="text-[10px] text-slate-400 leading-normal">
+                                <p class="text-[10px] text-slate-400 dark:text-slate-500 leading-normal">
                                     * The ₱{{ number_format($unit->advance_deposit_required, 0) }} deposit is held safely in escrow and refunded after checkout inspection.
                                 </p>
                             </div>
@@ -962,15 +962,15 @@ class="min-h-screen bg-slate-50/60 pb-20">
          x-transition:leave-end="opacity-0"
          class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4">
         
-        <div class="bg-white rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-100 overflow-hidden"
+        <div class="bg-white dark:bg-slate-900 rounded-3xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl border border-slate-100 dark:border-white/10 overflow-hidden"
              @click.away="amenitiesModalOpen = false">
-            <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
                 <div>
-                    <h3 class="text-base font-black text-slate-900">What this place offers</h3>
-                    <p class="text-xs text-slate-500 mt-0.5">Complete inventory and furnishings in Unit {{ $unit->unit_number }}</p>
+                    <h3 class="text-base font-black text-slate-900 dark:text-white">What this place offers</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Complete inventory and furnishings in Unit {{ $unit->unit_number }}</p>
                 </div>
                 <button type="button" @click="amenitiesModalOpen = false"
-                        class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors cursor-pointer">
+                        class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center transition-colors cursor-pointer">
                     ✕
                 </button>
             </div>
@@ -979,8 +979,8 @@ class="min-h-screen bg-slate-50/60 pb-20">
                 @if(!empty($inventoryItems))
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         @foreach($inventoryItems as $item)
-                            <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-semibold text-slate-800">
-                                <svg class="w-4 h-4 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5 text-xs font-semibold text-slate-800 dark:text-slate-200">
+                                <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
                                 </svg>
                                 <span>{{ $item }}</span>
@@ -988,13 +988,13 @@ class="min-h-screen bg-slate-50/60 pb-20">
                         @endforeach
                     </div>
                 @else
-                    <p class="text-xs text-slate-400 text-center py-4">No specific inventory items detailed.</p>
+                    <p class="text-xs text-slate-400 dark:text-slate-500 text-center py-4">No specific inventory items detailed.</p>
                 @endif
             </div>
 
-            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+            <div class="p-4 bg-slate-50 dark:bg-slate-800/60 border-t border-slate-100 dark:border-slate-800 flex justify-end">
                 <button type="button" @click="amenitiesModalOpen = false"
-                        class="px-5 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors cursor-pointer">
+                        class="px-5 py-2 rounded-xl bg-slate-900 dark:bg-blue-600 text-white text-xs font-bold hover:bg-slate-800 dark:hover:bg-blue-700 transition-colors cursor-pointer">
                     Close
                 </button>
             </div>
@@ -1004,13 +1004,13 @@ class="min-h-screen bg-slate-50/60 pb-20">
 </div>
 
 <!-- Mobile Airbnb-Style Fixed Bottom Floating Bar -->
-<div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 py-3 flex items-center justify-between shadow-lg">
+<div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-white/10 px-4 py-3 flex items-center justify-between shadow-lg">
     <div>
         <div class="flex items-baseline gap-1">
-            <span class="text-lg font-black text-slate-900 tabular-nums tracking-tight font-mono">₱{{ number_format($unit->base_price_per_night, 0) }}</span>
-            <span class="text-xs text-slate-500">/ night</span>
+            <span class="text-lg font-black text-slate-900 dark:text-white tabular-nums tracking-tight font-mono">₱{{ number_format($unit->base_price_per_night, 0) }}</span>
+            <span class="text-xs text-slate-500 dark:text-slate-400">/ night</span>
         </div>
-        <div class="text-[11px] font-semibold text-blue-600 underline" id="mobileDateSummary">
+        <div class="text-[11px] font-semibold text-blue-600 dark:text-blue-400 underline" id="mobileDateSummary">
             Select dates
         </div>
     </div>
@@ -1024,14 +1024,14 @@ class="min-h-screen bg-slate-50/60 pb-20">
 <!-- REVIEW MODAL & JAVASCRIPT LOGIC                                         -->
 <!-- ======================================================================= -->
 <div id="reviewModal" class="hidden opacity-0 fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300">
-    <div id="reviewModalBox" class="bg-white rounded-3xl w-full max-w-lg overflow-hidden transition-all duration-300 transform scale-95 relative shadow-2xl border border-slate-100">
-        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+    <div id="reviewModalBox" class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-lg overflow-hidden transition-all duration-300 transform scale-95 relative shadow-2xl border border-slate-100 dark:border-white/10">
+        <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
             <div>
-                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200">Rate Your Stay</span>
-                <h3 class="text-base font-bold text-slate-900 mt-1" id="reviewModalUnitTitle">Review Stay</h3>
-                <p class="text-xs text-slate-400 font-mono" id="reviewModalBookingCode"></p>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800/60">Rate Your Stay</span>
+                <h3 class="text-base font-bold text-slate-900 dark:text-white mt-1" id="reviewModalUnitTitle">Review Stay</h3>
+                <p class="text-xs text-slate-400 dark:text-slate-500 font-mono" id="reviewModalBookingCode"></p>
             </div>
-            <button type="button" onclick="closeReviewModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-all cursor-pointer">
+            <button type="button" onclick="closeReviewModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 flex items-center justify-center transition-all cursor-pointer">
                 ✕
             </button>
         </div>
@@ -1039,26 +1039,26 @@ class="min-h-screen bg-slate-50/60 pb-20">
         <form id="reviewModalForm" method="POST" action="" class="p-6 space-y-4">
             @csrf
             <div>
-                <label class="block text-xs font-bold text-slate-700 mb-2">Overall Stay Rating</label>
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">Overall Stay Rating</label>
                 <div class="flex items-center gap-2">
                     <div class="flex items-center gap-1.5" id="starContainer">
                         @for($star = 1; $star <= 5; $star++)
                             <button type="button" onclick="setModalRating({{ $star }})" onmouseover="hoverModalRating({{ $star }})" onmouseleave="resetModalRating()"
-                                    class="star-btn text-2xl text-slate-300 transition-transform cursor-pointer" data-star="{{ $star }}">
+                                    class="star-btn text-2xl text-slate-300 dark:text-slate-600 transition-transform cursor-pointer" data-star="{{ $star }}">
                                 ★
                             </button>
                         @endfor
                     </div>
-                    <span id="ratingLabel" class="text-xs font-bold text-amber-600 ml-2">Click to select rating</span>
+                    <span id="ratingLabel" class="text-xs font-bold text-amber-600 dark:text-amber-400 ml-2">Click to select rating</span>
                 </div>
                 <input type="hidden" name="rating" id="ratingInput" value="5" required>
             </div>
 
             <!-- Sub-ratings -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-slate-50 rounded-2xl border border-slate-100 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-100 dark:border-white/5 text-xs">
                 <div>
-                    <label class="block font-semibold text-slate-600 mb-1">Cleanliness</label>
-                    <select name="cleanliness_rating" class="w-full rounded-lg border-slate-200 text-xs py-1.5 px-2 bg-white">
+                    <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">Cleanliness</label>
+                    <select name="cleanliness_rating" class="w-full rounded-lg border-slate-200 dark:border-slate-700 text-xs py-1.5 px-2 bg-white dark:bg-slate-800 dark:text-white">
                         <option value="5">5 ★ Spotless</option>
                         <option value="4">4 ★ Clean</option>
                         <option value="3">3 ★ Average</option>
@@ -1067,8 +1067,8 @@ class="min-h-screen bg-slate-50/60 pb-20">
                     </select>
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-600 mb-1">Communication</label>
-                    <select name="communication_rating" class="w-full rounded-lg border-slate-200 text-xs py-1.5 px-2 bg-white">
+                    <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">Communication</label>
+                    <select name="communication_rating" class="w-full rounded-lg border-slate-200 dark:border-slate-700 text-xs py-1.5 px-2 bg-white dark:bg-slate-800 dark:text-white">
                         <option value="5">5 ★ Responsive</option>
                         <option value="4">4 ★ Helpful</option>
                         <option value="3">3 ★ Acceptable</option>
@@ -1077,8 +1077,8 @@ class="min-h-screen bg-slate-50/60 pb-20">
                     </select>
                 </div>
                 <div>
-                    <label class="block font-semibold text-slate-600 mb-1">Accuracy</label>
-                    <select name="accuracy_rating" class="w-full rounded-lg border-slate-200 text-xs py-1.5 px-2 bg-white">
+                    <label class="block font-semibold text-slate-600 dark:text-slate-300 mb-1">Accuracy</label>
+                    <select name="accuracy_rating" class="w-full rounded-lg border-slate-200 dark:border-slate-700 text-xs py-1.5 px-2 bg-white dark:bg-slate-800 dark:text-white">
                         <option value="5">5 ★ Accurate</option>
                         <option value="4">4 ★ Mostly Accurate</option>
                         <option value="3">3 ★ Fair</option>
@@ -1089,16 +1089,16 @@ class="min-h-screen bg-slate-50/60 pb-20">
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-slate-700 mb-1">Your Review &amp; Feedback</label>
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Your Review &amp; Feedback</label>
                 <textarea name="comment" rows="3" maxlength="1000" placeholder="Share your experience (e.g. WiFi speed, cleanliness, host check-in assistance)..."
-                          class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+                          class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500"></textarea>
             </div>
 
             <div class="flex items-center justify-end gap-3 pt-2">
-                <button type="button" onclick="closeReviewModal()" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer">
+                <button type="button" onclick="closeReviewModal()" class="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
                     Cancel
                 </button>
-                <button type="submit" class="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 transition-colors cursor-pointer">
+                <button type="submit" class="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-slate-900 dark:bg-blue-600 hover:bg-slate-800 dark:hover:bg-blue-700 transition-colors cursor-pointer">
                     Publish Review
                 </button>
             </div>

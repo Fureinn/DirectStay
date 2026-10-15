@@ -122,70 +122,73 @@
     <!-- ======================================================================= -->
     <!-- 2. WHY DIRECTSTAY: 3-COLUMN VALUE PROPOSITION STRIP -->
     <!-- ======================================================================= -->
+    <!-- ======================================================================= -->
+    <!-- 2. WHY DIRECTSTAY: 3-COLUMN VALUE PROPOSITION STRIP -->
+    <!-- ======================================================================= -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
         <!-- Value 1: Price Advantage -->
-        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 backdrop-blur-xl border border-white/80 shadow-sm hover:shadow-md transition-all">
+        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center text-xl shadow-xs">
+                <div class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center text-xl shadow-xs">
                     💸
                 </div>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-800">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300">
                     Save ~₱276 / night
                 </span>
             </div>
-            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 mb-1">
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white mb-1">
                 Zero OTA Middleman Fees
             </h3>
-            <p class="text-xs text-slate-500 leading-relaxed">
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 Mainstream travel portals deduct 14%–16% guest fees plus 3%+ host charges. DirectStay applies an ultra-lean 5% platform fee with 0% host markup.
             </p>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400">DirectStay Fee:</span>
-                <span class="font-extrabold text-emerald-600">Only 5.0% (vs ~15% Airbnb)</span>
+            <div class="mt-3.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+                <span class="text-slate-400 dark:text-slate-500">DirectStay Fee:</span>
+                <span class="font-extrabold text-emerald-600 dark:text-emerald-400">Only 5.0% (vs ~15% Airbnb)</span>
             </div>
         </div>
 
         <!-- Value 2: Digital Gate Pass Clearance -->
-        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 backdrop-blur-xl border border-white/80 shadow-sm hover:shadow-md transition-all">
+        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center text-xl shadow-xs">
+                <div class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800 flex items-center justify-center text-xl shadow-xs">
                     🛡️
                 </div>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-100 text-blue-800">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300">
                     Lobby Clearance
                 </span>
             </div>
-            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 mb-1">
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white mb-1">
                 Automated Lobby Gate Pass
             </h3>
-            <p class="text-xs text-slate-500 leading-relaxed">
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 Avoid security delays at Urban Deca Homes Ortigas. Official Building N &amp; P gate pass PDFs are automatically generated and emailed to you.
             </p>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400">Compliance:</span>
-                <span class="font-extrabold text-blue-600">RA 10173 Encrypted Data Privacy</span>
+            <div class="mt-3.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+                <span class="text-slate-400 dark:text-slate-500">Compliance:</span>
+                <span class="font-extrabold text-blue-600 dark:text-blue-400">RA 10173 Encrypted Data Privacy</span>
             </div>
         </div>
 
         <!-- Value 3: Verified Direct Hosts -->
-        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 backdrop-blur-xl border border-white/80 shadow-sm hover:shadow-md transition-all">
+        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center text-xl shadow-xs">
+                <div class="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800 flex items-center justify-center text-xl shadow-xs">
                     ✨
                 </div>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-indigo-100 text-indigo-800">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-indigo-100 dark:bg-indigo-950/80 text-indigo-800 dark:text-indigo-300">
                     Verified Condos
                 </span>
             </div>
-            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 mb-1">
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white mb-1">
                 100% Verified Condo Hosts
             </h3>
-            <p class="text-xs text-slate-500 leading-relaxed">
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
                 Connect directly with genuine unit owners. Full kitchenette, split-type aircon, high-speed WiFi, smart TV with Netflix, and pool access included.
             </p>
-            <div class="mt-3.5 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span class="text-slate-400">Security Deposit:</span>
-                <span class="font-extrabold text-indigo-600">₱1,000 Refundable Policy</span>
+            <div class="mt-3.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
+                <span class="text-slate-400 dark:text-slate-500">Security Deposit:</span>
+                <span class="font-extrabold text-indigo-600 dark:text-indigo-400">₱1,000 Refundable Policy</span>
             </div>
         </div>
     </div>
@@ -196,47 +199,47 @@
     <div id="featuredUnits" class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 scroll-mt-24">
         <div>
             <div class="flex items-center gap-2">
-                <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900">Featured Units in Deca Ortigas</h2>
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-blue-100 text-blue-800">
+                <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">Featured Units in Deca Ortigas</h2>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/50">
                     {{ $units->count() }} {{ Str::plural('unit', $units->count()) }} available
                 </span>
             </div>
-            <p class="text-xs text-slate-500 mt-0.5 font-medium">Verified direct-booking units across Building N &amp; Building P in Pasig City.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-medium">Verified direct-booking units across Building N &amp; Building P in Pasig City.</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
             <!-- Building Filter Navigation (Glass Capsule) -->
-            <div class="inline-flex p-1 rounded-2xl bg-white/70 backdrop-blur-xl border border-slate-200/70 shadow-xs">
+            <div class="inline-flex p-1 rounded-2xl bg-white/70 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/70 dark:border-slate-700/80 shadow-xs">
                 <a href="{{ route('units.index', array_filter(['check_in' => $checkIn, 'check_out' => $checkOut, 'guests' => $selectedGuests])) }}"
-                   class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all btn-press {{ empty($selectedBuilding) ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                   class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all btn-press {{ empty($selectedBuilding) ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
                     All Towers ({{ $totalUnitsCount ?? $units->count() }})
                 </a>
                 @foreach($buildings as $b)
                     <a href="{{ route('units.index', array_filter(['building' => $b->code, 'check_in' => $checkIn, 'check_out' => $checkOut, 'guests' => $selectedGuests])) }}"
-                       class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all btn-press {{ $selectedBuilding === $b->code ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                       class="px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all btn-press {{ $selectedBuilding === $b->code ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
                         Tower {{ $b->code }} ({{ $b->units_count }})
                     </a>
                 @endforeach
             </div>
 
             <!-- View Switcher (Cards / Map & Prices / Split) -->
-            <div class="inline-flex p-1 rounded-2xl bg-slate-200/70 backdrop-blur-xl border border-white/60 shadow-inner">
+            <div class="inline-flex p-1 rounded-2xl bg-slate-200/70 dark:bg-slate-800/80 backdrop-blur-xl border border-white/60 dark:border-slate-700/80 shadow-inner">
                 <button type="button" @click="toggleView('grid')"
-                        :class="viewMode === 'grid' ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 font-medium'"
+                        :class="viewMode === 'grid' ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium'"
                         class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                     <span>Cards</span>
                 </button>
 
                 <button type="button" @click="toggleView('split')"
-                        :class="viewMode === 'split' ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 font-medium'"
+                        :class="viewMode === 'split' ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium'"
                         class="hidden lg:flex px-3 py-1.5 rounded-xl text-xs transition-all items-center gap-1.5 cursor-pointer">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"/></svg>
                     <span>Split View</span>
                 </button>
 
                 <button type="button" @click="toggleView('map')"
-                        :class="viewMode === 'map' ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900 font-medium'"
+                        :class="viewMode === 'map' ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium'"
                         class="px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1.5 cursor-pointer">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     <span>Map &amp; Prices</span>
@@ -354,7 +357,6 @@
                     photoIdx: 0,
                     saved: false,
                     showAmenitiesModal: false,
-                    showPriceModal: false,
                     nextPhoto() {
                         this.photoIdx = (this.photoIdx + 1) % this.photos.length;
                     },
@@ -364,7 +366,7 @@
                  }"
                  id="unitCard-{{ $unit->id }}"
                  :class="selectedUnitId === {{ $unit->id }} ? 'ring-2 ring-blue-500 shadow-2xl scale-[1.01]' : ''"
-                 class="bg-white/95 backdrop-blur-xl hover-lift flex flex-col rounded-3xl border border-slate-200/80 overflow-hidden group shadow-[0_10px_35px_rgb(15,23,42,0.06)] relative transition-all duration-300">
+                 class="bg-white/95 dark:bg-slate-900/90 backdrop-blur-xl hover-lift flex flex-col rounded-3xl border border-slate-200/80 dark:border-white/10 overflow-hidden group shadow-[0_10px_35px_rgb(15,23,42,0.06)] relative transition-all duration-300">
                 
                 <!-- Unit Card Media Container with Multi-Photo Slider -->
                 <div class="relative h-64 sm:h-72 w-full overflow-hidden bg-slate-900 z-10 select-none">
@@ -458,33 +460,33 @@
                 <!-- Unit Details Body -->
                 <div class="p-6 flex-1 flex flex-col justify-between relative z-10">
                     <div>
-                        <p class="text-xs sm:text-sm text-slate-600 mb-5 leading-relaxed line-clamp-2">
+                        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-5 leading-relaxed line-clamp-2">
                             {{ $unit->description }}
                         </p>
 
                         <!-- Key Specs Grid -->
                         <div class="grid grid-cols-2 gap-3 mb-5 text-xs">
-                            <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200/60 flex items-center gap-3 shadow-2xs">
-                                <div class="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-400/20 flex items-center justify-center text-blue-600 shrink-0">
+                            <div class="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700/80 flex items-center gap-3 shadow-2xs">
+                                <div class="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-400/20 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <span class="text-slate-400 block text-[10px] font-bold uppercase tracking-wider">Capacity</span>
-                                    <span class="font-extrabold text-slate-900">Up to {{ $unit->max_guests }} Guests</span>
+                                    <span class="text-slate-400 dark:text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Capacity</span>
+                                    <span class="font-extrabold text-slate-900 dark:text-white">Up to {{ $unit->max_guests }} Guests</span>
                                 </div>
                             </div>
 
-                            <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200/60 flex items-center gap-3 shadow-2xs">
-                                <div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-600 shrink-0">
+                            <div class="p-3 bg-slate-50 dark:bg-slate-800/80 rounded-2xl border border-slate-200/60 dark:border-slate-700/80 flex items-center gap-3 shadow-2xs">
+                                <div class="w-8 h-8 rounded-xl bg-emerald-500/10 border border-emerald-400/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                                     </svg>
                                 </div>
                                 <div>
-                                    <span class="text-slate-400 block text-[10px] font-bold uppercase tracking-wider">Security Deposit</span>
-                                    <span class="font-extrabold text-slate-900 tabular-nums font-mono">₱{{ number_format($unit->advance_deposit_required, 0) }} (Refundable)</span>
+                                    <span class="text-slate-400 dark:text-slate-500 block text-[10px] font-bold uppercase tracking-wider">Security Deposit</span>
+                                    <span class="font-extrabold text-slate-900 dark:text-white tabular-nums font-mono">₱{{ number_format($unit->advance_deposit_required, 0) }} (Refundable)</span>
                                 </div>
                             </div>
                         </div>
@@ -492,17 +494,17 @@
                         <!-- Stylized Key Amenity Badges with Icons -->
                         <div class="mb-6">
                             <div class="flex items-center justify-between mb-2.5">
-                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400">Key Staycation Amenities</span>
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-slate-500">Key Staycation Amenities</span>
                                 <button type="button"
                                         @click="showAmenitiesModal = true"
-                                        class="text-xs font-bold text-blue-600 hover:text-blue-700 transition-colors inline-flex items-center gap-1 cursor-pointer">
+                                        class="text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors inline-flex items-center gap-1 cursor-pointer">
                                     <span>All {{ count($unit->inventory_items ?? []) }} items &rarr;</span>
                                 </button>
                             </div>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
                                 @foreach($unit->featuredAmenities() as $amenity)
-                                    <div class="flex items-center gap-2 p-2 rounded-xl bg-slate-50/90 border border-slate-200/60 shadow-2xs hover:bg-white transition-colors">
-                                        <div class="w-6 h-6 rounded-lg bg-white border border-slate-200/70 flex items-center justify-center shrink-0 shadow-2xs">
+                                    <div class="flex items-center gap-2 p-2 rounded-xl bg-slate-50/90 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700/80 shadow-2xs hover:bg-white dark:hover:bg-slate-800 transition-colors">
+                                        <div class="w-6 h-6 rounded-lg bg-white dark:bg-slate-700 border border-slate-200/70 dark:border-slate-600 flex items-center justify-center shrink-0 shadow-2xs">
                                             @if($amenity['icon'] === 'snowflake')
                                                 <svg class="w-3.5 h-3.5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v18m-9-9h18m-4.5-6.5l-9 9m0-9l9 9"/></svg>
                                             @elseif($amenity['icon'] === 'wifi')
@@ -522,7 +524,7 @@
                                             @endif
                                         </div>
                                         <div class="truncate">
-                                            <span class="block text-[11px] font-bold text-slate-800 truncate">{{ $amenity['label'] }}</span>
+                                            <span class="block text-[11px] font-bold text-slate-800 dark:text-slate-200 truncate">{{ $amenity['label'] }}</span>
                                         </div>
                                     </div>
                                 @endforeach
@@ -531,37 +533,30 @@
                     </div>
 
                     <!-- Pricing, Comparison & Primary CTA -->
-                    <div class="pt-5 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div class="pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
                             <div class="flex items-baseline gap-2">
-                                <span class="text-2xl sm:text-3xl font-black text-slate-900 tabular-nums font-mono">
+                                <span class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tabular-nums font-mono">
                                     ₱{{ number_format($unit->base_price_per_night, 0) }}
                                 </span>
-                                <span class="text-xs text-slate-500 font-medium">/ night</span>
-                                <span class="text-xs text-slate-400 line-through">
+                                <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">/ night</span>
+                                <span class="text-xs text-slate-400 dark:text-slate-500 line-through">
                                     ₱{{ number_format($otaTotal, 0) }} on Airbnb
                                 </span>
                             </div>
-                            <div class="flex items-center gap-2 mt-1.5">
-                                <span class="inline-flex items-center gap-1 text-[11px] text-emerald-700 font-extrabold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                    Save ~₱{{ number_format($estimatedSavings, 0) }} (5% lean fee)
+                            <div class="mt-1.5">
+                                <span class="inline-flex items-center gap-1.5 text-[11px] text-emerald-700 dark:text-emerald-300 font-extrabold bg-emerald-50 dark:bg-emerald-950/80 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800 whitespace-nowrap">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0"></span>
+                                    <span>Save ~₱{{ number_format($estimatedSavings, 0) }} (5% lean fee)</span>
                                 </span>
-
-                                <button type="button"
-                                        @click="showPriceModal = true"
-                                        class="inline-flex items-center gap-1 text-[11px] font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-2 py-0.5 rounded-full transition-all cursor-pointer">
-                                    <span>Fee Breakdown</span>
-                                    <svg class="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                </button>
                             </div>
                         </div>
 
                         <div class="flex items-center gap-2">
                             <button type="button" @click="focusUnit({{ $unit->id }}); toggleView('map');"
-                                    class="hidden sm:inline-flex items-center gap-1 px-3 py-3 rounded-xl font-bold text-xs text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all cursor-pointer"
+                                    class="hidden sm:inline-flex items-center gap-1 px-3 py-3 rounded-xl font-bold text-xs text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-all cursor-pointer"
                                     title="View location on map">
-                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 <span>Locate</span>
                             </button>
 
@@ -588,30 +583,30 @@
                      x-transition:leave-end="opacity-0"
                      class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md">
                     <div @click.outside="showAmenitiesModal = false"
-                         class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 overflow-hidden relative max-h-[90vh] flex flex-col">
+                         class="bg-white dark:bg-slate-900 rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 dark:border-white/10 overflow-hidden relative max-h-[90vh] flex flex-col">
                         
-                        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                        <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
                             <div>
-                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-600">Unit Inventory &bull; Tower {{ $unit->building?->code }}</span>
-                                <h3 class="text-lg font-black text-slate-900">{{ $unit->title }}</h3>
+                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">Unit Inventory &bull; Tower {{ $unit->building?->code }}</span>
+                                <h3 class="text-lg font-black text-slate-900 dark:text-white">{{ $unit->title }}</h3>
                             </div>
-                            <button type="button" @click="showAmenitiesModal = false" class="p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer">
+                            <button type="button" @click="showAmenitiesModal = false" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                             </button>
                         </div>
 
                         <div class="py-4 overflow-y-auto space-y-2 flex-1 pr-1">
-                            <p class="text-xs text-slate-500 mb-3">All listed furnishings, electronics, and supplies verified by host upon digital check-in inspection:</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">All listed furnishings, electronics, and supplies verified by host upon digital check-in inspection:</p>
                             @foreach($unit->inventory_items ?? [] as $index => $item)
-                                <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 border border-slate-200/50 text-xs">
-                                    <span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">✓</span>
-                                    <span class="font-medium text-slate-800">{{ $item }}</span>
+                                <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/50 dark:border-white/5 text-xs">
+                                    <span class="w-5 h-5 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-400 font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">✓</span>
+                                    <span class="font-medium text-slate-800 dark:text-slate-200">{{ $item }}</span>
                                 </div>
                             @endforeach
                         </div>
 
-                        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
-                            <span class="text-xs text-slate-400 font-medium">Included in rental price</span>
+                        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                            <span class="text-xs text-slate-400 dark:text-slate-500 font-medium">Included in rental price</span>
                             <button type="button" @click="showAmenitiesModal = false" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer">
                                 Close Window
                             </button>
@@ -619,96 +614,14 @@
                     </div>
                 </div>
 
-                <!-- =================================================================== -->
-                <!-- MODAL 2: DIRECTSTAY VS COMMERCIAL OTA ECONOMIC BREAKDOWN -->
-                <!-- =================================================================== -->
-                <div x-show="showPriceModal" x-cloak
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0"
-                     x-transition:enter-end="opacity-100"
-                     x-transition:leave="transition ease-in duration-150"
-                     x-transition:leave-start="opacity-100"
-                     x-transition:leave-end="opacity-0"
-                     class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-md">
-                    <div @click.outside="showPriceModal = false"
-                         class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-7 shadow-2xl border border-slate-200 relative overflow-hidden">
-                        
-                        <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-4">
-                            <div>
-                                <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-600">Price Transparency Matrix</span>
-                                <h3 class="text-lg font-black text-slate-900">DirectStay vs Commercial OTA</h3>
-                            </div>
-                            <button type="button" @click="showPriceModal = false" class="p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors cursor-pointer">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-
-                        <p class="text-xs text-slate-500 mb-4 leading-relaxed">
-                            Here is an itemized comparison for a 1-night stay at <strong>{{ $unit->title }}</strong> showing where your money goes:
-                        </p>
-
-                        <div class="rounded-2xl border border-slate-200 overflow-hidden mb-4 text-xs">
-                            <table class="w-full text-left divide-y divide-slate-200">
-                                <thead class="bg-slate-50 text-[10px] font-extrabold uppercase text-slate-500">
-                                    <tr>
-                                        <th class="py-2.5 px-3">Fee Component</th>
-                                        <th class="py-2.5 px-3 text-slate-400">Airbnb / OTA</th>
-                                        <th class="py-2.5 px-3 text-blue-600 font-black">DirectStay</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-slate-100">
-                                    <tr>
-                                        <td class="py-2 px-3 font-semibold text-slate-700">Base Room Rate</td>
-                                        <td class="py-2 px-3 text-slate-600 font-mono">₱{{ number_format($otaEstimatedBase, 2) }}</td>
-                                        <td class="py-2 px-3 font-bold text-slate-900 font-mono">₱{{ number_format($otaEstimatedBase, 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2 px-3 font-semibold text-slate-700">Guest Service Fee</td>
-                                        <td class="py-2 px-3 text-rose-600 font-mono">+₱{{ number_format($otaGuestFee, 2) }} (~14.2%)</td>
-                                        <td class="py-2 px-3 text-emerald-600 font-black font-mono">+₱{{ number_format($directStayFee, 2) }} (5.0%)</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="py-2 px-3 font-semibold text-slate-700">Host Deductions</td>
-                                        <td class="py-2 px-3 text-rose-600 font-mono">-₱{{ number_format($otaHostCut, 2) }} (3.0%)</td>
-                                        <td class="py-2 px-3 text-emerald-600 font-black font-mono">₱0.00 (0% cut)</td>
-                                    </tr>
-                                    <tr class="bg-blue-50/50">
-                                        <td class="py-2.5 px-3 font-black text-slate-900">Total Guest Nightly</td>
-                                        <td class="py-2.5 px-3 font-bold text-slate-500 line-through font-mono">₱{{ number_format($otaTotal, 2) }}</td>
-                                        <td class="py-2.5 px-3 font-black text-blue-700 text-sm font-mono">₱{{ number_format($directStayTotal, 2) }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 mb-4 flex items-center justify-between">
-                            <span class="font-extrabold">Your Direct Savings Per Night:</span>
-                            <span class="font-black text-sm text-emerald-700 font-mono">₱{{ number_format($estimatedSavings, 2) }}</span>
-                        </div>
-
-                        <div class="text-[11px] text-slate-400 space-y-1 mb-5">
-                            <p>&bull; Plus ₱1,000.00 advance security deposit (100% refundable upon unit checkout inspection).</p>
-                            <p>&bull; Free official building gate pass included (guarantees elevator and lobby clearance).</p>
-                        </div>
-
-                        <div class="flex items-center justify-end gap-2">
-                            <button type="button" @click="showPriceModal = false" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer">
-                                Close
-                            </button>
-                            <a href="{{ $unitBookingUrl }}" class="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-xs transition-all cursor-pointer">
-                                Book at ₱{{ number_format($directStayTotal, 0) }} &rarr;
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </div>
         @empty
-            <div class="col-span-2 text-center py-16 px-4 bg-white/90 backdrop-blur-xl rounded-3xl border border-slate-200 shadow-sm max-w-xl mx-auto">
-                <div class="w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center text-2xl mx-auto mb-4">
+            <div class="col-span-2 text-center py-16 px-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-3xl border border-slate-200 dark:border-white/10 shadow-sm max-w-xl mx-auto">
+                <div class="w-16 h-16 rounded-2xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 flex items-center justify-center text-2xl mx-auto mb-4">
                     🔍
                 </div>
-                <h3 class="text-lg font-black text-slate-900 mb-2">No units match your search filters</h3>
-                <p class="text-xs text-slate-500 mb-6 leading-relaxed">
+                <h3 class="text-lg font-black text-slate-900 dark:text-white mb-2">No units match your search filters</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
                     We couldn't find any available condominium units matching your selected dates, tower, or guest count. Try adjusting your dates or clearing filters.
                 </p>
                 <a href="{{ route('units.index') }}" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-600/25 transition-all">

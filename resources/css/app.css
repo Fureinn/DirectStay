@@ -1,6 +1,6 @@
 @import 'tailwindcss';
 
-@custom-variant dark (&:where(.dark, .dark *));
+@variant dark (&:where(.dark, .dark *));
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -226,43 +226,67 @@
 
     /* Primary Glass Surface — translucent frosted card */
     .glass-surface {
-        background: rgb(255 255 255 / 0.45);
+        background: rgb(255 255 255 / 0.55);
         backdrop-filter: blur(20px) saturate(180%);
         -webkit-backdrop-filter: blur(20px) saturate(180%);
-        border: 1px solid rgb(255 255 255 / 0.5);
-        box-shadow:
-            0 8px 30px rgb(0 0 0 / 0.06),
-            inset 0 1px 0 rgb(255 255 255 / 0.6);
-    }
-
-    /* Dense Glass — slightly more opaque for metric cards */
-    .glass-surface-dense {
-        background: rgb(255 255 255 / 0.60);
-        backdrop-filter: blur(24px) saturate(200%);
-        -webkit-backdrop-filter: blur(24px) saturate(200%);
-        border: 1px solid rgb(255 255 255 / 0.55);
+        border: 1px solid rgb(255 255 255 / 0.6);
         box-shadow:
             0 8px 30px rgb(0 0 0 / 0.06),
             inset 0 1px 0 rgb(255 255 255 / 0.7);
     }
 
+    .dark .glass-surface {
+        background: rgb(15 23 42 / 0.65);
+        border: 1px solid rgb(255 255 255 / 0.1);
+        box-shadow:
+            0 8px 30px rgb(0 0 0 / 0.35),
+            inset 0 1px 0 rgb(255 255 255 / 0.08);
+    }
+
+    /* Dense Glass — slightly more opaque for metric cards */
+    .glass-surface-dense {
+        background: rgb(255 255 255 / 0.70);
+        backdrop-filter: blur(24px) saturate(200%);
+        -webkit-backdrop-filter: blur(24px) saturate(200%);
+        border: 1px solid rgb(255 255 255 / 0.65);
+        box-shadow:
+            0 8px 30px rgb(0 0 0 / 0.06),
+            inset 0 1px 0 rgb(255 255 255 / 0.8);
+    }
+
+    .dark .glass-surface-dense {
+        background: rgb(15 23 42 / 0.85);
+        border: 1px solid rgb(255 255 255 / 0.12);
+        box-shadow:
+            0 8px 30px rgb(0 0 0 / 0.45),
+            inset 0 1px 0 rgb(255 255 255 / 0.1);
+    }
+
     /* Modal Overlay — dark frosted backdrop */
     .glass-modal-overlay {
-        background: rgb(15 23 42 / 0.55);
+        background: rgb(15 23 42 / 0.65);
         backdrop-filter: blur(16px) saturate(140%);
         -webkit-backdrop-filter: blur(16px) saturate(140%);
     }
 
     /* Modal Box — frosted glass modal container */
     .glass-modal-box {
-        background: rgb(255 255 255 / 0.72);
+        background: rgb(255 255 255 / 0.85);
         backdrop-filter: blur(28px) saturate(200%);
         -webkit-backdrop-filter: blur(28px) saturate(200%);
-        border: 1px solid rgb(255 255 255 / 0.5);
+        border: 1px solid rgb(255 255 255 / 0.65);
         box-shadow:
             0 24px 80px -12px rgb(0 0 0 / 0.18),
             0 8px 24px -8px rgb(0 0 0 / 0.08),
-            inset 0 1px 0 rgb(255 255 255 / 0.6);
+            inset 0 1px 0 rgb(255 255 255 / 0.75);
+    }
+
+    .dark .glass-modal-box {
+        background: rgb(15 23 42 / 0.92);
+        border: 1px solid rgb(255 255 255 / 0.12);
+        box-shadow:
+            0 24px 80px -12px rgb(0 0 0 / 0.6),
+            inset 0 1px 0 rgb(255 255 255 / 0.1);
     }
 
     /* Ambient Glow Blob — decorative gradient blur behind panels */
@@ -276,34 +300,56 @@
 
     /* Glass table surfaces */
     .glass-table-header {
-        background: rgb(248 250 252 / 0.65);
+        background: rgb(248 250 252 / 0.75);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
     }
 
+    .dark .glass-table-header {
+        background: rgb(30 41 59 / 0.7);
+    }
+
     .glass-table-row:hover {
-        background: rgb(248 250 252 / 0.5);
+        background: rgb(248 250 252 / 0.6);
+    }
+
+    .dark .glass-table-row:hover {
+        background: rgb(30 41 59 / 0.5);
     }
 
     /* Frosted reservation panel docked right */
     .glass-reservation-panel {
-        background: rgb(255 255 255 / 0.50);
+        background: rgb(255 255 255 / 0.65);
         backdrop-filter: blur(24px) saturate(190%);
         -webkit-backdrop-filter: blur(24px) saturate(190%);
-        border: 1px solid rgb(255 255 255 / 0.45);
+        border: 1px solid rgb(255 255 255 / 0.55);
         box-shadow:
             0 24px 60px -12px rgb(15 23 42 / 0.14),
             0 8px 24px -8px rgb(37 99 235 / 0.08),
-            inset 0 1px 0 rgb(255 255 255 / 0.65);
+            inset 0 1px 0 rgb(255 255 255 / 0.75);
+    }
+
+    .dark .glass-reservation-panel {
+        background: rgb(15 23 42 / 0.85);
+        border: 1px solid rgb(255 255 255 / 0.12);
+        box-shadow:
+            0 24px 60px -12px rgb(0 0 0 / 0.5),
+            inset 0 1px 0 rgb(255 255 255 / 0.08);
     }
 
     /* Mobile bottom bar glass */
     .glass-bottom-bar {
-        background: rgb(255 255 255 / 0.80);
+        background: rgb(255 255 255 / 0.85);
         backdrop-filter: blur(20px) saturate(180%);
         -webkit-backdrop-filter: blur(20px) saturate(180%);
-        border-top: 1px solid rgb(255 255 255 / 0.5);
+        border-top: 1px solid rgb(255 255 255 / 0.6);
         box-shadow: 0 -4px 20px rgb(0 0 0 / 0.06);
+    }
+
+    .dark .glass-bottom-bar {
+        background: rgb(15 23 42 / 0.92);
+        border-top: 1px solid rgb(255 255 255 / 0.1);
+        box-shadow: 0 -4px 20px rgb(0 0 0 / 0.4);
     }
 
     /* Glass footer */
@@ -312,6 +358,11 @@
         backdrop-filter: blur(16px) saturate(160%);
         -webkit-backdrop-filter: blur(16px) saturate(160%);
         border-top: 1px solid rgb(255 255 255 / 0.4);
+    }
+
+    .dark .glass-footer {
+        background: rgb(15 23 42 / 0.75);
+        border-top: 1px solid rgb(255 255 255 / 0.08);
     }
 
     /* Mobile navigation bar glass */
@@ -328,6 +379,10 @@
         transition: all 200ms ease;
     }
 
+    .dark .mobile-nav-item {
+        color: rgb(148 163 184);
+    }
+
     .mobile-nav-item svg {
         width: 1.25rem;
         height: 1.25rem;
@@ -339,12 +394,34 @@
         background: rgb(239 246 255 / 0.7);
     }
 
+    .dark .mobile-nav-item:hover,
+    .dark .mobile-nav-item-active {
+        color: rgb(96 165 250);
+        background: rgb(30 58 138 / 0.35);
+    }
+
     /* Glassmorphic notification alerts */
     .glass-alert {
-        background: rgb(255 255 255 / 0.55);
+        background: rgb(255 255 255 / 0.65);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         border: 1px solid rgb(255 255 255 / 0.4);
+    }
+
+    .dark .glass-alert {
+        background: rgb(15 23 42 / 0.8);
+        border: 1px solid rgb(255 255 255 / 0.1);
+    }
+
+    .dark .surface-card {
+        background: rgb(15 23 42 / 0.75);
+        border-color: rgb(255 255 255 / 0.1);
+        box-shadow: 0 10px 30px -15px rgb(0 0 0 / 0.5);
+    }
+
+    .dark .soft-panel {
+        background: linear-gradient(135deg, rgb(15 23 42 / 0.95), rgb(30 41 59 / 0.85));
+        border-color: rgb(255 255 255 / 0.1);
     }
 }
 

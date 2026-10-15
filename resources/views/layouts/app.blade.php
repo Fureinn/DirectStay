@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50 text-slate-900">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,10 +35,10 @@
                             DS
                         </div>
                         <div class="flex flex-col">
-                            <span class="text-lg font-black tracking-tight text-slate-900 leading-none">
-                                Direct<span class="text-blue-600">Stay</span>
+                            <span class="text-lg font-black tracking-tight text-slate-900 dark:text-white leading-none">
+                                Direct<span class="text-blue-600 dark:text-blue-400">Stay</span>
                             </span>
-                            <span class="text-[9px] uppercase tracking-wider font-extrabold text-slate-400 mt-0.5 leading-none">
+                            <span class="text-[9px] uppercase tracking-wider font-extrabold text-slate-400 dark:text-slate-400 mt-0.5 leading-none">
                                 Ortigas &bull; Pasig
                             </span>
                         </div>
@@ -46,29 +46,29 @@
                 </div>
 
                 <!-- Center Segmented Pill Navigation -->
-                <nav class="hidden md:flex items-center p-1 rounded-full bg-slate-200/50 backdrop-blur-md border border-white/60 shadow-inner gap-0.5">
+                <nav class="hidden md:flex items-center p-1 rounded-full bg-slate-200/50 dark:bg-slate-800/80 backdrop-blur-md border border-white/60 dark:border-slate-700/60 shadow-inner gap-0.5">
                     <a href="{{ route('units.index') }}"
-                       class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('units.*') && !request()->routeIs('host.units.*') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                       class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('units.*') && !request()->routeIs('host.units.*') ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
                         Explore
                     </a>
 
                     @auth
                         @if (auth()->user()->isHost())
                             <a href="{{ route('host.dashboard') }}"
-                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('host.dashboard') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('host.dashboard') ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
                                 Dashboard
                             </a>
                             <a href="{{ route('host.units.index') }}"
-                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('host.units.*') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('host.units.*') ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
                                 Units
                             </a>
                             <a href="{{ route('host.verifications.index') }}"
-                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('host.verifications.*') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('host.verifications.*') ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
                                 Verifications
                             </a>
                         @else
                             <a href="{{ route('customer.bookings') }}"
-                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('customer.bookings') ? 'bg-white text-blue-600 font-bold shadow-xs' : 'text-slate-600 hover:text-slate-900' }}">
+                               class="px-4 py-1.5 rounded-full text-xs font-semibold transition-all {{ request()->routeIs('customer.bookings') ? 'bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 font-bold shadow-xs' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white' }}">
                                 My Bookings
                             </a>
                         @endif
@@ -83,14 +83,14 @@
                             <button @click="userMenuOpen = !userMenuOpen"
                                     @click.outside="userMenuOpen = false"
                                     type="button"
-                                    class="flex items-center gap-2 p-1.5 pr-3 rounded-full bg-white/60 hover:bg-white/90 border border-white/70 backdrop-blur-md shadow-xs transition-all btn-press cursor-pointer">
+                                    class="flex items-center gap-2 p-1.5 pr-3 rounded-full bg-white/60 dark:bg-slate-800/80 hover:bg-white/90 dark:hover:bg-slate-800 border border-white/70 dark:border-slate-700 backdrop-blur-md shadow-xs transition-all btn-press cursor-pointer">
                                 <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shadow-xs {{ auth()->user()->isHost() ? 'bg-gradient-to-tr from-emerald-500 to-teal-600 text-white' : 'bg-gradient-to-tr from-blue-600 to-indigo-600 text-white' }}">
                                     {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                                 </div>
-                                <span class="text-xs font-bold text-slate-800 max-w-[120px] truncate">
+                                <span class="text-xs font-bold text-slate-800 dark:text-slate-100 max-w-[120px] truncate">
                                     {{ auth()->user()->name }}
                                 </span>
-                                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full {{ auth()->user()->isHost() ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-700' }}">
+                                <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full {{ auth()->user()->isHost() ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300' : 'bg-blue-100 text-blue-700 dark:bg-blue-950/80 dark:text-blue-300' }}">
                                     {{ auth()->user()->isHost() ? 'Host' : 'Guest' }}
                                 </span>
                                 <svg class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200" :class="{ 'rotate-180': userMenuOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -107,47 +107,47 @@
                                  x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                                  x-transition:leave-end="opacity-0 translate-y-1 scale-95"
                                  x-cloak
-                                 class="absolute right-0 mt-2 w-56 rounded-2xl glass-surface-dense border border-white/70 shadow-2xl backdrop-blur-2xl p-1.5 z-50">
+                                 class="absolute right-0 mt-2 w-56 rounded-2xl glass-surface-dense border border-white/70 dark:border-slate-700 shadow-2xl backdrop-blur-2xl p-1.5 z-50">
                                 
-                                <div class="px-3 py-2.5 border-b border-slate-200/50">
-                                    <p class="text-xs font-bold text-slate-900 truncate">{{ auth()->user()->name }}</p>
-                                    <p class="text-[11px] text-slate-500 font-mono truncate">{{ auth()->user()->email ?? auth()->user()->phone ?? 'DirectStay Member' }}</p>
+                                <div class="px-3 py-2.5 border-b border-slate-200/50 dark:border-slate-700/50">
+                                    <p class="text-xs font-bold text-slate-900 dark:text-white truncate">{{ auth()->user()->name }}</p>
+                                    <p class="text-[11px] text-slate-500 dark:text-slate-400 font-mono truncate">{{ auth()->user()->email ?? auth()->user()->phone ?? 'DirectStay Member' }}</p>
                                 </div>
 
                                 <div class="py-1 space-y-0.5">
                                     @if(auth()->user()->isHost())
-                                        <a href="{{ route('host.dashboard') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                        <a href="{{ route('host.dashboard') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/60 dark:hover:bg-slate-700/60 rounded-xl transition-colors">
                                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                                             Host Dashboard
                                         </a>
-                                        <a href="{{ route('host.units.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                        <a href="{{ route('host.units.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/60 dark:hover:bg-slate-700/60 rounded-xl transition-colors">
                                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                                             Manage Units
                                         </a>
-                                        <a href="{{ route('host.verifications.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                        <a href="{{ route('host.verifications.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/60 dark:hover:bg-slate-700/60 rounded-xl transition-colors">
                                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                             Verifications Queue
                                         </a>
-                                        <a href="{{ route('units.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                        <a href="{{ route('units.index') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/60 dark:hover:bg-slate-700/60 rounded-xl transition-colors">
                                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                             View Guest Portal
                                         </a>
                                     @else
-                                        <a href="{{ route('customer.bookings') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                        <a href="{{ route('customer.bookings') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/60 dark:hover:bg-slate-700/60 rounded-xl transition-colors">
                                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                                             My Bookings
                                         </a>
-                                        <a href="{{ route('customer.settings.edit') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 hover:text-blue-600 hover:bg-white/60 rounded-xl transition-colors">
+                                        <a href="{{ route('customer.settings.edit') }}" class="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-200 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white/60 dark:hover:bg-slate-700/60 rounded-xl transition-colors">
                                             <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                             Account Settings
                                         </a>
                                     @endif
                                 </div>
 
-                                <div class="pt-1 border-t border-slate-200/50">
+                                <div class="pt-1 border-t border-slate-200/50 dark:border-slate-700/50">
                                     <form method="POST" action="{{ auth()->user()->isHost() ? route('host.logout') : route('customer.logout') }}" class="w-full">
                                         @csrf
-                                        <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 text-xs font-semibold text-rose-600 hover:bg-rose-50/80 rounded-xl transition-colors cursor-pointer">
+                                        <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50/80 dark:hover:bg-rose-950/40 rounded-xl transition-colors cursor-pointer">
                                             <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                                             Sign Out
                                         </button>
@@ -156,14 +156,14 @@
                             </div>
                         </div>
                     @else
-                        <a href="{{ route('customer.login') }}" class="text-xs font-semibold text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-full transition-colors">
+                        <a href="{{ route('customer.login') }}" class="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white px-3 py-1.5 rounded-full transition-colors">
                             Sign In
                         </a>
                         <a href="{{ route('customer.register') }}" class="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 rounded-full shadow-sm shadow-blue-500/25 hover:shadow-md transition-all btn-press">
                             Register
                         </a>
                         <a href="{{ route('host.login') }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white/50 dark:bg-slate-800/60 hover:bg-white/90 dark:hover:bg-slate-800 border border-white/70 dark:border-slate-700 rounded-full backdrop-blur-md transition-all shadow-xs">
-                            <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <svg class="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                             Host Portal
                         </a>
                     @endauth
@@ -280,32 +280,32 @@
     <!-- Notifications / Alerts -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 w-full">
         @if (session('success'))
-            <div class="mb-4 rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-sm text-emerald-800 flex items-start gap-3 shadow-xs">
-                <svg class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mb-4 rounded-2xl bg-emerald-50/90 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/80 p-4 text-sm text-emerald-800 dark:text-emerald-200 flex items-start gap-3 shadow-xs backdrop-blur-md">
+                <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <div class="font-medium">{{ session('success') }}</div>
+                <div class="font-semibold">{{ session('success') }}</div>
             </div>
         @endif
 
         @if (session('error'))
-            <div class="mb-4 rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm text-rose-800 flex items-start gap-3 shadow-xs">
-                <svg class="w-5 h-5 text-rose-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mb-4 rounded-2xl bg-rose-50/90 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/80 p-4 text-sm text-rose-800 dark:text-rose-200 flex items-start gap-3 shadow-xs backdrop-blur-md">
+                <svg class="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <div class="font-medium">{{ session('error') }}</div>
+                <div class="font-semibold">{{ session('error') }}</div>
             </div>
         @endif
 
         @if ($errors->any())
-            <div class="mb-4 rounded-xl bg-rose-50 border border-rose-200 p-4 text-sm text-rose-800 shadow-xs">
-                <div class="flex items-center gap-2 font-semibold text-rose-900 mb-1">
-                    <svg class="w-5 h-5 text-rose-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mb-4 rounded-2xl bg-rose-50/90 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/80 p-4 text-sm text-rose-800 dark:text-rose-200 shadow-xs backdrop-blur-md">
+                <div class="flex items-center gap-2 font-bold text-rose-900 dark:text-rose-100 mb-1.5">
+                    <svg class="w-5 h-5 text-rose-600 dark:text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     Please correct the following errors:
                 </div>
-                <ul class="list-disc list-inside space-y-0.5 ml-7 text-xs">
+                <ul class="list-disc list-inside space-y-0.5 ml-7 text-xs font-medium">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
@@ -378,16 +378,16 @@
 
     <!-- Footer -->
     <footer class="glass-footer mt-16 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
             <div>
-                &copy; {{ date('Y') }} <strong>DirectStay</strong> &bull; Direct-Booking & Property Compliance Platform (Urban Deca Homes Ortigas).
+                &copy; {{ date('Y') }} <strong class="text-slate-800 dark:text-slate-200">DirectStay</strong> &bull; Direct-Booking & Property Compliance Platform (Urban Deca Homes Ortigas).
             </div>
             <div class="flex flex-wrap items-center gap-3 sm:gap-4">
                 <span>KM 19 Ortigas Ave Ext, Brgy. Rosario, Pasig City</span>
                 <span>&bull;</span>
                 <span>Zero OTA Commissions</span>
                 <span>&bull;</span>
-                <span class="text-emerald-600 font-semibold">Lean 5% Service Fee (vs 17-20% OTA)</span>
+                <span class="text-emerald-600 dark:text-emerald-400 font-bold">Lean 5% Service Fee (vs 17-20% OTA)</span>
             </div>
         </div>
     </footer>
