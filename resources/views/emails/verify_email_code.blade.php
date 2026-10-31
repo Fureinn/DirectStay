@@ -155,7 +155,7 @@
                 <h1 class="headline">Verify your email address</h1>
                 <p class="subhead">
                     Hi <strong>{{ $user->name }}</strong>,<br>
-                    Welcome to DirectStay! To activate your guest account and secure your Deca Ortigas staycation reservations, please enter this 6-digit verification code:
+                    Welcome to DirectStay! To activate your guest account and secure your Ortigas, Pasig staycation reservations, please enter this 6-digit verification code:
                 </p>
 
                 <!-- OTP Code Display Card -->
@@ -178,7 +178,7 @@
 
             <!-- Footer -->
             <div class="footer-note">
-                &copy; {{ date('Y') }} <strong>DirectStay Ortigas</strong> &bull; Urban Deca Homes Ortigas, Pasig City.<br>
+                &copy; {{ date('Y') }} <strong>DirectStay Ortigas</strong> &bull; Ortigas, Pasig City.<br>
                 Automated security notification sent to <span style="color: #64748b;">{{ $user->email }}</span>.
             </div>
         </div>

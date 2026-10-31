@@ -184,7 +184,7 @@ window.hostDashboard = function() {
         <div>
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border border-blue-100 dark:border-blue-900/50 mb-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
-                <span>Host Control Center &bull; Urban Deca Homes Ortigas</span>
+                <span>Host Control Center &bull; Ortigas, Pasig City</span>
             </div>
             <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 Operations Dashboard
@@ -258,7 +258,7 @@ window.hostDashboard = function() {
                                     Click dates to block
                                 </span>
                             </div>
-                            <p class="text-[11px] text-slate-400 dark:text-slate-500">Urban Deca Homes &bull; Click 1st date, then 2nd date to block</p>
+                            <p class="text-[11px] text-slate-400 dark:text-slate-500">Ortigas Condos &bull; Click 1st date, then 2nd date to block</p>
                         </div>
                     </div>
 
@@ -726,7 +726,7 @@ window.hostDashboard = function() {
                         </div>
                         <div>
                             <h2 class="text-sm font-bold text-slate-900 dark:text-white tracking-tight">Managed Properties</h2>
-                            <p class="text-[11px] text-slate-400 dark:text-slate-500">Urban Deca Homes Ortigas Complexes</p>
+                            <p class="text-[11px] text-slate-400 dark:text-slate-500">Ortigas, Pasig City Condos</p>
                         </div>
                     </div>
                     <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700">

@@ -104,7 +104,7 @@
                         <p class="text-[11px] text-slate-500">Official instructions for {{ $unit->unit_number }} (A-F Staycation)</p>
                     </div>
                 </div>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">Deca Ortigas</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">{{ $unit->building?->name ?? 'Ortigas, Pasig' }}</span>
             </div>
 
             <!-- WiFi & Connection Credentials -->
@@ -281,7 +281,7 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Leave your feedback or tips for future guests</label>
-                        <textarea name="comment" rows="2" placeholder="e.g. Host was very responsive, WiFi was fast for Netflix, very smooth check-in at Deca Homes!" class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white p-2.5 focus:ring-2 focus:ring-blue-500"></textarea>
+                        <textarea name="comment" rows="2" placeholder="e.g. Host was very responsive, WiFi was fast for Netflix, very smooth check-in!" class="w-full text-xs rounded-xl border-slate-200 dark:border-slate-700 dark:bg-slate-800 dark:text-white p-2.5 focus:ring-2 focus:ring-blue-500"></textarea>
                     </div>
 
                     <div class="flex justify-end">

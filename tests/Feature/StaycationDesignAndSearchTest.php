@@ -34,8 +34,8 @@ class StaycationDesignAndSearchTest extends TestCase
         $response->assertOk();
         $response->assertSee('DirectStay');
         $response->assertSee('Staycation');
-        $response->assertSee('Urban Deca Homes Ortigas');
-        $response->assertSee('Building N &amp; P Gate Pass Certified', false);
+        $response->assertSee('Ortigas, Pasig City');
+        $response->assertSee('Ortigas Condo Gate Pass Certified', false);
         $response->assertSee('All Towers');
 
         $units = Unit::where('is_active', true)->get();
@@ -144,7 +144,7 @@ class StaycationDesignAndSearchTest extends TestCase
         $response->assertSee(number_format($unit->base_price_per_night, 0));
         $response->assertSee('Show all');
         $response->assertSee('How Your DirectStay Reservation Works');
-        $response->assertSee('Deca PMO Gate Pass Ready');
+        $response->assertSee('Official PMO Gate Pass Ready');
         $response->assertSee('Featured Amenities');
         $response->assertSee('Location &amp; Pasig Neighborhood Guide', false);
     }

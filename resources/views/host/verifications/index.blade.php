@@ -20,7 +20,7 @@
                 Guest Identity &amp; Payment Triage
             </h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Audit GCash payment receipts, inspect guest government IDs, and dispatch official Urban Deca Homes gate passes
+                Audit GCash payment receipts, inspect guest government IDs, and dispatch official condo PMO gate passes
             </p>
         </div>
 
@@ -89,7 +89,7 @@
                 </span>
                 <span class="text-xs font-bold text-slate-500 dark:text-slate-400">refundable hold</span>
             </div>
-            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2">Advance deposits logged for Urban Deca security clearance</p>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-2">Advance deposits logged for condominium PMO security clearance</p>
         </div>
     </div>
 

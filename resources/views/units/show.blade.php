@@ -123,7 +123,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                 <!-- Instant Pass Badge -->
                 <span class="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 px-2.5 py-0.5 rounded-full border border-blue-100 dark:border-blue-800/60">
                     <span class="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse"></span>
-                    Deca PMO Gate Pass Ready
+                    Official PMO Gate Pass Ready
                 </span>
             </div>
         </div>
@@ -233,7 +233,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                                 Hosted by {{ $unit->host ? $unit->host->name : 'DirectStay Superhost Team' }}
                             </h2>
                             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                                Urban Deca Homes Ortigas PMO-Accredited Host &bull; Fast response in under 15 mins
+                                PMO-Accredited Condo Host &bull; Fast response in under 15 mins
                             </p>
                         </div>
                         <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-700 text-white font-black text-base flex items-center justify-center shadow-md shadow-blue-500/20 shrink-0">
@@ -275,7 +275,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                             <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                                 Hassle-Free Arrival
                             </span>
-                            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Urban Deca Homes Ortigas PMO Process</span>
+                            <span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Condo PMO Process</span>
                         </div>
                         <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white tracking-tight mb-2">
                             How Your DirectStay Reservation Works
@@ -308,7 +308,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                                     </div>
                                     <h4 class="text-xs font-black text-slate-900 dark:text-white mb-1">ID Upload &amp; Clearance</h4>
                                     <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-normal">
-                                        Submit government IDs securely online. DirectStay generates your official Deca Gate Pass PDF.
+                                        Submit government IDs securely online. DirectStay generates your official PMO Gate Pass PDF.
                                     </p>
                                 </div>
                                 <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold mt-3 block">✓ PMO Security Approved</span>
@@ -422,7 +422,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                         <svg class="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                         </svg>
-                        Urban Deca Homes Ortigas PMO Gate Pass &amp; House Rules
+                        Condo PMO Gate Pass &amp; House Rules
                     </div>
                     <p class="text-slate-700 dark:text-slate-300 leading-relaxed font-sans mb-3">
                         {{ $unit->building ? $unit->building->house_rules : 'All guests must submit valid government-issued IDs for security gate pass clearance prior to building entry.' }}
@@ -580,7 +580,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                     <!-- Neighborhood Transit & Distances Guide -->
                     <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs pt-1">
                         <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-white/5">
-                            <span class="text-[10px] text-slate-400 block font-semibold">Deca Main Gate</span>
+                            <span class="text-[10px] text-slate-400 block font-semibold">Lobby / Main Gate</span>
                             <strong class="text-slate-900 dark:text-white block truncate">Ortigas Ave Extension</strong>
                             <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Pass Verification Point</span>
                         </div>
@@ -746,7 +746,7 @@ class="min-h-screen bg-slate-50/60 dark:bg-slate-950 pb-20">
                                     <label class="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Full Legal Name</label>
                                     <input type="text" name="guest_name" id="guestNameInput"
                                            value="{{ old('guest_name', auth()->check() ? auth()->user()->name : '') }}"
-                                           placeholder="Must match government ID for Deca Gate Pass" required
+                                           placeholder="Must match government ID for PMO Gate Pass" required
                                            class="w-full text-xs px-3.5 py-2.5 rounded-xl border @error('guest_name') border-rose-400 bg-rose-50/30 @else border-slate-300 dark:border-slate-700 @enderror focus:outline-none focus:ring-2 focus:ring-blue-600 bg-white dark:bg-slate-800 dark:text-white">
                                     @error('guest_name')
                                         <p class="text-[11px] text-rose-600 mt-1 font-semibold">{{ $message }}</p>

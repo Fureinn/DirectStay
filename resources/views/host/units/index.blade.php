@@ -20,7 +20,7 @@
                 Managed Condominium Units
             </h1>
             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                Urban Deca Homes Ortigas &bull; High-res gallery photo uploads, nightly pricing, and inventory specifications
+                Ortigas, Pasig City &bull; High-res gallery photo uploads, nightly pricing, and inventory specifications
             </p>
         </div>
 
@@ -72,7 +72,7 @@
             <div class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tabular-nums font-mono">
                 ₱{{ number_format($units->avg('base_price_per_night'), 0) }}
             </div>
-            <span class="text-[11px] text-slate-500 dark:text-slate-400">Per night in Deca</span>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400">Per night portfolio average</span>
         </div>
     </div>
 

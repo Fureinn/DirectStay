@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'DirectStay - Direct-Booking & Property Compliance Engine (Urban Deca Homes Ortigas)')</title>
+    <title>@yield('title', 'DirectStay - Direct Condo Bookings in Ortigas, Pasig City')</title>
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
@@ -377,17 +377,86 @@
     @endunless
 
     <!-- Footer -->
-    <footer class="glass-footer mt-16 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
-            <div>
-                &copy; {{ date('Y') }} <strong class="text-slate-800 dark:text-slate-200">DirectStay</strong> &bull; Direct-Booking & Property Compliance Platform (Urban Deca Homes Ortigas).
+    <footer class="glass-footer mt-16 py-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pb-8 border-b border-slate-200/50 dark:border-slate-800">
+                <!-- Brand Column -->
+                <div class="space-y-3">
+                    <a href="{{ route('units.index') }}" class="flex items-center gap-2.5 w-fit">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-700 flex items-center justify-center text-white font-black text-sm shadow-md shadow-blue-600/25">
+                            DS
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-lg font-black tracking-tight text-slate-900 dark:text-white leading-none">
+                                Direct<span class="text-blue-600 dark:text-blue-400">Stay</span>
+                            </span>
+                            <span class="text-[9px] uppercase tracking-wider font-extrabold text-slate-400 mt-0.5 leading-none">
+                                Ortigas &bull; Pasig
+                            </span>
+                        </div>
+                    </a>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-xs">
+                        Direct-booking &amp; property compliance platform for condominiums in Ortigas, Pasig City. Zero OTA commissions, lean 5% service fee.
+                    </p>
+                    <div class="flex items-center gap-1.5 text-[11px] text-emerald-700 dark:text-emerald-300 font-bold bg-emerald-50 dark:bg-emerald-950/50 px-2.5 py-1 rounded-full border border-emerald-200 dark:border-emerald-800 w-fit">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 status-beacon"></span>
+                        <span>Live &bull; KM 19 Ortigas Ave Ext, Pasig</span>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li>
+                            <a href="{{ route('units.index') }}" class="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                Explore Condo Units
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('customer.register') }}" class="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                                Register as Guest
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('host.login') }}" class="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                Host Portal
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Trust & Compliance Column -->
+                <div>
+                    <h3 class="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3">Trust &amp; Compliance</h3>
+                    <ul class="space-y-2 text-xs text-slate-500 dark:text-slate-400">
+                        <li class="flex items-start gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            <span>RA 10173 &bull; Data Privacy Act compliant</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            <span>Automated gate pass PDF &bull; Ortigas condo buildings</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            <span>&#8369;1,000 Refundable Security Deposit per booking</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            <span>Encrypted guest data &bull; no third-party sharing</span>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div class="flex flex-wrap items-center gap-3 sm:gap-4">
-                <span>KM 19 Ortigas Ave Ext, Brgy. Rosario, Pasig City</span>
-                <span>&bull;</span>
-                <span>Zero OTA Commissions</span>
-                <span>&bull;</span>
-                <span class="text-emerald-600 dark:text-emerald-400 font-bold">Lean 5% Service Fee (vs 17-20% OTA)</span>
+
+            <!-- Bottom Bar -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-6 text-xs text-slate-500 dark:text-slate-400">
+                <span>&copy; {{ date('Y') }} <strong class="text-slate-800 dark:text-slate-200">DirectStay</strong> &bull; All rights reserved.</span>
+                <span class="text-emerald-600 dark:text-emerald-400 font-bold">5% Service Fee &bull; Zero OTA Commissions &bull; Instant Gate Pass</span>
             </div>
         </div>
     </footer>

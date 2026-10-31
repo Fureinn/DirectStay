@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'DirectStay - Urban Deca Homes Ortigas Direct Bookings')
+@section('title', 'DirectStay - Direct Condo Bookings in Ortigas, Pasig City')
 
 @push('styles')
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -107,7 +107,7 @@
             <!-- Trust Badge Pill -->
             <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-blue-200 border border-white/20 text-xs font-bold uppercase tracking-wider mb-5 backdrop-blur-xl shadow-xs transition-all">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 status-beacon"></span>
-                <span>Urban Deca Homes Ortigas &bull; Official Direct Stays</span>
+                <span>Ortigas, Pasig City &bull; Verified Direct-Booking Condos</span>
             </div>
 
             <!-- Main Headline -->
@@ -119,16 +119,48 @@
             </h1>
 
             <p class="text-slate-300 text-sm sm:text-base lg:text-lg max-w-2xl mb-8 leading-relaxed font-normal">
-                Skip commercial OTA markups. Book verified condo suites directly from unit owners across <strong>Buildings N &amp; P</strong> in Pasig City with lean <strong>5% service fee</strong> (save ~₱276 per night vs Airbnb) and guaranteed lobby clearance.
+                Skip commercial OTA markups. Book verified condo suites directly from unit owners across <strong>Ortigas, Pasig City</strong> with lean <strong>5% service fee</strong> (save ~₱276 per night vs Airbnb) and guaranteed condo lobby clearance.
             </p>
 
-            <!-- Hero Action Button -->
-            <div class="flex flex-wrap items-center justify-center gap-3">
-                <a href="#featuredUnits" class="px-7 py-3.5 rounded-2xl font-black text-sm text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all flex items-center gap-2 cursor-pointer btn-press">
-                    <span>View Available Units</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-                </a>
-            </div>
+            <!-- Hero Search Capsule -->
+            <form method="GET" action="{{ route('units.index') }}"
+                  class="w-full max-w-2xl mt-2 p-2 rounded-3xl bg-white/15 backdrop-blur-xl border border-white/25 shadow-xl shadow-slate-950/20 flex flex-col sm:flex-row gap-2">
+                <!-- Check-in -->
+                <div class="flex-1 flex flex-col px-4 py-2.5 rounded-2xl bg-white/20 hover:bg-white/25 border border-white/20 transition-all cursor-pointer">
+                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-blue-200 mb-0.5">Check-in</label>
+                    <input type="date" name="check_in"
+                           value="{{ $checkIn ?? '' }}"
+                           min="{{ date('Y-m-d') }}"
+                           class="bg-transparent text-white text-sm font-bold placeholder-white/50 outline-none cursor-pointer w-full [color-scheme:dark]"
+                           placeholder="Add date">
+                </div>
+                <!-- Check-out -->
+                <div class="flex-1 flex flex-col px-4 py-2.5 rounded-2xl bg-white/20 hover:bg-white/25 border border-white/20 transition-all cursor-pointer">
+                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-blue-200 mb-0.5">Check-out</label>
+                    <input type="date" name="check_out"
+                           value="{{ $checkOut ?? '' }}"
+                           min="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                           class="bg-transparent text-white text-sm font-bold placeholder-white/50 outline-none cursor-pointer w-full [color-scheme:dark]"
+                           placeholder="Add date">
+                </div>
+                <!-- Guests -->
+                <div class="flex-1 flex flex-col px-4 py-2.5 rounded-2xl bg-white/20 hover:bg-white/25 border border-white/20 transition-all cursor-pointer">
+                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-blue-200 mb-0.5">Guests</label>
+                    <select name="guests"
+                            class="bg-transparent text-white text-sm font-bold outline-none cursor-pointer w-full appearance-none [color-scheme:dark]">
+                        @for ($g = 1; $g <= 6; $g++)
+                            <option value="{{ $g }}" {{ ($selectedGuests ?? 1) == $g ? 'selected' : '' }}
+                                    class="bg-slate-900 text-white">{{ $g }} {{ $g === 1 ? 'Guest' : 'Guests' }}</option>
+                        @endfor
+                    </select>
+                </div>
+                <!-- Search Button -->
+                <button type="submit"
+                        class="shrink-0 px-6 py-3 rounded-2xl font-black text-sm text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all flex items-center gap-2 btn-press cursor-pointer whitespace-nowrap">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <span class="hidden sm:inline">Search</span>
+                </button>
+            </form>
 
             <!-- Quick Trust Badges Strip -->
             <div class="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-medium text-slate-300">
@@ -138,7 +170,7 @@
                 </div>
                 <div class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10">
                     <span class="text-emerald-400 font-bold">✓</span>
-                    <span>Building N &amp; P Gate Pass Certified</span>
+                    <span>Ortigas Condo Gate Pass Certified</span>
                 </div>
                 <div class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10">
                     <span class="text-emerald-400 font-bold">✓</span>
@@ -151,15 +183,12 @@
     <!-- ======================================================================= -->
     <!-- 2. WHY DIRECTSTAY: 3-COLUMN VALUE PROPOSITION STRIP -->
     <!-- ======================================================================= -->
-    <!-- ======================================================================= -->
-    <!-- 2. WHY DIRECTSTAY: 3-COLUMN VALUE PROPOSITION STRIP -->
-    <!-- ======================================================================= -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
         <!-- Value 1: Price Advantage -->
-        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all">
+        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all group">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center text-xl shadow-xs">
-                    💸
+                <div class="w-10 h-10 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-800 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300">
                     Save ~₱276 / night
@@ -178,10 +207,10 @@
         </div>
 
         <!-- Value 2: Digital Gate Pass Clearance -->
-        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all">
+        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all group">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800 flex items-center justify-center text-xl shadow-xs">
-                    🛡️
+                <div class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950/80 text-blue-600 dark:text-blue-400 border border-blue-100 dark:border-blue-800 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                 </div>
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300">
                     Lobby Clearance
@@ -191,7 +220,7 @@
                 Automated Lobby Gate Pass
             </h3>
             <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                Avoid security delays at Urban Deca Homes Ortigas. Official Building N &amp; P gate pass PDFs are automatically generated and emailed to you.
+                Avoid security delays at your condo. Official PMO-compliant gate pass PDFs are automatically generated and emailed to you upon booking approval.
             </p>
             <div class="mt-3.5 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px]">
                 <span class="text-slate-400 dark:text-slate-500">Compliance:</span>
@@ -200,10 +229,10 @@
         </div>
 
         <!-- Value 3: Verified Direct Hosts -->
-        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all">
+        <div class="p-5 sm:p-6 rounded-3xl bg-white/90 dark:bg-slate-900/80 backdrop-blur-xl border border-white/80 dark:border-white/10 shadow-sm hover:shadow-md transition-all group">
             <div class="flex items-center justify-between mb-3">
-                <div class="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800 flex items-center justify-center text-xl shadow-xs">
-                    ✨
+                <div class="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-800 flex items-center justify-center shadow-xs group-hover:scale-110 transition-transform">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg>
                 </div>
                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-indigo-100 dark:bg-indigo-950/80 text-indigo-800 dark:text-indigo-300">
                     Verified Condos
@@ -228,12 +257,12 @@
     <div id="featuredUnits" class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6 scroll-mt-24">
         <div>
             <div class="flex items-center gap-2">
-                <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">Featured Units in Deca Ortigas</h2>
+                <h2 class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white">Featured Units in Ortigas, Pasig</h2>
                 <span class="px-2.5 py-0.5 rounded-full text-xs font-black bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/50">
                     {{ $units->count() }} {{ Str::plural('unit', $units->count()) }} available
                 </span>
             </div>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-medium">Verified direct-booking units across Building N &amp; Building P in Pasig City.</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 font-medium">Verified direct-booking condos across Ortigas, Pasig City.</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
@@ -292,7 +321,7 @@
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                 <div class="flex items-center gap-2">
                     <span class="w-2.5 h-2.5 rounded-full bg-blue-600 status-beacon"></span>
-                    <span class="text-xs font-bold text-slate-900 dark:text-white">Interactive Deca Ortigas Map:</span>
+                    <span class="text-xs font-bold text-slate-900 dark:text-white">Interactive Ortigas Condo Map:</span>
                     <span class="text-xs text-slate-500 dark:text-slate-400">Click any price pin to view unit details</span>
                 </div>
 
@@ -321,7 +350,7 @@
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs">
                     <div class="p-2.5 rounded-xl bg-white/60 dark:bg-slate-800/80 border border-white/60 dark:border-white/5 shadow-2xs">
-                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Deca Complex</span>
+                        <span class="text-[10px] text-slate-400 dark:text-slate-500 block font-semibold">Condo Complex</span>
                         <strong class="text-slate-900 dark:text-white block truncate">KM 19 Ortigas Ave</strong>
                         <span class="text-[10px] text-blue-600 dark:text-blue-400 font-bold">Main Gate &bull; Pasig</span>
                     </div>

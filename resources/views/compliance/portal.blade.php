@@ -140,7 +140,7 @@
                             256-Bit Encrypted
                         </span>
                     </div>
-                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Urban Deca Homes Ortigas &bull; Pasig PMO Gate Pass Protocol</p>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">Ortigas, Pasig City &bull; PMO Gate Pass Protocol</p>
                 </div>
             </div>
 
@@ -295,7 +295,7 @@
                         @endif
                     </div>
                     <p class="text-xs font-bold text-slate-900 dark:text-white mt-1.5 truncate">Rules &amp; Lease</p>
-                    <p class="text-[10px] text-slate-400 dark:text-slate-500">Deca PMO Rules</p>
+                    <p class="text-[10px] text-slate-400 dark:text-slate-500">Condo PMO Rules</p>
                 </button>
 
                 <!-- Step 5 Tab -->
@@ -496,7 +496,7 @@
                 <div class="space-y-0.5">
                     <strong class="text-slate-900 dark:text-white font-bold">Privacy &amp; Data Protection:</strong>
                     <p class="text-[11px] leading-relaxed">
-                        Uploaded ID files are encrypted and accessible exclusively by DirectStay and the Urban Deca PMO gate security. They are never shared publicly and are purged in accordance with Data Privacy regulations.
+                        Uploaded ID files are encrypted and accessible exclusively by DirectStay and authorized condominium PMO gate security. They are never shared publicly and are purged in accordance with Data Privacy regulations.
                     </p>
                 </div>
             </div>
@@ -770,7 +770,7 @@
                         Transfer Advance Deposit (₱{{ number_format($booking->advance_deposit_amount, 2) }})
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                        Locks your reservation dates and guarantees compliance with Deca Ortigas building regulations.
+                        Locks your reservation dates and guarantees compliance with condominium building regulations.
                     </p>
                 </div>
 
@@ -1228,7 +1228,7 @@
                                 <span>🎉</span> PMO Security Gate Pass Ready
                             </span>
                             <h3 class="text-lg font-black text-slate-900 dark:text-white">
-                                Official Building Gate Clearance Pass (Deca Guest Form)
+                                Official Building Gate Clearance Pass (PMO Guest Form)
                             </h3>
                             <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                                 Present this digital pass or printed copy at the {{ $building->name }} lobby security guard post upon arrival.

@@ -45,7 +45,7 @@
                 Direct Guest Account
             </span>
             <h1 class="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Create Guest Account</h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Book directly, receive official Deca Gate Passes, and manage staycations</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Book directly, receive official PMO Gate Passes, and manage staycations</p>
         </div>
 
         <form action="{{ route('customer.register.post') }}" method="POST" class="space-y-4">

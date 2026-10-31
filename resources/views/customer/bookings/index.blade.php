@@ -37,7 +37,7 @@
                     <span>Direct-Booking Clearance Checklist</span>
                 </h2>
                 <p class="mt-1 text-xs leading-relaxed text-emerald-800 dark:text-emerald-300 max-w-2xl">
-                    For seamless check-in at Urban Deca Homes Ortigas: upload your <strong>₱1,000 security deposit receipt</strong>, government ID for all occupants, and sign the digital waiver. The official PMO gate pass PDF will be dispatched automatically upon approval.
+                    For seamless condo check-in: upload your <strong>₱1,000 security deposit receipt</strong>, government ID for all occupants, and sign the digital waiver. The official PMO gate pass PDF will be dispatched automatically upon approval.
                 </p>
             </div>
             <a href="{{ route('units.index') }}" class="inline-flex shrink-0 items-center justify-center rounded-xl bg-emerald-600 dark:bg-emerald-500 px-4 py-2 text-xs font-black text-white shadow-xs hover:bg-emerald-700 transition-all btn-press">
@@ -55,10 +55,10 @@
             </div>
             <h3 class="text-lg font-black text-slate-900 dark:text-white mb-2">No Reservations Yet</h3>
             <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
-                You haven't made any staycation reservations yet. Browse verified direct condo suites across Building N &amp; P in Pasig with zero OTA markups and instant gate pass clearance.
+                You haven't made any staycation reservations yet. Browse verified direct condo suites across Ortigas, Pasig City with zero OTA markups and instant gate pass clearance.
             </p>
             <a href="{{ route('units.index') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl text-xs font-black text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 shadow-md shadow-blue-500/25 transition-all btn-press">
-                <span>Browse Condos in Deca Ortigas</span>
+                <span>Browse Condos in Ortigas, Pasig</span>
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </a>
         </div>
@@ -174,7 +174,7 @@
                             @if($isConfirmed)
                                 <a href="{{ route('compliance.downloadGatePass', $b->booking_code) }}"
                                    class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-black text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 shadow-md shadow-blue-500/25 transition-all btn-press"
-                                   title="Official Building Gate Pass (Deca Guest Form)">
+                                   title="Official Building Gate Pass (Condo Guest Form)">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                                     <span>Gate Pass PDF</span>
                                 </a>

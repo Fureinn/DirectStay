@@ -250,7 +250,7 @@
         <div class="bg-gradient-to-br from-slate-900 via-slate-850 to-blue-950 text-white rounded-3xl p-8 shadow-xl border border-white/10">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="text-xs font-black uppercase tracking-wider text-blue-300">Security Deposit Settlement Ledger</h3>
-                <span class="text-xs text-slate-400 font-mono">Urban Deca Homes Escrow</span>
+                <span class="text-xs text-slate-400 font-mono">Condo Security Escrow</span>
             </div>
 
             <!-- Animated Deduction Pills Container -->

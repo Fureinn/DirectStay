@@ -22,7 +22,7 @@
             { id: 'fridge', label: '2-Door Refrigerator', icon: '🧊' },
             { id: 'microwave', label: 'Microwave Oven', icon: '♨️' },
             { id: 'shower', label: 'Heated Shower', icon: '🚿' },
-            { id: 'pool', label: 'Deca Swimming Pool Access', icon: '🏊' },
+            { id: 'pool', label: 'Swimming Pool Access', icon: '🏊' },
             { id: 'washer', label: 'In-Unit Washing Machine', icon: '🧺' },
             { id: 'bed', label: 'Queen Bed & Double Loft Setup', icon: '🛏️' },
             { id: 'kettle', label: 'Electric Kettle & Coffee Nook', icon: '☕' },
@@ -40,7 +40,7 @@
             '2-Door Refrigerator',
             'Microwave Oven',
             'Heated Shower',
-            'Deca Swimming Pool Access',
+            'Swimming Pool Access',
             'Fresh Hotel-Grade Linens & Towels'
         ],
         customAmenityInput: '',
@@ -125,7 +125,7 @@
             <div>
                 <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 mb-2">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>Urban Deca Homes Ortigas &bull; New Listing Creator</span>
+                    <span>Ortigas, Pasig City &bull; New Listing Creator</span>
                 </div>
                 <h1 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                     Add New Condominium Unit
@@ -214,7 +214,7 @@
                         Unit Number <span class="text-rose-500">*</span>
                     </label>
                     <input type="text" name="unit_number" x-model="unitNumber"
-                           placeholder="e.g. Unit N412 or Unit P718" required
+                           placeholder="e.g. Unit 412, Tower 1 - 15B" required
                            class="w-full text-xs px-3.5 py-2.5 rounded-2xl border @error('unit_number') border-rose-300 bg-rose-50/40 @else border-slate-200 dark:border-slate-700 @enderror bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-600 font-mono font-bold">
                     <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Printed on gate pass clearance.</p>
                     @error('unit_number')
@@ -238,7 +238,7 @@
                                 class="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                             + Minimalist 2BR
                         </button>
-                        <button type="button" @click="applyTitleSuggestion('Cozy Family Loft • Deca Pool Access & Full Kitchenette')"
+                        <button type="button" @click="applyTitleSuggestion('Cozy Family Loft • Pool Access & Full Kitchenette')"
                                 class="text-[10px] font-semibold px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                             + Family Loft & Pool
                         </button>
