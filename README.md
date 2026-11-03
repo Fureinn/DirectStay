@@ -1,58 +1,55 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# DirectStay Solutions Co.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Direct Condominium Rental & Automated Building Compliance Platform**  
+> Servicing the Ortigas-Pasig Corridor (Anchored at Urban Deca Homes Ortigas)
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Quickstart & Setup Guide
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+For the full, step-by-step setup and execution instructions (including system requirements, database seeding, test accounts, and end-to-end workflows), please refer to:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+👉 **[HOW_TO_RUN.md](./HOW_TO_RUN.md)**
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Quick Commands
 
 ```bash
-composer require laravel/boost --dev
+# 1. Install dependencies
+composer install
+npm install
 
-php artisan boost:install
+# 2. Environment & key
+cp .env.example .env
+php artisan key:generate
+
+# 3. Database migrations & seeders
+php artisan migrate --seed
+
+# 4. Storage symlink & asset build
+php artisan storage:link
+npm run build
+
+# 5. Run application
+composer run dev
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Application will be accessible at **http://localhost:8000** (or **http://directstay.test** if using Laragon).
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Pre-Configured Demo Accounts
 
-## Code of Conduct
+| Role | Portal URL | Email | Password |
+| :--- | :--- | :--- | :--- |
+| **Host / Lessor** | `/host/login` | `host@directstay.local` | `password` |
+| **Guest / Customer** | `/login` | `customer@directstay.local` | `password` |
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## Core Features
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* **Direct-Booking Catalog:** Browse units (Pad Dos N343 & Pad Uno P718) with real-time rate comparison against neighboring Ortigas condominiums.
+* **Digital Compliance Portal (`/compliance/{bookingCode}`):** Guest roster registration, secure government ID verification (compliant with RA 10173 Data Privacy Act), and payment deposit upload.
+* **Host Verification Triage (`/host/verifications`):** Streamed private document verification, booking approval/rejection workflow, and automated Building Gate Pass PDF generation.
+* **Post-Checkout Inventory & Penalty Engine (`/host/checkouts/{booking}`):** Digital turnover checklist with automatic penalty and deposit deduction calculation.
+* **Official Building PDF Integration:** Automated generation of Urban Deca Homes Ortigas Building N and Building P Gate Passes and Rental Agreements via DomPDF.
