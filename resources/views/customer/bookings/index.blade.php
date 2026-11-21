@@ -70,7 +70,7 @@
                     $isCheckedOut = $b->status === 'checked_out';
                     $isCancelled = $b->status === 'cancelled';
                     $hasIds = $b->complianceDocuments->filter(fn($d) => str_starts_with($d->document_type, 'gov_id_'))->count() >= $b->guest_count;
-                    $hasReceipt = $b->complianceDocuments->contains('document_type', 'payment_receipt');
+                    $hasReceipt = $b->complianceDocuments->contains('document_type', 'payment_receipt') || $b->isPaid();
                 @endphp
                 <div class="glass-surface rounded-3xl border border-white/60 dark:border-white/10 hover-lift overflow-hidden shadow-lg relative p-6 sm:p-8 group">
                     <div class="ambient-glow w-48 h-48 bg-blue-500/10 -bottom-12 -right-12 glow-animate"></div>

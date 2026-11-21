@@ -172,7 +172,11 @@
                         <span class="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300 flex items-center justify-center font-black text-xs shadow-xs">₱</span>
                         Advance Deposit Payment Proof (₱1,000.00)
                     </h3>
-                    @if($paymentDoc)
+                    @if($booking->paymongo_payment_id)
+                        <span class="px-2.5 py-1 rounded-xl text-[11px] font-extrabold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                            PayMongo Verified ✓
+                        </span>
+                    @elseif($paymentDoc)
                         <span class="px-2.5 py-1 rounded-xl text-[11px] font-extrabold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
                             {{ $paymentDoc->notes ?? 'GCash Receipt' }}
                         </span>
@@ -182,6 +186,20 @@
                         </span>
                     @endif
                 </div>
+
+                @if($booking->paymongo_payment_id)
+                    <div class="p-5 rounded-2xl bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 space-y-2 text-xs mb-4">
+                        <div class="flex items-center justify-between">
+                            <span class="font-black text-emerald-900 dark:text-emerald-200">Online Gateway Settlement (PayMongo)</span>
+                            <span class="font-mono font-bold text-emerald-700 dark:text-emerald-300">₱{{ number_format((float) ($booking->paid_amount ?? $booking->advance_deposit_amount), 2) }}</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px] text-slate-600 dark:text-slate-300">
+                            <div>Payment Ref: <strong class="font-mono text-slate-900 dark:text-white">{{ $booking->paymongo_payment_id }}</strong></div>
+                            <div>Method: <strong class="uppercase text-slate-900 dark:text-white">{{ str_replace('paymongo_', '', $booking->payment_method ?? 'paymongo') }}</strong></div>
+                            <div>Paid At: <strong>{{ $booking->paid_at?->format('M d, Y h:i A') ?? 'Verified' }}</strong></div>
+                        </div>
+                    </div>
+                @endif
 
                 @if($paymentDoc)
                     <div class="bg-white/40 dark:bg-slate-900/60 p-4 rounded-2xl border border-white/60 dark:border-white/10 backdrop-blur-md text-center relative group">
@@ -194,9 +212,9 @@
                             <span class="font-mono text-[10px]">{{ $paymentDoc->original_filename }}</span>
                         </div>
                     </div>
-                @else
+                @elseif(! $booking->paymongo_payment_id)
                     <div class="p-8 text-center bg-white/30 dark:bg-slate-900/40 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500 text-xs backdrop-blur-sm">
-                        Guest has not yet uploaded proof of advance deposit.
+                        Guest has not yet completed payment or uploaded proof of advance deposit.
                     </div>
                 @endif
             </div>

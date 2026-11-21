@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'host' => EnsureUserIsHost::class,
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'webhooks/paymongo',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

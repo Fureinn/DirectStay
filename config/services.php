@@ -39,4 +39,12 @@ return [
         'maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
     ],
 
+    'paymongo' => [
+        'secret_key' => env('PAYMONGO_SECRET_KEY'),
+        'public_key' => env('PAYMONGO_PUBLIC_KEY'),
+        'webhook_secret' => env('PAYMONGO_WEBHOOK_SECRET'),
+        'base_url' => env('PAYMONGO_BASE_URL', 'https://api.paymongo.com/v1'),
+        'sandbox_simulation' => env('PAYMONGO_SANDBOX_SIMULATION', false),
+    ],
+
 ];

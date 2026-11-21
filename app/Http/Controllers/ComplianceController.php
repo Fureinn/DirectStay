@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Booking;
 use App\Models\ComplianceDocument;
 use App\Services\GatePassService;
+use App\Services\PayMongoService;
 use App\Services\RentalAgreementService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class ComplianceController extends Controller
     /**
      * Display the Security Compliance and ID Portal for the guest.
      */
-    public function portal(string $bookingCode): View
+    public function portal(string $bookingCode, PayMongoService $payMongo): View
     {
         $booking = Booking::with(['unit.building', 'bookingAddOns.addOn', 'complianceDocuments'])
             ->where('booking_code', $bookingCode)
@@ -38,6 +39,8 @@ class ComplianceController extends Controller
             'paymentDoc' => $paymentDoc,
             'governmentIds' => $governmentIds,
             'selfieDoc' => $selfieDoc,
+            'paymongoLiveConfigured' => $payMongo->isLiveApiConfigured(),
+            'paymongoSimulation' => $payMongo->isSimulationEnabled(),
         ]);
     }
 

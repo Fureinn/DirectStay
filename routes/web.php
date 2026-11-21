@@ -11,6 +11,7 @@ use App\Http\Controllers\Host\CheckoutController as HostCheckoutController;
 use App\Http\Controllers\Host\DashboardController as HostDashboardController;
 use App\Http\Controllers\Host\UnitManagementController as HostUnitManagementController;
 use App\Http\Controllers\Host\VerificationController as HostVerificationController;
+use App\Http\Controllers\PayMongoController;
 use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,9 @@ Route::prefix('compliance')->name('compliance.')->group(function () {
     Route::get('/{bookingCode}', [ComplianceController::class, 'portal'])->name('portal');
     Route::post('/{bookingCode}/roster', [ComplianceController::class, 'saveRoster'])->name('roster');
     Route::post('/{bookingCode}/payment', [ComplianceController::class, 'uploadPayment'])->name('payment');
+    Route::post('/{bookingCode}/paymongo/checkout', [PayMongoController::class, 'checkout'])->name('paymongo.checkout');
+    Route::get('/{bookingCode}/paymongo/success', [PayMongoController::class, 'success'])->name('paymongo.success');
+    Route::get('/{bookingCode}/paymongo/cancel', [PayMongoController::class, 'cancel'])->name('paymongo.cancel');
     Route::post('/{bookingCode}/identity', [ComplianceController::class, 'uploadIdentity'])->name('identity');
     Route::get('/{bookingCode}/document/{document}', [ComplianceController::class, 'streamDocument'])->name('document');
     Route::post('/{bookingCode}/waiver', [ComplianceController::class, 'acceptWaiver'])->name('waiver');
@@ -35,6 +39,15 @@ Route::prefix('compliance')->name('compliance.')->group(function () {
     Route::get('/{bookingCode}/gate-pass', [ComplianceController::class, 'downloadGatePass'])->name('downloadGatePass');
     Route::get('/{bookingCode}/rental-agreement', [ComplianceController::class, 'downloadRentalAgreement'])->name('downloadRentalAgreement');
 });
+
+/*
+|--------------------------------------------------------------------------
+| PayMongo Sandbox Simulator & Webhook Endpoints
+|--------------------------------------------------------------------------
+*/
+Route::get('/paymongo/sandbox/{checkoutId}', [PayMongoController::class, 'sandboxPage'])->name('paymongo.sandbox');
+Route::post('/paymongo/sandbox/{checkoutId}/complete', [PayMongoController::class, 'sandboxComplete'])->name('paymongo.sandbox.complete');
+Route::post('/webhooks/paymongo', [PayMongoController::class, 'webhook'])->name('webhooks.paymongo');
 
 /*
 |--------------------------------------------------------------------------

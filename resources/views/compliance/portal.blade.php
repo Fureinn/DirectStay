@@ -8,7 +8,7 @@
     $guestCount = $booking->guest_count;
     $hasAllIds = $governmentIds->count() >= $guestCount;
     $hasSelfie = (bool) $selfieDoc;
-    $hasPayment = (bool) $paymentDoc;
+    $hasPayment = (bool) $paymentDoc || in_array($booking->payment_status, ['submitted', 'verified', 'paid'], true);
     $hasWaiver = (bool) $booking->waiver_accepted_at;
 
     // Determine initial active step based on progress
@@ -276,7 +276,9 @@
                         @endif
                     </div>
                     <p class="text-xs font-bold text-slate-900 dark:text-white mt-1.5 truncate">Advance Deposit</p>
-                    <p class="text-[10px] text-slate-400 dark:text-slate-500">₱1,000 GCash</p>
+                    <p class="text-[10px] text-slate-400 dark:text-slate-500">
+                        {{ $booking->isPaid() ? 'PayMongo Paid ✓' : 'PayMongo / GCash' }}
+                    </p>
                 </button>
 
                 <!-- Step 4 Tab -->
@@ -756,7 +758,7 @@
     </div>
 
     <!-- ======================================================================= -->
-    <!-- 5. STEP 3: ADVANCE DEPOSIT ESCROW (GCASH RECEIPT)                       -->
+    <!-- 5. STEP 3: ADVANCE DEPOSIT ESCROW (PAYMONGO OR GCASH RECEIPT)           -->
     <!-- ======================================================================= -->
     <div x-show="currentStep === 3" x-cloak class="max-w-5xl mx-auto space-y-6">
         <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6 transition-colors">
@@ -764,155 +766,301 @@
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
                 <div>
                     <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 mb-2">
-                        <span>Phase 3 of 5</span> &bull; <span>Advance Security Deposit Escrow</span>
+                        <span>Phase 3 of 5</span> &bull; <span>Payment &amp; Security Deposit Escrow</span>
                     </div>
                     <h2 class="text-xl font-black text-slate-900 dark:text-white tracking-tight">
-                        Transfer Advance Deposit (₱{{ number_format($booking->advance_deposit_amount, 2) }})
+                        Pay Advance Deposit (₱{{ number_format($booking->advance_deposit_amount, 2) }})
                     </h2>
                     <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
                         Locks your reservation dates and guarantees compliance with condominium building regulations.
                     </p>
                 </div>
 
-                @if($paymentDoc)
+                @if($booking->isPaid())
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800">
+                        Paid &amp; Verified ✓
+                    </span>
+                @elseif($paymentDoc)
                     <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800">
                         Receipt Submitted ✓
                     </span>
                 @endif
             </div>
 
-            <!-- Host GCash Account Card with Copy Button -->
-            <div class="p-5 rounded-3xl bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 space-y-3">
-                <div class="flex items-center justify-between border-b border-blue-100 dark:border-blue-900 pb-2">
-                    <span class="text-xs font-extrabold uppercase tracking-wider text-blue-700 dark:text-blue-300">
-                        Host Official GCash Transfer Account
-                    </span>
-                    <span class="text-[10px] font-bold text-slate-400">Direct-To-Host Escrow</span>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-                    <div>
-                        <span class="text-slate-500 dark:text-slate-400 block text-[11px]">GCash Account Name:</span>
-                        <strong class="text-slate-900 dark:text-white font-bold text-sm">
-                            {{ $booking->unit->host->name ?? 'Aurelio J. Budol Sr.' }}
-                        </strong>
+            @if($booking->isPaid())
+                <!-- PayMongo Verified Payment Summary -->
+                <div class="p-6 rounded-3xl bg-emerald-50/70 dark:bg-emerald-950/30 border-2 border-emerald-500/70 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-600/25">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-black text-slate-900 dark:text-white">
+                                    Payment Succeeded &amp; Verified!
+                                </h3>
+                                <p class="text-xs text-emerald-800 dark:text-emerald-300">
+                                    Confirmed via {{ $booking->paymongo_payment_id ? 'PayMongo Gateway' : 'Host Verification' }}.
+                                </p>
+                            </div>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-xs font-black bg-emerald-600 text-white self-start sm:self-auto">
+                            Verified ✓
+                        </span>
                     </div>
-                    <div>
-                        <span class="text-slate-500 dark:text-slate-400 block text-[11px]">GCash Mobile Number:</span>
-                        <div class="flex items-center gap-2 mt-0.5">
-                            <span class="font-mono text-sm font-black text-blue-600 dark:text-blue-400">
-                                {{ $booking->unit->host->phone ?? '09478847463' }}
-                            </span>
-                            <button type="button" @click="copyGcash('{{ $booking->unit->host->phone ?? '09478847463' }}')"
-                                    class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 transition-colors cursor-pointer">
-                                <span x-show="!copiedGcash">Copy</span>
-                                <span x-show="copiedGcash">Copied! ✓</span>
-                            </button>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-2 border-t border-emerald-200/70 dark:border-emerald-800/60">
+                        <div class="p-3 rounded-2xl bg-white/80 dark:bg-slate-900/70 border border-emerald-200/60 dark:border-emerald-900">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Amount Verified</span>
+                            <strong class="text-sm font-black font-mono text-slate-900 dark:text-white">
+                                ₱{{ number_format((float) ($booking->paid_amount ?? $booking->advance_deposit_amount), 2) }}
+                            </strong>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-white/80 dark:bg-slate-900/70 border border-emerald-200/60 dark:border-emerald-900">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Payment Method</span>
+                            <strong class="text-sm font-bold text-slate-900 dark:text-white uppercase">
+                                {{ str_replace('paymongo_', 'PayMongo • ', $booking->payment_method ?? 'Verified') }}
+                            </strong>
+                        </div>
+                        <div class="p-3 rounded-2xl bg-white/80 dark:bg-slate-900/70 border border-emerald-200/60 dark:border-emerald-900">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Reference ID</span>
+                            <strong class="text-xs font-mono font-bold text-blue-600 dark:text-blue-400 break-all">
+                                {{ $booking->paymongo_payment_id ?? 'HOST-VERIFIED' }}
+                            </strong>
                         </div>
                     </div>
-                    <div>
-                        <span class="text-slate-500 dark:text-slate-400 block text-[11px]">Required Escrow Amount:</span>
-                        <strong class="text-slate-900 dark:text-white font-mono text-sm font-black tabular-nums">
-                            ₱{{ number_format($booking->advance_deposit_amount, 2) }}
-                        </strong>
+
+                    <div class="flex items-center justify-between pt-2">
+                        <button type="button" @click="goToStep(2)"
+                                class="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-white/70 dark:hover:bg-slate-800 transition-colors cursor-pointer">
+                            &larr; Back to Step 2 (Identity Vault)
+                        </button>
+                        <button type="button" @click="goToStep(4)"
+                                class="px-6 py-3 rounded-2xl text-xs font-black text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/25 transition-all cursor-pointer">
+                            Proceed to Step 4 (Rules &amp; Lease) &rarr;
+                        </button>
                     </div>
                 </div>
-            </div>
-
-            <!-- Existing Receipt Display if uploaded -->
-            @if($paymentDoc)
-                <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between gap-4">
-                    <div class="flex items-center gap-3">
-                        <button type="button" @click="openModal('{{ route('compliance.document', [$booking->booking_code, $paymentDoc->id]) }}', 'GCash Deposit Receipt')"
-                                class="w-16 h-16 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0 bg-slate-100 dark:bg-slate-950 p-1 cursor-pointer hover:opacity-85 transition-opacity" title="Click to view full picture">
-                            <img src="{{ route('compliance.document', [$booking->booking_code, $paymentDoc->id]) }}" 
-                                 alt="Payment Receipt"
-                                 class="w-full h-full object-contain">
-                        </button>
+            @else
+                <!-- PRIMARY OPTION: INSTANT PAYMONGO CHECKOUT -->
+                <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-emerald-50/80 via-teal-50/50 to-blue-50/60 dark:from-emerald-950/30 dark:via-slate-900 dark:to-blue-950/20 border border-emerald-200 dark:border-emerald-800/80 space-y-4"
+                     x-data="{ paymentScope: 'deposit', startingCheckout: false }">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-200/60 dark:border-emerald-800/50 pb-3">
                         <div>
-                            <p class="text-xs font-bold text-slate-900 dark:text-white">
-                                {{ $paymentDoc->original_filename }}
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white">
+                                    Recommended
+                                </span>
+                                <span class="text-xs font-black uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
+                                    Instant Online Payment via PayMongo
+                                </span>
+                            </div>
+                            <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
+                                Automatically verifies your payment the moment it succeeds — no waiting for manual receipt review.
                             </p>
-                            <p class="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
-                                {{ $paymentDoc->notes ?? 'GCash Deposit Screenshot' }}
-                            </p>
-                            <div class="flex items-center gap-2 mt-1">
-                                <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">Status: {{ ucfirst($booking->payment_status) }}</span>
-                                <span class="text-slate-300 dark:text-slate-700">&bull;</span>
-                                <button type="button" @click="openModal('{{ route('compliance.document', [$booking->booking_code, $paymentDoc->id]) }}', 'GCash Deposit Receipt')"
-                                        class="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
-                                    View Full Picture &nearr;
+                        </div>
+                        <div class="flex flex-wrap items-center gap-1.5 text-[10px] font-bold">
+                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-rose-600 dark:text-rose-400">QR Ph</span>
+                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-blue-600 dark:text-blue-400">GCash</span>
+                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-400">Maya</span>
+                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-indigo-600 dark:text-indigo-400">Card</span>
+                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-emerald-700 dark:text-emerald-300">GrabPay</span>
+                        </div>
+                    </div>
+
+                    <form action="{{ route('compliance.paymongo.checkout', $booking->booking_code) }}" method="POST"
+                          @submit="startingCheckout = true" class="space-y-4">
+                        @csrf
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                            <label class="p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3"
+                                   :class="paymentScope === 'deposit' ? 'bg-white dark:bg-slate-900 border-emerald-500 ring-2 ring-emerald-500/20 shadow-xs' : 'bg-white/60 dark:bg-slate-900/50 border-slate-200 dark:border-slate-700'">
+                                <input type="radio" name="payment_scope" value="deposit" x-model="paymentScope" class="mt-0.5 accent-emerald-600">
+                                <div>
+                                    <span class="font-black text-slate-900 dark:text-white block">Advance Security Deposit</span>
+                                    <span class="text-base font-black font-mono text-emerald-600 dark:text-emerald-400 tabular-nums">
+                                        ₱{{ number_format($booking->advance_deposit_amount, 2) }}
+                                    </span>
+                                    <span class="block text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Locks your booking dates (balance settled at check-in)</span>
+                                </div>
+                            </label>
+
+                            <label class="p-4 rounded-2xl border cursor-pointer transition-all flex items-start gap-3"
+                                   :class="paymentScope === 'full' ? 'bg-white dark:bg-slate-900 border-emerald-500 ring-2 ring-emerald-500/20 shadow-xs' : 'bg-white/60 dark:bg-slate-900/50 border-slate-200 dark:border-slate-700'">
+                                <input type="radio" name="payment_scope" value="full" x-model="paymentScope" class="mt-0.5 accent-emerald-600">
+                                <div>
+                                    <span class="font-black text-slate-900 dark:text-white block">Full Stay + Deposit</span>
+                                    <span class="text-base font-black font-mono text-blue-600 dark:text-blue-400 tabular-nums">
+                                        ₱{{ number_format($booking->total_amount, 2) }}
+                                    </span>
+                                    <span class="block text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Settle full stay, add-ons, fee &amp; deposit upfront</span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+                            @if($paymongoSimulation ?? false)
+                                <span class="text-[11px] font-semibold text-amber-700 dark:text-amber-300">
+                                    Test Sandbox Mode active (set <code>PAYMONGO_SECRET_KEY</code> in <code>.env</code> for live PayMongo API)
+                                </span>
+                            @else
+                                <span class="text-[11px] text-slate-500 dark:text-slate-400">
+                                    Secured by PayMongo Checkout &bull; Instant verification on success
+                                </span>
+                            @endif
+
+                            <button type="submit" :disabled="startingCheckout"
+                                    class="px-6 py-3 rounded-2xl text-xs font-black text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-md shadow-emerald-600/25 transition-all cursor-pointer shrink-0">
+                                <span x-show="!startingCheckout">
+                                    Pay <span x-text="paymentScope === 'full' ? '₱{{ number_format($booking->total_amount, 2) }}' : '₱{{ number_format($booking->advance_deposit_amount, 2) }}'"></span> via PayMongo &rarr;
+                                </span>
+                                <span x-show="startingCheckout" x-cloak>Connecting to PayMongo...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Divider -->
+                <div class="relative flex items-center py-1">
+                    <div class="grow border-t border-slate-200 dark:border-slate-800"></div>
+                    <span class="shrink mx-3 text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                        Or Upload Manual GCash Receipt
+                    </span>
+                    <div class="grow border-t border-slate-200 dark:border-slate-800"></div>
+                </div>
+
+                <!-- Host GCash Account Card with Copy Button -->
+                <div class="p-5 rounded-3xl bg-blue-50/50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 space-y-3">
+                    <div class="flex items-center justify-between border-b border-blue-100 dark:border-blue-900 pb-2">
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-blue-700 dark:text-blue-300">
+                            Host Official GCash Transfer Account
+                        </span>
+                        <span class="text-[10px] font-bold text-slate-400">Manual Escrow Transfer</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+                        <div>
+                            <span class="text-slate-500 dark:text-slate-400 block text-[11px]">GCash Account Name:</span>
+                            <strong class="text-slate-900 dark:text-white font-bold text-sm">
+                                {{ $booking->unit->host->name ?? 'Aurelio J. Budol Sr.' }}
+                            </strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-500 dark:text-slate-400 block text-[11px]">GCash Mobile Number:</span>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <span class="font-mono text-sm font-black text-blue-600 dark:text-blue-400">
+                                    {{ $booking->unit->host->phone ?? '09478847463' }}
+                                </span>
+                                <button type="button" @click="copyGcash('{{ $booking->unit->host->phone ?? '09478847463' }}')"
+                                        class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-200 hover:bg-blue-200 transition-colors cursor-pointer">
+                                    <span x-show="!copiedGcash">Copy</span>
+                                    <span x-show="copiedGcash">Copied! ✓</span>
                                 </button>
                             </div>
                         </div>
-                    </div>
-                    <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300">Proof Locked in Vault ✓</span>
-                </div>
-            @endif
-
-            <!-- Upload Receipt Form -->
-            <form action="{{ route('compliance.payment', $booking->booking_code) }}" method="POST" enctype="multipart/form-data" class="space-y-4"
-                  x-data="{
-                    receiptPreview: null,
-                    receiptName: '',
-                    handleReceipt(e) {
-                        const file = e.target.files ? e.target.files[0] : null;
-                        if (file) {
-                            this.receiptName = file.name;
-                            const reader = new FileReader();
-                            reader.onload = (event) => { this.receiptPreview = event.target.result; };
-                            reader.readAsDataURL(file);
-                        }
-                    }
-                  }">
-                @csrf
-                <input type="hidden" name="step" value="3">
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                            GCash / Bank Reference Number
-                        </label>
-                        <input type="text" name="reference_number" placeholder="e.g. 1002 9384 1928"
-                               class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono font-bold">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
-                            Payment Screenshot (Receipt) *
-                        </label>
-                        <input type="file" name="payment_receipt" accept="image/*" required @change="handleReceipt($event)"
-                               class="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 text-slate-600 dark:text-slate-300 cursor-pointer">
-                    </div>
-                </div>
-
-                <template x-if="receiptPreview">
-                    <div class="p-3 bg-blue-50/60 dark:bg-blue-950/40 rounded-2xl border border-blue-200 dark:border-blue-800 flex items-center gap-3">
-                        <img :src="receiptPreview" class="w-14 h-14 rounded-xl object-contain bg-white dark:bg-slate-900 border border-blue-300 dark:border-blue-700 shrink-0 p-1">
-                        <div class="min-w-0 flex-1">
-                            <span class="text-xs font-bold text-slate-900 dark:text-white truncate block" x-text="receiptName"></span>
-                            <span class="text-[10px] text-blue-600 dark:text-blue-400 font-semibold">Screenshot ready to upload</span>
+                        <div>
+                            <span class="text-slate-500 dark:text-slate-400 block text-[11px]">Required Escrow Amount:</span>
+                            <strong class="text-slate-900 dark:text-white font-mono text-sm font-black tabular-nums">
+                                ₱{{ number_format($booking->advance_deposit_amount, 2) }}
+                            </strong>
                         </div>
                     </div>
-                </template>
-
-                <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
-                    <button type="button" @click="goToStep(2)"
-                            class="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                        &larr; Back to Step 2 (Identity Vault)
-                    </button>
-                    <div class="flex items-center gap-3">
-                        <button type="button" @click="goToStep(4)"
-                                class="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                            Skip to Step 4 &rarr;
-                        </button>
-                        <button type="submit"
-                                class="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/25 transition-all cursor-pointer">
-                            {{ $paymentDoc ? 'Re-upload Receipt & Save' : 'Upload Payment Receipt & Proceed' }} &rarr;
-                        </button>
-                    </div>
                 </div>
-            </form>
+
+                <!-- Existing Receipt Display if uploaded -->
+                @if($paymentDoc)
+                    <div class="p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3">
+                            <button type="button" @click="openModal('{{ route('compliance.document', [$booking->booking_code, $paymentDoc->id]) }}', 'GCash Deposit Receipt')"
+                                    class="w-16 h-16 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 shrink-0 bg-slate-100 dark:bg-slate-950 p-1 cursor-pointer hover:opacity-85 transition-opacity" title="Click to view full picture">
+                                <img src="{{ route('compliance.document', [$booking->booking_code, $paymentDoc->id]) }}" 
+                                     alt="Payment Receipt"
+                                     class="w-full h-full object-contain">
+                            </button>
+                            <div>
+                                <p class="text-xs font-bold text-slate-900 dark:text-white">
+                                    {{ $paymentDoc->original_filename }}
+                                </p>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 font-mono">
+                                    {{ $paymentDoc->notes ?? 'GCash Deposit Screenshot' }}
+                                </p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">Status: {{ ucfirst($booking->payment_status) }}</span>
+                                    <span class="text-slate-300 dark:text-slate-700">&bull;</span>
+                                    <button type="button" @click="openModal('{{ route('compliance.document', [$booking->booking_code, $paymentDoc->id]) }}', 'GCash Deposit Receipt')"
+                                            class="text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+                                        View Full Picture &nearr;
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="text-xs font-bold text-emerald-700 dark:text-emerald-300">Proof Locked in Vault ✓</span>
+                    </div>
+                @endif
+
+                <!-- Upload Receipt Form -->
+                <form action="{{ route('compliance.payment', $booking->booking_code) }}" method="POST" enctype="multipart/form-data" class="space-y-4"
+                      x-data="{
+                        receiptPreview: null,
+                        receiptName: '',
+                        handleReceipt(e) {
+                            const file = e.target.files ? e.target.files[0] : null;
+                            if (file) {
+                                this.receiptName = file.name;
+                                const reader = new FileReader();
+                                reader.onload = (event) => { this.receiptPreview = event.target.result; };
+                                reader.readAsDataURL(file);
+                            }
+                        }
+                      }">
+                    @csrf
+                    <input type="hidden" name="step" value="3">
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                                GCash / Bank Reference Number
+                            </label>
+                            <input type="text" name="reference_number" placeholder="e.g. 1002 9384 1928"
+                                   class="w-full text-xs px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white font-mono font-bold">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                                Payment Screenshot (Receipt) *
+                            </label>
+                            <input type="file" name="payment_receipt" accept="image/*" required @change="handleReceipt($event)"
+                                   class="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 text-slate-600 dark:text-slate-300 cursor-pointer">
+                        </div>
+                    </div>
+
+                    <template x-if="receiptPreview">
+                        <div class="p-3 bg-blue-50/60 dark:bg-blue-950/40 rounded-2xl border border-blue-200 dark:border-blue-800 flex items-center gap-3">
+                            <img :src="receiptPreview" class="w-14 h-14 rounded-xl object-contain bg-white dark:bg-slate-900 border border-blue-300 dark:border-blue-700 shrink-0 p-1">
+                            <div class="min-w-0 flex-1">
+                                <span class="text-xs font-bold text-slate-900 dark:text-white truncate block" x-text="receiptName"></span>
+                                <span class="text-[10px] text-blue-600 dark:text-blue-400 font-semibold">Screenshot ready to upload</span>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <button type="button" @click="goToStep(2)"
+                                class="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                            &larr; Back to Step 2 (Identity Vault)
+                        </button>
+                        <div class="flex items-center gap-3">
+                            <button type="button" @click="goToStep(4)"
+                                    class="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                Skip to Step 4 &rarr;
+                            </button>
+                            <button type="submit"
+                                    class="px-6 py-3 rounded-2xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/25 transition-all cursor-pointer">
+                                {{ $paymentDoc ? 'Re-upload Receipt & Save' : 'Upload Payment Receipt & Proceed' }} &rarr;
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            @endif
         </div>
     </div>
 
@@ -1180,14 +1328,29 @@
                 <div class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2">
                     <div class="flex items-center justify-between">
                         <span class="font-bold text-slate-900 dark:text-white">Security Deposit Escrow</span>
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $paymentDoc ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200' : 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' }}">
-                            {{ $paymentDoc ? 'Proof Uploaded ✓' : 'Pending Upload' }}
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full {{ $booking->isPaid() || $paymentDoc ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200' : 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' }}">
+                            @if($booking->isPaid())
+                                PayMongo Verified ✓
+                            @elseif($paymentDoc)
+                                Proof Uploaded ✓
+                            @else
+                                Pending Payment
+                            @endif
                         </span>
                     </div>
                     <p class="text-slate-500 dark:text-slate-400 text-[11px]">
-                        Amount: <strong>₱{{ number_format($booking->advance_deposit_amount, 2) }}</strong> &bull; Status: <strong class="text-blue-600">{{ ucfirst($booking->payment_status) }}</strong>
+                        Amount: <strong>₱{{ number_format((float) ($booking->paid_amount ?? $booking->advance_deposit_amount), 2) }}</strong> &bull; Status: <strong class="text-blue-600">{{ ucfirst($booking->payment_status) }}</strong>
                     </p>
-                    @if($paymentDoc)
+                    @if($booking->paymongo_payment_id)
+                        <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-700 pt-2 mt-2">
+                            <span class="text-[11px] font-mono text-emerald-700 dark:text-emerald-300">
+                                Ref: {{ $booking->paymongo_payment_id }}
+                            </span>
+                            <span class="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase">
+                                {{ str_replace('paymongo_', '', $booking->payment_method ?? 'PayMongo') }}
+                            </span>
+                        </div>
+                    @elseif($paymentDoc)
                         <div class="flex items-center justify-between border-t border-slate-200 dark:border-slate-700 pt-2 mt-2">
                             <span class="text-[11px] font-mono text-slate-600 dark:text-slate-300">
                                 {{ $paymentDoc->notes ?? 'GCash Transfer Receipt Stored' }}

@@ -27,6 +27,12 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
     'total_amount',
     'status',
     'payment_status',
+    'paymongo_checkout_id',
+    'paymongo_payment_id',
+    'payment_method',
+    'payment_scope',
+    'paid_amount',
+    'paid_at',
     'waiver_accepted_at',
     'verified_at',
     'verified_by',
@@ -52,6 +58,8 @@ class Booking extends Model
             'advance_deposit_amount' => 'decimal:2',
             'platform_fee' => 'decimal:2',
             'total_amount' => 'decimal:2',
+            'paid_amount' => 'decimal:2',
+            'paid_at' => 'datetime',
             'waiver_accepted_at' => 'datetime',
             'verified_at' => 'datetime',
         ];
@@ -168,5 +176,21 @@ class Booking extends Model
     public function hasVerificationSelfie(): bool
     {
         return $this->complianceDocuments()->where('document_type', 'selfie')->exists();
+    }
+
+    /**
+     * Determine whether payment has been verified or paid online.
+     */
+    public function isPaid(): bool
+    {
+        return in_array($this->payment_status, ['verified', 'paid'], true);
+    }
+
+    /**
+     * Determine whether payment proof has been submitted or verified online.
+     */
+    public function hasPaymentSubmittedOrPaid(): bool
+    {
+        return $this->hasPaymentReceipt() || in_array($this->payment_status, ['submitted', 'verified', 'paid'], true);
     }
 }
