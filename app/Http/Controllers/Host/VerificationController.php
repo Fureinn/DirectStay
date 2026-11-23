@@ -97,6 +97,9 @@ class VerificationController extends Controller
         $booking->update([
             'status' => 'confirmed',
             'payment_status' => 'verified',
+            'payment_method' => $booking->payment_method ?? 'gcash_manual',
+            'paid_amount' => $booking->paid_amount ?? $booking->advance_deposit_amount,
+            'paid_at' => $booking->paid_at ?? now(),
             'verified_at' => now(),
             'verified_by' => auth()->id(),
         ]);

@@ -843,6 +843,11 @@ window.hostDashboard = function() {
                 </div>
 
                 <div class="flex items-center gap-2">
+                    <a href="{{ route('host.transactions.index') }}"
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 transition-colors">
+                        <span>GCash Ledger</span>
+                        <span>&rarr;</span>
+                    </a>
                     <a href="{{ route('host.verifications.index') }}"
                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950/50 transition-colors">
                         <span>View Verification Pipeline</span>
@@ -887,7 +892,12 @@ window.hostDashboard = function() {
                                 </td>
                                 <td class="py-4 px-6">
                                     <div class="font-extrabold text-slate-900 dark:text-white tabular-nums">₱{{ number_format($b->total_amount, 2) }}</div>
-                                    <span class="text-[10px] text-blue-600 dark:text-blue-400 font-medium">Dep: ₱{{ number_format($b->advance_deposit_amount, 2) }}</span>
+                                    <span class="text-[10px] text-blue-600 dark:text-blue-400 font-medium block">Dep: ₱{{ number_format($b->advance_deposit_amount, 2) }}</span>
+                                    @if($b->isPaid())
+                                        <a href="{{ route('transactions.receipt', $b->booking_code) }}" class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
+                                            GCash Paid ✓ &bull; Receipt
+                                        </a>
+                                    @endif
                                 </td>
                                 <td class="py-4 px-6">
                                     @if($b->status === 'confirmed')

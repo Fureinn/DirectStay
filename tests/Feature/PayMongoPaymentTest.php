@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Booking;
 use App\Models\Transaction;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\Carbon;
 use Database\Seeders\DirectStaySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -120,6 +121,14 @@ class PayMongoPaymentTest extends TestCase
 
         $checkoutResponse->assertRedirect('https://checkout.paymongo.com/cs_test_123456');
 
+        Http::assertSent(function ($request): bool {
+            if ($request->url() !== 'https://api.paymongo.com/v1/checkout_sessions') {
+                return true;
+            }
+
+            return $request['data']['attributes']['payment_method_types'] === ['gcash'];
+        });
+
         $booking->refresh();
         $this->assertSame('cs_test_123456', $booking->paymongo_checkout_id);
         $this->assertSame('unpaid', $booking->payment_status);
@@ -209,10 +218,16 @@ class PayMongoPaymentTest extends TestCase
         $prematureResponse->assertSessionHas('error');
         $this->assertSame('unpaid', $booking->fresh()->payment_status);
 
-        // Complete simulated payment with "succeed"
-        $completeResponse = $this->post(route('paymongo.sandbox.complete', ['checkoutId' => $checkoutId]), [
+        // Non-GCash payment method is rejected in sandbox
+        $this->post(route('paymongo.sandbox.complete', ['checkoutId' => $checkoutId]), [
             'action' => 'succeed',
             'payment_method' => 'paymaya',
+        ])->assertSessionHasErrors('payment_method');
+
+        // Complete simulated payment with "succeed" using GCash
+        $completeResponse = $this->post(route('paymongo.sandbox.complete', ['checkoutId' => $checkoutId]), [
+            'action' => 'succeed',
+            'payment_method' => 'gcash',
         ]);
 
         $completeResponse->assertRedirect();
@@ -222,7 +237,7 @@ class PayMongoPaymentTest extends TestCase
 
         $booking->refresh();
         $this->assertSame('verified', $booking->payment_status);
-        $this->assertSame('paymongo_paymaya', $booking->payment_method);
+        $this->assertSame('paymongo_gcash', $booking->payment_method);
         $this->assertSame('full', $booking->payment_scope);
         $this->assertEquals(4150.00, (float) $booking->paid_amount);
 
@@ -297,7 +312,7 @@ class PayMongoPaymentTest extends TestCase
                                     'attributes' => [
                                         'amount' => 100000,
                                         'status' => 'paid',
-                                        'source' => ['type' => 'card'],
+                                        'source' => ['type' => 'gcash'],
                                     ],
                                 ],
                             ],
@@ -332,7 +347,7 @@ class PayMongoPaymentTest extends TestCase
         $booking->refresh();
         $this->assertSame('verified', $booking->payment_status);
         $this->assertSame('pay_wh_555666', $booking->paymongo_payment_id);
-        $this->assertSame('paymongo_card', $booking->payment_method);
+        $this->assertSame('paymongo_gcash', $booking->payment_method);
     }
 
     public function test_cancelled_booking_cannot_initiate_paymongo_checkout(): void
@@ -344,5 +359,83 @@ class PayMongoPaymentTest extends TestCase
             ->assertSessionHas('error');
 
         $this->assertNull($booking->fresh()->paymongo_checkout_id);
+    }
+
+    public function test_gcash_transaction_is_traceable_on_both_buyer_and_seller_accounts(): void
+    {
+        Config::set('services.paymongo.secret_key', '');
+        Config::set('services.paymongo.sandbox_simulation', true);
+
+        $buyer = User::where('email', 'customer@directstay.local')->firstOrFail();
+        $seller = User::where('email', 'host@directstay.local')->firstOrFail();
+        $otherBuyer = User::factory()->create(['role' => 'guest']);
+
+        $booking = $this->createUnpaidBooking('DS-TRACE-01');
+        $booking->update([
+            'user_id' => $buyer->id,
+            'guest_name' => $buyer->name,
+            'guest_email' => $buyer->email,
+        ]);
+
+        $this->post(route('compliance.paymongo.checkout', $booking->booking_code), [
+            'payment_scope' => 'deposit',
+        ]);
+
+        $checkoutId = $booking->fresh()->paymongo_checkout_id;
+        $complete = $this->post(route('paymongo.sandbox.complete', ['checkoutId' => $checkoutId]), [
+            'action' => 'succeed',
+            'payment_method' => 'gcash',
+        ]);
+        $this->get($complete->headers->get('Location'));
+
+        $booking->refresh();
+        $paymentRef = $booking->paymongo_payment_id;
+        $this->assertNotNull($paymentRef);
+
+        // 1. Buyer sees the transaction in My Transactions & can view Official Receipt
+        $this->actingAs($buyer)
+            ->get(route('customer.transactions'))
+            ->assertOk()
+            ->assertSee($booking->booking_code)
+            ->assertSee($paymentRef)
+            ->assertSee('GCash');
+
+        $this->actingAs($buyer)
+            ->get(route('transactions.receipt', $booking->booking_code))
+            ->assertOk()
+            ->assertSee('Buyer Receipt (Payment Transmitted)')
+            ->assertSee($paymentRef)
+            ->assertSee($seller->email)
+            ->assertSee($buyer->email);
+
+        // 2. Seller (Host) sees the exact same transaction in Seller Ledger & can view Official Receipt
+        $this->actingAs($seller)
+            ->get(route('host.transactions.index'))
+            ->assertOk()
+            ->assertSee($booking->booking_code)
+            ->assertSee($paymentRef)
+            ->assertSee($buyer->name);
+
+        $this->actingAs($seller)
+            ->get(route('transactions.receipt', $booking->booking_code))
+            ->assertOk()
+            ->assertSee('Seller Receipt (Payment Received)')
+            ->assertSee($paymentRef)
+            ->assertSee($seller->email)
+            ->assertSee($buyer->email);
+
+        // 3. Unrelated buyer cannot view another buyer's receipt or host ledger
+        $this->actingAs($otherBuyer)
+            ->get(route('transactions.receipt', $booking->booking_code))
+            ->assertForbidden();
+
+        $this->actingAs($otherBuyer)
+            ->get(route('host.transactions.index'))
+            ->assertForbidden();
+
+        // 4. Host cannot open guest-only My Transactions page
+        $this->actingAs($seller)
+            ->get(route('customer.transactions'))
+            ->assertForbidden();
     }
 }

@@ -16,6 +16,8 @@ class PayMongoService
 
     public const SCOPE_FULL = 'full';
 
+    public const ALLOWED_PAYMENT_METHOD = 'gcash';
+
     /**
      * Determine if live or test PayMongo API credentials are configured.
      */
@@ -93,7 +95,7 @@ class PayMongoService
                                     'description' => $description,
                                 ],
                             ],
-                            'payment_method_types' => ['qrph', 'gcash', 'paymaya', 'card', 'grab_pay'],
+                            'payment_method_types' => [self::ALLOWED_PAYMENT_METHOD],
                             'reference_number' => $booking->booking_code,
                             'send_email_receipt' => true,
                             'show_description' => true,
@@ -239,16 +241,28 @@ class PayMongoService
         $isPaid = $paidPayment !== null || $paymentIntentStatus === 'succeeded' || $sessionStatus === 'paid';
 
         $paymentId = $paidPayment['id'] ?? ($attributes['payment_intent']['id'] ?? null);
-        $paymentMethod = $paidPayment['attributes']['source']['type']
-            ?? ($attributes['payment_method_used'] ?? 'gcash');
+        $paymentMethod = strtolower((string) ($paidPayment['attributes']['source']['type']
+            ?? ($attributes['payment_method_used'] ?? self::ALLOWED_PAYMENT_METHOD)));
         $paidCentavos = $paidPayment['attributes']['amount']
             ?? ($attributes['payment_intent']['attributes']['amount'] ?? null);
+
+        if ($isPaid && $paymentMethod !== self::ALLOWED_PAYMENT_METHOD) {
+            return [
+                'paid' => false,
+                'status' => 'unsupported_payment_method',
+                'payment_id' => $paymentId ? (string) $paymentId : null,
+                'payment_method' => $paymentMethod,
+                'amount' => $paidCentavos !== null ? round(((int) $paidCentavos) / 100, 2) : null,
+                'payment_scope' => $attributes['metadata']['payment_scope'] ?? null,
+                'raw' => is_array($data) ? $data : [],
+            ];
+        }
 
         return [
             'paid' => $isPaid,
             'status' => $isPaid ? 'paid' : (string) ($paymentIntentStatus ?? $sessionStatus),
             'payment_id' => $paymentId ? (string) $paymentId : null,
-            'payment_method' => $paymentMethod ? (string) $paymentMethod : null,
+            'payment_method' => $paymentMethod,
             'amount' => $paidCentavos !== null ? round(((int) $paidCentavos) / 100, 2) : null,
             'payment_scope' => $attributes['metadata']['payment_scope'] ?? null,
             'raw' => is_array($data) ? $data : [],
@@ -272,7 +286,7 @@ class PayMongoService
      *
      * @return ?array<string, mixed>
      */
-    public function completeSimulatedSession(string $checkoutId, bool $succeed, string $paymentMethod = 'gcash'): ?array
+    public function completeSimulatedSession(string $checkoutId, bool $succeed, string $paymentMethod = self::ALLOWED_PAYMENT_METHOD): ?array
     {
         $session = $this->getSimulatedSession($checkoutId);
         if ($session === null) {
@@ -282,10 +296,10 @@ class PayMongoService
         if ($succeed) {
             $session['status'] = 'paid';
             $session['payment_id'] = 'pay_sim_'.Str::random(16);
-            $session['payment_method'] = $paymentMethod;
+            $session['payment_method'] = self::ALLOWED_PAYMENT_METHOD;
         } else {
             $session['status'] = 'failed';
-            $session['payment_method'] = $paymentMethod;
+            $session['payment_method'] = self::ALLOWED_PAYMENT_METHOD;
         }
 
         Cache::put($this->simulationCacheKey($checkoutId), $session, now()->addHours(2));

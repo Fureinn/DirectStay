@@ -144,12 +144,17 @@
                                         <span class="text-slate-400 dark:text-slate-500">({{ $b->nights_count }} Nights)</span>
                                     </div>
 
-                                    <div class="flex items-center gap-3 text-slate-500 dark:text-slate-400">
+                                    <div class="flex flex-wrap items-center gap-2 text-slate-500 dark:text-slate-400">
                                         <span>👥 {{ $b->guest_count }} {{ Str::plural('Guest', $b->guest_count) }}</span>
                                         <span>&bull;</span>
                                         <span>Sec Deposit: ₱{{ number_format($b->advance_deposit_amount, 0) }}</span>
                                         <span>&bull;</span>
                                         <span class="font-black text-slate-900 dark:text-white tabular-nums font-mono">Total: ₱{{ number_format($b->total_amount, 2) }}</span>
+                                        @if($b->isPaid())
+                                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                                GCash Paid ✓
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -163,6 +168,13 @@
                                     <span class="text-amber-950">★</span>
                                     <span>Rate Your Stay</span>
                                 </button>
+                            @endif
+
+                            @if($b->transactions->isNotEmpty() || $b->isPaid())
+                                <a href="{{ route('transactions.receipt', $b->booking_code) }}"
+                                   class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50/80 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/70 border border-emerald-200/80 dark:border-emerald-800 shadow-2xs transition-all btn-press">
+                                    <span>GCash Receipt</span>
+                                </a>
                             @endif
 
                             <a href="{{ route('compliance.portal', $b->booking_code) }}"

@@ -6,6 +6,7 @@ use App\Models\AddOn;
 use App\Models\Booking;
 use App\Models\Building;
 use App\Models\Review;
+use App\Models\Transaction;
 use App\Models\Unit;
 use App\Models\User;
 use Carbon\Carbon;
@@ -32,7 +33,7 @@ class DirectStaySeeder extends Seeder
         );
 
         // 2. Demo Customer / Guest User
-        User::updateOrCreate(
+        $customer = User::updateOrCreate(
             ['email' => 'customer@directstay.local'],
             [
                 'name' => 'Kenry M. Cui',
@@ -209,10 +210,10 @@ class DirectStaySeeder extends Seeder
                 ['booking_code' => 'DS-SEED-REV-01'],
                 [
                     'unit_id' => $unitN->id,
-                    'user_id' => null,
-                    'guest_name' => 'Maria Cristina Reyes',
-                    'guest_email' => 'maria.reyes@example.com',
-                    'guest_phone' => '09171239988',
+                    'user_id' => $customer->id,
+                    'guest_name' => 'Kenry M. Cui',
+                    'guest_email' => 'customer@directstay.local',
+                    'guest_phone' => '09178889911',
                     'guest_count' => 4,
                     'check_in_date' => Carbon::now()->subDays(10)->toDateString(),
                     'check_out_date' => Carbon::now()->subDays(8)->toDateString(),
@@ -224,10 +225,60 @@ class DirectStaySeeder extends Seeder
                     'total_amount' => 4200.00,
                     'status' => 'checked_out',
                     'payment_status' => 'verified',
+                    'paymongo_checkout_id' => 'cs_sample_gcash_001',
+                    'paymongo_payment_id' => 'pay_gcash_sample_889900',
+                    'payment_method' => 'paymongo_gcash',
+                    'payment_scope' => 'full',
+                    'paid_amount' => 4200.00,
+                    'paid_at' => Carbon::now()->subDays(10),
                     'waiver_accepted_at' => Carbon::now()->subDays(10),
                     'verified_at' => Carbon::now()->subDays(10),
+                    'verified_by' => $host->id,
                     'created_at' => Carbon::now()->subDays(12),
                     'updated_at' => Carbon::now()->subDays(8),
+                ]
+            );
+
+            Transaction::updateOrCreate(
+                ['booking_id' => $booking1->id, 'type' => 'advance_deposit'],
+                [
+                    'amount' => 1000.00,
+                    'reference_number' => 'pay_gcash_sample_889900',
+                    'status' => 'completed',
+                    'metadata' => [
+                        'gateway' => 'paymongo',
+                        'checkout_id' => 'cs_sample_gcash_001',
+                        'payment_method' => 'paymongo_gcash',
+                        'description' => 'Mandatory advance deposit settled via GCash',
+                    ],
+                ]
+            );
+
+            Transaction::updateOrCreate(
+                ['booking_id' => $booking1->id, 'type' => 'platform_fee'],
+                [
+                    'amount' => 150.00,
+                    'reference_number' => 'pay_gcash_sample_889900',
+                    'status' => 'completed',
+                    'metadata' => [
+                        'gateway' => 'paymongo',
+                        'payment_method' => 'paymongo_gcash',
+                        'description' => 'DirectStay flat service fee (5%) settled via GCash',
+                    ],
+                ]
+            );
+
+            Transaction::updateOrCreate(
+                ['booking_id' => $booking1->id, 'type' => 'stay_payment'],
+                [
+                    'amount' => 3050.00,
+                    'reference_number' => 'pay_gcash_sample_889900',
+                    'status' => 'completed',
+                    'metadata' => [
+                        'gateway' => 'paymongo',
+                        'payment_method' => 'paymongo_gcash',
+                        'description' => 'Full stay room rate & add-ons settled via GCash',
+                    ],
                 ]
             );
 
@@ -235,8 +286,8 @@ class DirectStaySeeder extends Seeder
                 ['booking_id' => $booking1->id],
                 [
                     'unit_id' => $unitN->id,
-                    'user_id' => null,
-                    'guest_name' => 'Maria Cristina Reyes',
+                    'user_id' => $customer->id,
+                    'guest_name' => 'Kenry M. Cui',
                     'rating' => 5,
                     'cleanliness_rating' => 5,
                     'communication_rating' => 5,

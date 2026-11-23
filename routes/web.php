@@ -5,14 +5,17 @@ use App\Http\Controllers\ComplianceController;
 use App\Http\Controllers\CustomerAuthController;
 use App\Http\Controllers\CustomerBookingController;
 use App\Http\Controllers\CustomerSettingsController;
+use App\Http\Controllers\CustomerTransactionController;
 use App\Http\Controllers\Host\AuthController as HostAuthController;
 use App\Http\Controllers\Host\BlockedDateController as HostBlockedDateController;
 use App\Http\Controllers\Host\CheckoutController as HostCheckoutController;
 use App\Http\Controllers\Host\DashboardController as HostDashboardController;
+use App\Http\Controllers\Host\TransactionController as HostTransactionController;
 use App\Http\Controllers\Host\UnitManagementController as HostUnitManagementController;
 use App\Http\Controllers\Host\VerificationController as HostVerificationController;
 use App\Http\Controllers\PayMongoController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\TransactionReceiptController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -65,6 +68,8 @@ Route::post('/logout', [CustomerAuthController::class, 'logout'])->name('custome
 
 Route::middleware('auth')->group(function () {
     Route::get('/my-bookings', [CustomerBookingController::class, 'index'])->name('customer.bookings');
+    Route::get('/my-transactions', [CustomerTransactionController::class, 'index'])->name('customer.transactions');
+    Route::get('/transactions/{bookingCode}/receipt', [TransactionReceiptController::class, 'show'])->name('transactions.receipt');
     Route::get('/account/settings', [CustomerSettingsController::class, 'edit'])->name('customer.settings.edit');
     Route::put('/account/settings', [CustomerSettingsController::class, 'update'])->name('customer.settings.update');
 });
@@ -102,6 +107,9 @@ Route::prefix('host')->name('host.')->group(function () {
         Route::post('/verifications/{booking}/approve', [HostVerificationController::class, 'approve'])->name('verifications.approve');
         Route::post('/verifications/{booking}/reject', [HostVerificationController::class, 'reject'])->name('verifications.reject');
         Route::get('/documents/{document}', [HostVerificationController::class, 'streamDocument'])->name('documents.stream');
+
+        // Seller Transaction Ledger
+        Route::get('/transactions', [HostTransactionController::class, 'index'])->name('transactions.index');
 
         // Post-Checkout Digital Inventory Inspection & Penalty Engine
         Route::get('/checkouts/{booking}', [HostCheckoutController::class, 'show'])->name('checkouts.show');

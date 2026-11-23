@@ -47,7 +47,7 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
-        $recentBookings = Booking::with(['unit.building', 'complianceDocuments'])
+        $recentBookings = Booking::with(['unit.building', 'complianceDocuments', 'transactions'])
             ->latest()
             ->take(10)
             ->get();

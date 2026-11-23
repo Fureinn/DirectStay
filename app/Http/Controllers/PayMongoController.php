@@ -155,11 +155,11 @@ class PayMongoController extends Controller
 
         $validated = $request->validate([
             'action' => ['required', 'in:succeed,fail'],
-            'payment_method' => ['required', 'in:gcash,paymaya,card,grab_pay'],
+            'payment_method' => ['nullable', 'in:gcash'],
         ]);
 
         $succeed = $validated['action'] === 'succeed';
-        $session = $payMongo->completeSimulatedSession($checkoutId, $succeed, $validated['payment_method']);
+        $session = $payMongo->completeSimulatedSession($checkoutId, $succeed, PayMongoService::ALLOWED_PAYMENT_METHOD);
 
         if ($session === null) {
             abort(404, 'Checkout session expired or not found.');
@@ -220,8 +220,12 @@ class PayMongoController extends Controller
         $paidPayment = is_array($payments) ? ($payments[0] ?? null) : null;
 
         $paymentId = (string) ($paidPayment['id'] ?? ($resourceData['id'] ?? $checkoutId));
-        $paymentMethod = (string) ($paidPayment['attributes']['source']['type']
-            ?? ($attributes['source']['type'] ?? 'gcash'));
+        $paymentMethod = strtolower((string) ($paidPayment['attributes']['source']['type']
+            ?? ($attributes['source']['type'] ?? PayMongoService::ALLOWED_PAYMENT_METHOD)));
+
+        if ($paymentMethod !== PayMongoService::ALLOWED_PAYMENT_METHOD) {
+            return response()->json(['ignored' => 'GCash is the only accepted payment method.']);
+        }
         $paidCentavos = $paidPayment['attributes']['amount']
             ?? ($attributes['amount'] ?? null);
         $paymentScope = (string) ($attributes['metadata']['payment_scope']

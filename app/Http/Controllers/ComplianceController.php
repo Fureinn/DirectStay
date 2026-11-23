@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\ComplianceDocument;
+use App\Models\Transaction;
 use App\Services\GatePassService;
 use App\Services\PayMongoService;
 use App\Services\RentalAgreementService;
@@ -68,19 +69,37 @@ class ComplianceController extends Controller
         $folder = 'compliance/'.$booking->booking_code;
         $path = $file->store($folder, 'local');
 
+        $refNumber = ! empty($validated['reference_number']) ? trim($validated['reference_number']) : null;
+
         ComplianceDocument::updateOrCreate(
             ['booking_id' => $booking->id, 'document_type' => 'payment_receipt'],
             [
                 'file_path' => $path,
                 'original_filename' => $file->getClientOriginalName(),
                 'mime_type' => $file->getClientMimeType(),
-                'notes' => $validated['reference_number'] ? 'GCash Ref: '.trim($validated['reference_number']) : null,
+                'notes' => $refNumber ? 'GCash Ref: '.$refNumber : null,
             ]
         );
 
         $booking->update([
             'payment_status' => 'submitted',
+            'payment_method' => 'gcash_manual',
         ]);
+
+        $depositTxn = Transaction::where('booking_id', $booking->id)
+            ->where('type', 'advance_deposit')
+            ->first();
+
+        if ($depositTxn) {
+            $depositTxn->update([
+                'reference_number' => $refNumber ?? ($depositTxn->reference_number ?: 'GCASH-'.$booking->booking_code),
+                'metadata' => array_merge($depositTxn->metadata ?? [], [
+                    'gateway' => 'gcash_manual',
+                    'payment_method' => 'GCash (Manual Transfer)',
+                    'gcash_reference' => $refNumber,
+                ]),
+            ]);
+        }
 
         return redirect()->route('compliance.portal', ['bookingCode' => $booking->booking_code, 'step' => 3])
             ->with('success', 'Payment proof submitted successfully! The host will review and verify it.');

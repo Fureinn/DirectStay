@@ -277,7 +277,7 @@
                     </div>
                     <p class="text-xs font-bold text-slate-900 dark:text-white mt-1.5 truncate">Advance Deposit</p>
                     <p class="text-[10px] text-slate-400 dark:text-slate-500">
-                        {{ $booking->isPaid() ? 'PayMongo Paid ✓' : 'PayMongo / GCash' }}
+                        {{ $booking->isPaid() ? 'GCash Paid ✓' : 'GCash Only' }}
                     </p>
                 </button>
 
@@ -818,8 +818,8 @@
                         </div>
                         <div class="p-3 rounded-2xl bg-white/80 dark:bg-slate-900/70 border border-emerald-200/60 dark:border-emerald-900">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Payment Method</span>
-                            <strong class="text-sm font-bold text-slate-900 dark:text-white uppercase">
-                                {{ str_replace('paymongo_', 'PayMongo • ', $booking->payment_method ?? 'Verified') }}
+                            <strong class="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase">
+                                GCash (PayMongo)
                             </strong>
                         </div>
                         <div class="p-3 rounded-2xl bg-white/80 dark:bg-slate-900/70 border border-emerald-200/60 dark:border-emerald-900">
@@ -830,41 +830,45 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between pt-2">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-2">
                         <button type="button" @click="goToStep(2)"
                                 class="px-5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-400 hover:bg-white/70 dark:hover:bg-slate-800 transition-colors cursor-pointer">
                             &larr; Back to Step 2 (Identity Vault)
                         </button>
-                        <button type="button" @click="goToStep(4)"
-                                class="px-6 py-3 rounded-2xl text-xs font-black text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/25 transition-all cursor-pointer">
-                            Proceed to Step 4 (Rules &amp; Lease) &rarr;
-                        </button>
+                        <div class="flex items-center gap-2">
+                            @auth
+                                <a href="{{ route('transactions.receipt', $booking->booking_code) }}"
+                                   class="px-4 py-2.5 rounded-2xl text-xs font-bold text-blue-700 dark:text-blue-300 bg-white dark:bg-slate-900 border border-blue-200 dark:border-blue-800 hover:bg-blue-50 transition-all">
+                                    View Official Receipt
+                                </a>
+                            @endauth
+                            <button type="button" @click="goToStep(4)"
+                                    class="px-6 py-3 rounded-2xl text-xs font-black text-white bg-emerald-600 hover:bg-emerald-700 shadow-md shadow-emerald-600/25 transition-all cursor-pointer">
+                                Proceed to Step 4 (Rules &amp; Lease) &rarr;
+                            </button>
+                        </div>
                     </div>
                 </div>
             @else
-                <!-- PRIMARY OPTION: INSTANT PAYMONGO CHECKOUT -->
-                <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-emerald-50/80 via-teal-50/50 to-blue-50/60 dark:from-emerald-950/30 dark:via-slate-900 dark:to-blue-950/20 border border-emerald-200 dark:border-emerald-800/80 space-y-4"
+                <!-- PRIMARY OPTION: INSTANT PAYMONGO GCASH CHECKOUT -->
+                <div class="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-blue-50/80 via-emerald-50/40 to-indigo-50/60 dark:from-blue-950/30 dark:via-slate-900 dark:to-emerald-950/20 border border-blue-200 dark:border-blue-800/80 space-y-4"
                      x-data="{ paymentScope: 'deposit', startingCheckout: false }">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-200/60 dark:border-emerald-800/50 pb-3">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-blue-200/60 dark:border-blue-800/50 pb-3">
                         <div>
                             <div class="flex items-center gap-2">
-                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-600 text-white">
-                                    Recommended
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white">
+                                    GCash Only
                                 </span>
-                                <span class="text-xs font-black uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
-                                    Instant Online Payment via PayMongo
+                                <span class="text-xs font-black uppercase tracking-wider text-blue-900 dark:text-blue-300">
+                                    Instant GCash Payment via PayMongo
                                 </span>
                             </div>
                             <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
-                                Automatically verifies your payment the moment it succeeds — no waiting for manual receipt review.
+                                GCash is the only accepted payment method. Payment is automatically verified and recorded on both buyer and seller ledgers upon success.
                             </p>
                         </div>
-                        <div class="flex flex-wrap items-center gap-1.5 text-[10px] font-bold">
-                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-rose-600 dark:text-rose-400">QR Ph</span>
-                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-blue-600 dark:text-blue-400">GCash</span>
-                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-emerald-600 dark:text-emerald-400">Maya</span>
-                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-indigo-600 dark:text-indigo-400">Card</span>
-                            <span class="px-2 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-emerald-700 dark:text-emerald-300">GrabPay</span>
+                        <div class="flex items-center gap-1.5 text-[10px] font-bold shrink-0">
+                            <span class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400">GCash E-Wallet Only</span>
                         </div>
                     </div>
 
