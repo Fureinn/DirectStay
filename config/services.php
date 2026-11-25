@@ -44,6 +44,7 @@ return [
         'public_key' => env('PAYMONGO_PUBLIC_KEY'),
         'webhook_secret' => env('PAYMONGO_WEBHOOK_SECRET'),
         'base_url' => env('PAYMONGO_BASE_URL', 'https://api.paymongo.com/v1'),
+        'refunds_url' => env('PAYMONGO_REFUNDS_URL', 'https://refunds-api.paymongo.com/v1'),
         'sandbox_simulation' => env('PAYMONGO_SANDBOX_SIMULATION', false),
     ],
 

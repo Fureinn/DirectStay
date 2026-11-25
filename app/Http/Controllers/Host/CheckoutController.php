@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Checkout;
 use App\Models\Transaction;
+use App\Services\PayMongoService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class CheckoutController extends Controller
@@ -28,19 +30,25 @@ class CheckoutController extends Controller
             'Physical Key & Elevator Card',
         ];
 
+        $refundTransaction = $booking->transactions
+            ->where('type', 'deposit_refund')
+            ->sortByDesc('id')
+            ->first();
+
         return view('host.checkouts.inspect', [
             'booking' => $booking,
             'unit' => $booking->unit,
             'building' => $booking->unit->building,
             'inventory' => $defaultInventory,
             'checkout' => $booking->checkout,
+            'refundTransaction' => $refundTransaction,
         ]);
     }
 
     /**
      * Process inspection results, calculate cleaning and penalties, and settle deposit refund.
      */
-    public function store(Request $request, Booking $booking): RedirectResponse
+    public function store(Request $request, Booking $booking, PayMongoService $payMongo): RedirectResponse
     {
         if ($booking->status === 'cancelled') {
             return back()->with('error', 'Cannot perform checkout inspection on a cancelled reservation.');
@@ -118,48 +126,107 @@ class CheckoutController extends Controller
                 'penalties_breakdown' => $penalties,
                 'total_penalties' => $totalPenalties,
                 'deposit_refunded' => $depositRefunded,
-                'notes' => $validated['notes'],
+                'notes' => $validated['notes'] ?? null,
             ]
         );
 
         // Record transactions for financial audit ledger
         if ($cleaningFee > 0) {
-            Transaction::create([
-                'booking_id' => $booking->id,
-                'type' => 'cleaning_fee',
-                'amount' => $cleaningFee,
-                'status' => 'completed',
-                'metadata' => ['cleaning_type' => $validated['cleaning_type']],
-            ]);
+            Transaction::updateOrCreate(
+                ['booking_id' => $booking->id, 'type' => 'cleaning_fee'],
+                [
+                    'amount' => $cleaningFee,
+                    'status' => 'completed',
+                    'metadata' => ['cleaning_type' => $validated['cleaning_type']],
+                ]
+            );
         }
 
         if ($totalPenalties > 0) {
-            Transaction::create([
-                'booking_id' => $booking->id,
-                'type' => 'penalty_deduction',
-                'amount' => $totalPenalties,
-                'status' => 'completed',
-                'metadata' => ['penalties' => $penalties],
-            ]);
+            Transaction::updateOrCreate(
+                ['booking_id' => $booking->id, 'type' => 'penalty_deduction'],
+                [
+                    'amount' => $totalPenalties,
+                    'status' => 'completed',
+                    'metadata' => ['penalties' => $penalties],
+                ]
+            );
         }
 
-        Transaction::create([
-            'booking_id' => $booking->id,
-            'type' => 'deposit_refund',
-            'amount' => $depositRefunded,
-            'status' => 'completed',
-            'metadata' => [
-                'original_deposit' => $depositAmount,
-                'total_deductions' => $totalDeductions,
-                'net_refund' => $depositRefunded,
-            ],
+        $existingRefundTxn = Transaction::where('booking_id', $booking->id)
+            ->where('type', 'deposit_refund')
+            ->first();
+
+        $refundMetadata = array_merge($existingRefundTxn?->metadata ?? [], [
+            'original_deposit' => $depositAmount,
+            'total_deductions' => $totalDeductions,
+            'net_refund' => $depositRefunded,
         ]);
+        $refundReference = $existingRefundTxn?->reference_number;
+        $refundWarning = null;
+        $refundNotice = null;
+
+        $alreadyGatewayRefunded = ! empty($refundMetadata['refund_id']);
+
+        if ($depositRefunded > 0 && ! empty($booking->paymongo_payment_id) && ! $alreadyGatewayRefunded) {
+            try {
+                $refundResult = $payMongo->refundPayment(
+                    $booking,
+                    $depositRefunded,
+                    "Security deposit refund ({$booking->booking_code})"
+                );
+
+                $refundReference = $refundResult['refund_id'];
+                $refundMetadata = array_merge($refundMetadata, [
+                    'gateway' => 'paymongo',
+                    'refund_id' => $refundResult['refund_id'],
+                    'refund_status' => $refundResult['status'],
+                    'transfer_link' => $refundResult['transfer_link'],
+                    'refund_mode' => $refundResult['mode'],
+                    'refund_error' => null,
+                ]);
+
+                $refundNotice = ! empty($refundResult['transfer_link'])
+                    ? ' PayMongo QR Ph refund link generated (share with guest to claim).'
+                    : ' PayMongo GCash refund initiated (Ref: '.$refundResult['refund_id'].').';
+            } catch (\Throwable $e) {
+                Log::error('PayMongo deposit refund failed', [
+                    'booking_code' => $booking->booking_code,
+                    'payment_id' => $booking->paymongo_payment_id,
+                    'amount' => $depositRefunded,
+                    'error' => $e->getMessage(),
+                ]);
+
+                $refundMetadata = array_merge($refundMetadata, [
+                    'gateway' => 'paymongo',
+                    'refund_status' => 'failed',
+                    'refund_error' => $e->getMessage(),
+                ]);
+
+                $refundWarning = 'Checkout settled (Net refund: ₱'.number_format($depositRefunded, 2).'), but automatic PayMongo refund failed: '.$e->getMessage().' Please send manually.';
+            }
+        }
+
+        Transaction::updateOrCreate(
+            ['booking_id' => $booking->id, 'type' => 'deposit_refund'],
+            [
+                'amount' => $depositRefunded,
+                'reference_number' => $refundReference,
+                'status' => 'completed',
+                'metadata' => $refundMetadata,
+            ]
+        );
 
         $booking->update([
             'status' => 'checked_out',
         ]);
 
+        if ($refundWarning !== null) {
+            return redirect()->route('host.checkouts.show', $booking)
+                ->with('error', $refundWarning);
+        }
+
         return redirect()->route('host.checkouts.show', $booking)
-            ->with('success', 'Checkout inspection completed! Penalty deductions calculated. Net deposit refund: ₱'.number_format($depositRefunded, 2));
+            ->with('success', 'Checkout inspection completed! Penalty deductions calculated. Net deposit refund: ₱'.number_format($depositRefunded, 2).($refundNotice ?? ''));
     }
 }

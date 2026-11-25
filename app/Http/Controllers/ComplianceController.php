@@ -346,14 +346,20 @@ class ComplianceController extends Controller
      */
     public function status(string $bookingCode): View
     {
-        $booking = Booking::with(['unit.building', 'complianceDocuments', 'bookingAddOns.addOn', 'review'])
+        $booking = Booking::with(['unit.building', 'complianceDocuments', 'bookingAddOns.addOn', 'review', 'checkout', 'transactions'])
             ->where('booking_code', $bookingCode)
             ->firstOrFail();
+
+        $depositRefundTxn = $booking->transactions
+            ->where('type', 'deposit_refund')
+            ->sortByDesc('id')
+            ->first();
 
         return view('compliance.status', [
             'booking' => $booking,
             'unit' => $booking->unit,
             'building' => $booking->unit->building,
+            'depositRefundTxn' => $depositRefundTxn,
         ]);
     }
 

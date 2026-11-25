@@ -638,4 +638,151 @@ class PayMongoPaymentTest extends TestCase
         $this->assertSame('pay_wh_qrph_777', $booking->paymongo_payment_id);
         $this->assertSame('paymongo_qrph', $booking->payment_method);
     }
+
+    public function test_checkout_inspection_automatically_refunds_paymongo_gcash_deposit(): void
+    {
+        Config::set('services.paymongo.secret_key', 'sk_test_dummy_key');
+        Config::set('services.paymongo.base_url', 'https://api.paymongo.com/v1');
+
+        Http::preventStrayRequests();
+        Http::fake([
+            'api.paymongo.com/v1/refunds' => Http::response([
+                'data' => [
+                    'id' => 'ref_gcash_12345',
+                    'type' => 'refund',
+                    'attributes' => [
+                        'amount' => 50000,
+                        'status' => 'pending',
+                        'payment_id' => 'pay_gcash_001',
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $host = User::where('email', 'host@directstay.local')->firstOrFail();
+        $booking = $this->createUnpaidBooking('DS-REF-GCASH');
+        $booking->update([
+            'status' => 'confirmed',
+            'payment_status' => 'verified',
+            'paymongo_payment_id' => 'pay_gcash_001',
+            'payment_method' => 'paymongo_gcash',
+            'paid_amount' => 1000.00,
+        ]);
+
+        $this->actingAs($host)
+            ->post(route('host.checkouts.store', $booking), [
+                'inventory_status' => ['aircon' => 'intact'],
+                'cleaning_type' => 'none',
+                'penalty_garbage' => '1',
+            ])
+            ->assertRedirect(route('host.checkouts.show', $booking))
+            ->assertSessionHas('success');
+
+        Http::assertSent(function ($request): bool {
+            return $request->url() === 'https://api.paymongo.com/v1/refunds'
+                && $request['data']['attributes']['payment_id'] === 'pay_gcash_001'
+                && $request['data']['attributes']['amount'] === 50000;
+        });
+
+        $this->assertDatabaseHas('transactions', [
+            'booking_id' => $booking->id,
+            'type' => 'deposit_refund',
+            'amount' => 500.00,
+            'reference_number' => 'ref_gcash_12345',
+        ]);
+    }
+
+    public function test_checkout_inspection_generates_and_displays_qrph_refund_transfer_link(): void
+    {
+        Config::set('services.paymongo.secret_key', 'sk_test_dummy_key');
+        Config::set('services.paymongo.refunds_url', 'https://refunds-api.paymongo.com/v1');
+
+        Http::preventStrayRequests();
+        Http::fake([
+            'refunds-api.paymongo.com/v1/refunds' => Http::response([
+                'data' => [
+                    'id' => 'ref_qrph_98765',
+                    'type' => 'refund',
+                    'attributes' => [
+                        'amount' => 100000,
+                        'status' => 'processing',
+                        'payment_id' => 'pay_qrph_002',
+                        'transfer_link' => 'https://transfer.paymongo.com/claim-98765',
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $host = User::where('email', 'host@directstay.local')->firstOrFail();
+        $booking = $this->createUnpaidBooking('DS-REF-QRPH');
+        $booking->update([
+            'status' => 'confirmed',
+            'payment_status' => 'verified',
+            'paymongo_payment_id' => 'pay_qrph_002',
+            'payment_method' => 'paymongo_qrph',
+            'paid_amount' => 1000.00,
+        ]);
+
+        $this->actingAs($host)
+            ->post(route('host.checkouts.store', $booking), [
+                'inventory_status' => ['aircon' => 'intact'],
+                'cleaning_type' => 'none',
+            ])
+            ->assertRedirect(route('host.checkouts.show', $booking))
+            ->assertSessionHas('success');
+
+        Http::assertSent(function ($request): bool {
+            return $request->url() === 'https://refunds-api.paymongo.com/v1/refunds'
+                && $request['data']['attributes']['payment_id'] === 'pay_qrph_002'
+                && $request['data']['attributes']['amount'] === 100000;
+        });
+
+        $this->actingAs($host)
+            ->get(route('host.checkouts.show', $booking))
+            ->assertOk()
+            ->assertSee('ref_qrph_98765')
+            ->assertSee('https://transfer.paymongo.com/claim-98765');
+
+        $this->get(route('compliance.status', $booking->booking_code))
+            ->assertOk()
+            ->assertSee('https://transfer.paymongo.com/claim-98765')
+            ->assertSee('Claim Refund');
+    }
+
+    public function test_checkout_inspection_still_settles_if_paymongo_refund_api_fails(): void
+    {
+        Config::set('services.paymongo.secret_key', 'sk_test_dummy_key');
+        Config::set('services.paymongo.base_url', 'https://api.paymongo.com/v1');
+
+        Http::preventStrayRequests();
+        Http::fake([
+            'api.paymongo.com/v1/refunds' => Http::response([
+                'errors' => [['detail' => 'Insufficient wallet balance for refund.']],
+            ], 422),
+        ]);
+
+        $host = User::where('email', 'host@directstay.local')->firstOrFail();
+        $booking = $this->createUnpaidBooking('DS-REF-FAIL');
+        $booking->update([
+            'status' => 'confirmed',
+            'payment_status' => 'verified',
+            'paymongo_payment_id' => 'pay_gcash_fail',
+            'payment_method' => 'paymongo_gcash',
+            'paid_amount' => 1000.00,
+        ]);
+
+        $this->actingAs($host)
+            ->post(route('host.checkouts.store', $booking), [
+                'inventory_status' => ['aircon' => 'intact'],
+                'cleaning_type' => 'none',
+            ])
+            ->assertRedirect(route('host.checkouts.show', $booking))
+            ->assertSessionHas('error');
+
+        $this->assertSame('checked_out', $booking->fresh()->status);
+        $this->assertDatabaseHas('checkouts', [
+            'booking_id' => $booking->id,
+            'deposit_refunded' => 1000.00,
+        ]);
+    }
 }

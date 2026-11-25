@@ -486,6 +486,87 @@ class PayMongoService
     }
 
     /**
+     * Issue a PayMongo refund for a deposit settlement (supports GCash direct refund and QR Ph transfer link).
+     *
+     * @return array{refund_id: string, status: string, transfer_link: ?string, mode: string}
+     */
+    public function refundPayment(Booking $booking, float $amount, string $notes = ''): array
+    {
+        $paymentId = (string) $booking->paymongo_payment_id;
+        if ($paymentId === '') {
+            throw new RuntimeException('No PayMongo payment ID is recorded for this booking.');
+        }
+
+        $amountInCentavos = (int) round($amount * 100);
+        if ($amountInCentavos < 100) {
+            throw new RuntimeException('PayMongo requires a minimum refund amount of ₱1.00.');
+        }
+
+        $isQrPh = str_contains(strtolower((string) $booking->payment_method), self::ALLOWED_PAYMENT_METHOD_QRPH);
+        $refundNotes = Str::limit(
+            $notes !== '' ? $notes : "Security deposit refund for {$booking->booking_code}",
+            255,
+            ''
+        );
+
+        if (str_starts_with($paymentId, 'pay_sim_') && $this->isSimulationEnabled()) {
+            $refundId = 'ref_sim_'.Str::random(16);
+
+            return [
+                'refund_id' => $refundId,
+                'status' => $isQrPh ? 'processing' : 'succeeded',
+                'transfer_link' => $isQrPh ? url('/paymongo/sandbox/refund/'.$refundId) : null,
+                'mode' => 'simulation',
+            ];
+        }
+
+        if (! $this->isLiveApiConfigured()) {
+            throw new RuntimeException('PayMongo secret key is not configured.');
+        }
+
+        $endpoint = ($isQrPh ? $this->refundsUrl() : $this->baseUrl()).'/refunds';
+
+        $response = Http::withBasicAuth((string) config('services.paymongo.secret_key'), '')
+            ->acceptJson()
+            ->asJson()
+            ->connectTimeout(5)
+            ->timeout(15)
+            ->post($endpoint, [
+                'data' => [
+                    'attributes' => [
+                        'payment_id' => $paymentId,
+                        'amount' => $amountInCentavos,
+                        'reason' => 'requested_by_customer',
+                        'notes' => $refundNotes,
+                    ],
+                ],
+            ]);
+
+        if ($response->failed()) {
+            $detail = $response->json('errors.0.detail') ?? $response->body();
+
+            throw new RuntimeException('PayMongo refund error: '.$detail);
+        }
+
+        $data = $response->json('data') ?? [];
+        $attributes = $data['attributes'] ?? [];
+        $refundId = (string) ($data['id'] ?? '');
+
+        if ($refundId === '') {
+            throw new RuntimeException('PayMongo returned an incomplete refund response.');
+        }
+
+        return [
+            'refund_id' => $refundId,
+            'status' => (string) ($attributes['status'] ?? ($isQrPh ? 'processing' : 'pending')),
+            'transfer_link' => isset($attributes['transfer_link']) && $attributes['transfer_link'] !== ''
+                ? (string) $attributes['transfer_link']
+                : null,
+            'mode' => 'api',
+        ];
+    }
+
+    /**
      * Extract the normalized payment method type from a PayMongo checkout session payload.
      *
      * @param  array<string, mixed>  $paidPayment
@@ -508,6 +589,14 @@ class PayMongoService
     private function baseUrl(): string
     {
         return rtrim((string) config('services.paymongo.base_url', 'https://api.paymongo.com/v1'), '/');
+    }
+
+    /**
+     * Build the dedicated PayMongo QR Ph Refunds API URL.
+     */
+    private function refundsUrl(): string
+    {
+        return rtrim((string) config('services.paymongo.refunds_url', 'https://refunds-api.paymongo.com/v1'), '/');
     }
 
     /**

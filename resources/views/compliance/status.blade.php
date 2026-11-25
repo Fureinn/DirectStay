@@ -94,6 +94,53 @@
             </div>
         </div>
 
+        @if($booking->status === 'checked_out' && $booking->checkout)
+            @php
+                $refundMeta = $depositRefundTxn?->metadata ?? [];
+                $transferLink = $refundMeta['transfer_link'] ?? null;
+                $refundId = $refundMeta['refund_id'] ?? $depositRefundTxn?->reference_number;
+                $refundStatus = $refundMeta['refund_status'] ?? null;
+            @endphp
+            <div class="text-left bg-emerald-50/70 dark:bg-emerald-950/30 rounded-2xl border border-emerald-200 dark:border-emerald-800/70 p-6 space-y-3 text-xs mb-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-200/70 dark:border-emerald-800/60 pb-3">
+                    <div>
+                        <span class="text-[10px] font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-300 block">Post-Checkout Escrow Settlement</span>
+                        <h3 class="text-sm font-black text-slate-900 dark:text-white">
+                            Security Deposit Refund: ₱{{ number_format((float) $booking->checkout->deposit_refunded, 2) }}
+                        </h3>
+                    </div>
+                    @if($refundStatus)
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase bg-white dark:bg-slate-900 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 self-start sm:self-auto">
+                            PayMongo: {{ ucfirst($refundStatus) }}
+                        </span>
+                    @endif
+                </div>
+
+                @if($refundId)
+                    <div class="text-[11px] text-slate-600 dark:text-slate-300">
+                        Refund Reference: <strong class="font-mono text-slate-900 dark:text-white">{{ $refundId }}</strong>
+                    </div>
+                @endif
+
+                @if($transferLink)
+                    <div class="p-3 rounded-xl bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="text-[11px] text-slate-600 dark:text-slate-300">
+                            <strong class="text-slate-900 dark:text-white block">Claim your QR Ph Deposit Refund</strong>
+                            Open this PayMongo link within 3 days and enter your GCash or bank details to receive ₱{{ number_format((float) $booking->checkout->deposit_refunded, 2) }}.
+                        </div>
+                        <a href="{{ $transferLink }}" target="_blank" rel="noopener noreferrer"
+                           class="shrink-0 inline-flex items-center justify-center px-4 py-2 rounded-xl text-xs font-black text-white bg-emerald-600 hover:bg-emerald-700 transition-colors">
+                            Claim Refund &rarr;
+                        </a>
+                    </div>
+                @elseif($refundId)
+                    <p class="text-[11px] text-slate-600 dark:text-slate-300">
+                        Your GCash deposit refund has been submitted via PayMongo and typically reflects within 24 hours.
+                    </p>
+                @endif
+            </div>
+        @endif
+
         <!-- Staycation Guest Dossier & House Rules (A-F Staycation @ Deca Homes) -->
         <div class="text-left bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-800/70 dark:to-blue-950/30 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-6 space-y-4 text-xs mb-8">
             <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/80 pb-3">
