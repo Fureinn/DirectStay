@@ -52,7 +52,15 @@ class PayMongoWebhookController extends Controller
                 'event_type' => $eventType,
                 'received_amount' => $receivedAmount,
                 'payment_id' => $paymentId,
+                'attribute_keys' => array_keys($attributes),
             ]);
+
+            if ($receivedAmount === null) {
+                Log::warning('PayMongo webhook missing amount in expected paths', [
+                    'event_type' => $eventType,
+                    'resource_data' => $resourceData,
+                ]);
+            }
 
             if ($receivedAmount !== null && $receivedAmount > 0) {
                 $payment = Payment::where('status', 'pending')
@@ -97,9 +105,23 @@ class PayMongoWebhookController extends Controller
             ? $payments[0]
             : null;
 
+        $transactions = $attributes['transactions'] ?? [];
+        $firstTransaction = is_array($transactions) && isset($transactions[0]) && is_array($transactions[0])
+            ? $transactions[0]
+            : null;
+
         $rawAmount = $firstPayment['attributes']['amount']
+            ?? $firstPayment['amount']
+            ?? $firstTransaction['attributes']['amount']
+            ?? $firstTransaction['amount']
             ?? $attributes['latest_payment']['attributes']['amount']
+            ?? $attributes['latest_payment']['amount']
             ?? $attributes['payment']['attributes']['amount']
+            ?? $attributes['payment']['amount']
+            ?? $attributes['transaction']['attributes']['amount']
+            ?? $attributes['transaction']['amount']
+            ?? $attributes['paid_amount']
+            ?? $attributes['transaction_amount']
             ?? $attributes['amount']
             ?? null;
 
