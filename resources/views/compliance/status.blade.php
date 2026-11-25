@@ -5,26 +5,26 @@
 @section('content')
 <div class="page-enter max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-    <div class="surface-card soft-panel rounded-3xl border p-8 text-center">
+    <div class="surface-card soft-panel rounded-3xl border border-slate-200/80 dark:border-slate-800 p-8 text-center">
 
         @if($booking->status === 'confirmed' || $booking->status === 'checked_in')
-            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mx-auto mb-4">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 mb-2">
-                Gate Pass Dispatched & Cleared
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 mb-2">
+                Gate Pass Dispatched &amp; Cleared
             </span>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
                 Your Staycation is Fully Confirmed!
             </h1>
-            <p class="text-xs text-slate-500 max-w-lg mx-auto mb-8">
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-lg mx-auto mb-8">
                 Your payment and government ID have been validated by the host. Your official building move-in gate pass has been compiled and emailed to you and the lobby desk.
             </p>
 
             <!-- Download Official Building Documents (Gate Pass & Rental Agreement) -->
-            <div class="p-6 bg-slate-50/80 rounded-2xl border border-slate-200 mb-8 max-w-xl mx-auto text-center">
-                <div class="text-xs font-bold text-slate-900 mb-1">Official Documents Issued & Cleared</div>
-                <p class="text-[11px] text-slate-500 mb-4">
+            <div class="p-6 bg-slate-50/80 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 mb-8 max-w-xl mx-auto text-center">
+                <div class="text-xs font-bold text-slate-900 dark:text-white mb-1">Official Documents Issued &amp; Cleared</div>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mb-4">
                     Your reservation documents have been officially certified. You can download both the building gate pass (guest form) for security entry and your signed rental agreement contract:
                 </p>
 
@@ -36,138 +36,138 @@
                     </a>
 
                     <a href="{{ route('compliance.downloadRentalAgreement', ['bookingCode' => $booking->booking_code]) }}"
-                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-slate-800 bg-white border border-slate-300 hover:bg-slate-50 shadow-sm transition-all">
-                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-slate-800 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 shadow-sm transition-all">
+                        <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
                         <span>Download Rental Agreement (Contract)</span>
                     </a>
                 </div>
 
-                <p class="text-[11px] text-slate-400 mt-3">
+                <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-3">
                     Please present the Gate Pass PDF along with original Gov IDs to the lobby security upon arrival.
                 </p>
             </div>
 
         @else
-            <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-4 animate-pulse">
+            <div class="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-950/70 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto mb-4 animate-pulse">
                 <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-800 border border-amber-200 mb-2">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/70 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 mb-2">
                 Documents Under Review
             </span>
-            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
                 Verification in Progress
             </h1>
-            <p class="text-xs text-slate-500 max-w-lg mx-auto mb-8">
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-lg mx-auto mb-8">
                 Your reservation details, payment proof, and identification are queued for host verification. Once verified, your building gate pass will be automatically generated and emailed.
             </p>
         @endif
 
         <!-- Reservation Details Summary Box -->
-        <div class="text-left bg-slate-50 rounded-2xl border border-slate-200 p-6 space-y-3 text-xs mb-6">
-            <div class="flex justify-between border-b border-slate-200 pb-2">
-                <span class="text-slate-400">Booking Reference</span>
-                <span class="font-mono font-bold text-slate-900">{{ $booking->booking_code }}</span>
+        <div class="text-left bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-6 space-y-3 text-xs mb-6">
+            <div class="flex justify-between border-b border-slate-200 dark:border-slate-700/80 pb-2">
+                <span class="text-slate-500 dark:text-slate-400">Booking Reference</span>
+                <span class="font-mono font-bold text-slate-900 dark:text-white">{{ $booking->booking_code }}</span>
             </div>
-            <div class="flex justify-between border-b border-slate-200 pb-2">
-                <span class="text-slate-400">Condominium Unit</span>
-                <span class="font-bold text-slate-900">{{ $building->name }} - {{ $unit->unit_number }}</span>
+            <div class="flex justify-between border-b border-slate-200 dark:border-slate-700/80 pb-2">
+                <span class="text-slate-500 dark:text-slate-400">Condominium Unit</span>
+                <span class="font-bold text-slate-900 dark:text-white">{{ $building->name }} - {{ $unit->unit_number }}</span>
             </div>
-            <div class="flex justify-between border-b border-slate-200 pb-2">
-                <span class="text-slate-400">Check-in</span>
-                <span class="font-medium text-slate-900">{{ $booking->check_in_date->format('l, F d, Y') }} (2:00 PM)</span>
+            <div class="flex justify-between border-b border-slate-200 dark:border-slate-700/80 pb-2">
+                <span class="text-slate-500 dark:text-slate-400">Check-in</span>
+                <span class="font-medium text-slate-900 dark:text-slate-200">{{ $booking->check_in_date->format('l, F d, Y') }} (2:00 PM)</span>
             </div>
-            <div class="flex justify-between border-b border-slate-200 pb-2">
-                <span class="text-slate-400">Check-out</span>
-                <span class="font-medium text-slate-900">{{ $booking->check_out_date->format('l, F d, Y') }} (12:00 PM)</span>
+            <div class="flex justify-between border-b border-slate-200 dark:border-slate-700/80 pb-2">
+                <span class="text-slate-500 dark:text-slate-400">Check-out</span>
+                <span class="font-medium text-slate-900 dark:text-slate-200">{{ $booking->check_out_date->format('l, F d, Y') }} (12:00 PM)</span>
             </div>
-            <div class="flex justify-between border-b border-slate-200 pb-2">
-                <span class="text-slate-400">Lead Guest</span>
-                <span class="font-semibold text-slate-900">{{ $booking->guest_name }} ({{ $booking->guest_phone }})</span>
+            <div class="flex justify-between border-b border-slate-200 dark:border-slate-700/80 pb-2">
+                <span class="text-slate-500 dark:text-slate-400">Lead Guest</span>
+                <span class="font-semibold text-slate-900 dark:text-white">{{ $booking->guest_name }} ({{ $booking->guest_phone }})</span>
             </div>
-            <div class="flex justify-between border-b border-slate-200 pb-2">
-                <span class="text-slate-400">Advance Security Deposit</span>
-                <span class="font-bold text-slate-900">₱{{ number_format($booking->advance_deposit_amount, 2) }}</span>
+            <div class="flex justify-between border-b border-slate-200 dark:border-slate-700/80 pb-2">
+                <span class="text-slate-500 dark:text-slate-400">Advance Security Deposit</span>
+                <span class="font-bold text-slate-900 dark:text-white">₱{{ number_format($booking->advance_deposit_amount, 2) }}</span>
             </div>
             <div class="flex justify-between pt-1">
-                <span class="text-slate-400">Total Paid / Due</span>
-                <span class="font-extrabold text-blue-600 text-sm">₱{{ number_format($booking->total_amount, 2) }}</span>
+                <span class="text-slate-500 dark:text-slate-400">Total Paid / Due</span>
+                <span class="font-extrabold text-blue-600 dark:text-blue-400 text-sm">₱{{ number_format($booking->total_amount, 2) }}</span>
             </div>
         </div>
 
         <!-- Staycation Guest Dossier & House Rules (A-F Staycation @ Deca Homes) -->
-        <div class="text-left bg-gradient-to-br from-slate-50 to-blue-50/30 rounded-2xl border border-slate-200 p-6 space-y-4 text-xs mb-8">
-            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+        <div class="text-left bg-gradient-to-br from-slate-50 to-blue-50/30 dark:from-slate-800/70 dark:to-blue-950/30 rounded-2xl border border-slate-200 dark:border-slate-700/80 p-6 space-y-4 text-xs mb-8">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700/80 pb-3">
                 <div class="flex items-center gap-2">
                     <span class="text-base">🏠</span>
                     <div>
-                        <h4 class="font-extrabold text-slate-900 text-sm">Guest Stay Briefing & House Reminders</h4>
-                        <p class="text-[11px] text-slate-500">Official instructions for {{ $unit->unit_number }} (A-F Staycation)</p>
+                        <h4 class="font-extrabold text-slate-900 dark:text-white text-sm">Guest Stay Briefing &amp; House Reminders</h4>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">Official instructions for {{ $unit->unit_number }} (A-F Staycation)</p>
                     </div>
                 </div>
-                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">{{ $unit->building?->name ?? 'Ortigas, Pasig' }}</span>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950/80 text-blue-800 dark:text-blue-300 border border-transparent dark:border-blue-800">{{ $unit->building?->name ?? 'Ortigas, Pasig' }}</span>
             </div>
 
             <!-- WiFi & Connection Credentials -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-white rounded-xl border border-slate-200">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-white dark:bg-slate-900/80 rounded-xl border border-slate-200 dark:border-slate-700">
                 <div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">High-Speed WiFi Network</span>
-                    <span class="font-mono font-bold text-slate-900 text-xs">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-0.5">High-Speed WiFi Network</span>
+                    <span class="font-mono font-bold text-slate-900 dark:text-white text-xs">
                         {{ str_contains($unit->unit_number, 'N') ? 'AFSaltLifePadDos' : 'AFSaltLifePadUno2g' }}
                     </span>
                 </div>
                 <div>
-                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">WiFi Password</span>
-                    <span class="font-mono font-bold text-blue-600 text-xs select-all">Unodos.020933</span>
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-0.5">WiFi Password</span>
+                    <span class="font-mono font-bold text-blue-600 dark:text-blue-400 text-xs select-all">Unodos.020933</span>
                 </div>
             </div>
 
             <!-- Key Check-in & Security Policies -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-600">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-slate-600 dark:text-slate-300">
                 <div class="flex items-start gap-2">
-                    <span class="text-emerald-500 font-bold shrink-0">✓</span>
-                    <span><strong>Check-in:</strong> 2:00 PM onwards | <strong>Checkout:</strong> 12:00 NN</span>
+                    <span class="text-emerald-500 dark:text-emerald-400 font-bold shrink-0">✓</span>
+                    <span><strong class="text-slate-800 dark:text-slate-100">Check-in:</strong> 2:00 PM onwards | <strong class="text-slate-800 dark:text-slate-100">Checkout:</strong> 12:00 NN</span>
                 </div>
                 <div class="flex items-start gap-2">
-                    <span class="text-emerald-500 font-bold shrink-0">✓</span>
-                    <span><strong>Rider / Delivery:</strong> Meetup between Bldgs M & N parking garages</span>
+                    <span class="text-emerald-500 dark:text-emerald-400 font-bold shrink-0">✓</span>
+                    <span><strong class="text-slate-800 dark:text-slate-100">Rider / Delivery:</strong> Meetup between Bldgs M &amp; N parking garages</span>
                 </div>
                 <div class="flex items-start gap-2">
-                    <span class="text-amber-500 font-bold shrink-0">⚠</span>
-                    <span><strong>Garbage:</strong> Back of {{ str_contains($unit->unit_number, 'N') ? 'Bldg N' : 'Bldg P' }} (₱500 fine for unthrown trash)</span>
+                    <span class="text-amber-500 dark:text-amber-400 font-bold shrink-0">⚠</span>
+                    <span><strong class="text-slate-800 dark:text-slate-100">Garbage:</strong> Back of {{ str_contains($unit->unit_number, 'N') ? 'Bldg N' : 'Bldg P' }} (₱500 fine for unthrown trash)</span>
                 </div>
                 <div class="flex items-start gap-2">
-                    <span class="text-rose-500 font-bold shrink-0">⛔</span>
-                    <span><strong>No Smoking:</strong> Complex fine ₱2,000 (Smoking area at back of bldg)</span>
+                    <span class="text-rose-500 dark:text-rose-400 font-bold shrink-0">⛔</span>
+                    <span><strong class="text-slate-800 dark:text-slate-100">No Smoking:</strong> Complex fine ₱2,000 (Smoking area at back of bldg)</span>
                 </div>
                 <div class="flex items-start gap-2">
-                    <span class="text-amber-500 font-bold shrink-0">🔑</span>
-                    <span><strong>Key / Elevator RFID Pass:</strong> ₱500 replacement fee each if lost</span>
+                    <span class="text-amber-500 dark:text-amber-400 font-bold shrink-0">🔑</span>
+                    <span><strong class="text-slate-800 dark:text-slate-100">Key / Elevator RFID Pass:</strong> ₱500 replacement fee each if lost</span>
                 </div>
                 <div class="flex items-start gap-2">
-                    <span class="text-slate-500 font-bold shrink-0">🔇</span>
-                    <span><strong>Quiet Hours:</strong> Sun–Thu 10 PM–8 AM | Fri–Sat 12 AM–9 AM</span>
+                    <span class="text-slate-500 dark:text-slate-400 font-bold shrink-0">🔇</span>
+                    <span><strong class="text-slate-800 dark:text-slate-100">Quiet Hours:</strong> Sun–Thu 10 PM–8 AM | Fri–Sat 12 AM–9 AM</span>
                 </div>
             </div>
 
             <!-- Host & Emergency Contacts Table -->
-            <div class="pt-3 border-t border-slate-200">
-                <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 mb-2">Important Contacts</div>
+            <div class="pt-3 border-t border-slate-200 dark:border-slate-700/80">
+                <div class="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Important Contacts</div>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px]">
-                    <div class="p-2 bg-white rounded-lg border border-slate-200">
-                        <span class="text-slate-400 block text-[9px]">Host / GCash</span>
-                        <span class="font-bold text-slate-800">09478847463</span>
+                    <div class="p-2 bg-white dark:bg-slate-900/80 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-400 dark:text-slate-500 block text-[9px]">Host / GCash</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-200">09478847463</span>
                     </div>
-                    <div class="p-2 bg-white rounded-lg border border-slate-200">
-                        <span class="text-slate-400 block text-[9px]">{{ str_contains($unit->unit_number, 'N') ? 'Bldg N' : 'Bldg P' }} Landline</span>
-                        <span class="font-bold text-slate-800">{{ str_contains($unit->unit_number, 'N') ? '(02) 8642-8735' : '(02) 8659-4229' }}</span>
+                    <div class="p-2 bg-white dark:bg-slate-900/80 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-400 dark:text-slate-500 block text-[9px]">{{ str_contains($unit->unit_number, 'N') ? 'Bldg N' : 'Bldg P' }} Landline</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-200">{{ str_contains($unit->unit_number, 'N') ? '(02) 8642-8735' : '(02) 8659-4229' }}</span>
                     </div>
-                    <div class="p-2 bg-white rounded-lg border border-slate-200">
-                        <span class="text-slate-400 block text-[9px]">Admin Office</span>
-                        <span class="font-bold text-slate-800">(02) 8539-2340</span>
+                    <div class="p-2 bg-white dark:bg-slate-900/80 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-400 dark:text-slate-500 block text-[9px]">Admin Office</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-200">(02) 8539-2340</span>
                     </div>
-                    <div class="p-2 bg-white rounded-lg border border-slate-200">
-                        <span class="text-slate-400 block text-[9px]">Security / Viber</span>
-                        <span class="font-bold text-slate-800">09530694221</span>
+                    <div class="p-2 bg-white dark:bg-slate-900/80 rounded-lg border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-400 dark:text-slate-500 block text-[9px]">Security / Viber</span>
+                        <span class="font-bold text-slate-800 dark:text-slate-200">09530694221</span>
                     </div>
                 </div>
             </div>
@@ -193,7 +193,7 @@
                 @if($booking->review->comment)
                     <p class="text-xs text-slate-600 dark:text-slate-300 italic mb-3">"{{ $booking->review->comment }}"</p>
                 @endif
-                <div class="flex flex-wrap gap-4 text-[11px] text-slate-500 pt-2 border-t border-amber-500/15">
+                <div class="flex flex-wrap gap-4 text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-amber-500/15">
                     @if($booking->review->cleanliness_rating)
                         <span>Cleanliness: <strong>{{ $booking->review->cleanliness_rating }}/5</strong></span>
                     @endif
@@ -215,10 +215,10 @@
                         <span class="text-xl">✨</span>
                         <div>
                             <h4 class="font-extrabold text-slate-900 dark:text-white text-sm">How was your stay at {{ $unit->unit_number }}?</h4>
-                            <p class="text-[11px] text-slate-500">Your rating helps future guests and supports direct staycation hosts.</p>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">Your rating helps future guests and supports direct staycation hosts.</p>
                         </div>
                     </div>
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
                         ★ Verified Guest Rating
                     </span>
                 </div>
@@ -319,12 +319,14 @@
                 }
             </script>
         @endif
+
+        <div class="flex flex-wrap items-center justify-center gap-3">
             <a href="{{ route('compliance.portal', ['bookingCode' => $booking->booking_code]) }}"
-               class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
+               class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                 &larr; View Compliance Vault
             </a>
             <a href="{{ route('units.index') }}"
-               class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition-colors">
+               class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
                 Browse More Units
             </a>
         </div>

@@ -118,52 +118,12 @@
                 </span>
             </h1>
 
-            <p class="text-slate-300 text-sm sm:text-base lg:text-lg max-w-2xl mb-8 leading-relaxed font-normal">
+            <p class="text-slate-300 text-sm sm:text-base lg:text-lg max-w-2xl mb-6 leading-relaxed font-normal">
                 Skip commercial OTA markups. Book verified condo suites directly from unit owners across <strong>Ortigas, Pasig City</strong> with lean <strong>5% service fee</strong> (save ~₱276 per night vs Airbnb) and guaranteed condo lobby clearance.
             </p>
 
-            <!-- Hero Search Capsule -->
-            <form method="GET" action="{{ route('units.index') }}"
-                  class="w-full max-w-2xl mt-2 p-2 rounded-3xl bg-white/15 backdrop-blur-xl border border-white/25 shadow-xl shadow-slate-950/20 flex flex-col sm:flex-row gap-2">
-                <!-- Check-in -->
-                <div class="flex-1 flex flex-col px-4 py-2.5 rounded-2xl bg-white/20 hover:bg-white/25 border border-white/20 transition-all cursor-pointer">
-                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-blue-200 mb-0.5">Check-in</label>
-                    <input type="date" name="check_in"
-                           value="{{ $checkIn ?? '' }}"
-                           min="{{ date('Y-m-d') }}"
-                           class="bg-transparent text-white text-sm font-bold placeholder-white/50 outline-none cursor-pointer w-full [color-scheme:dark]"
-                           placeholder="Add date">
-                </div>
-                <!-- Check-out -->
-                <div class="flex-1 flex flex-col px-4 py-2.5 rounded-2xl bg-white/20 hover:bg-white/25 border border-white/20 transition-all cursor-pointer">
-                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-blue-200 mb-0.5">Check-out</label>
-                    <input type="date" name="check_out"
-                           value="{{ $checkOut ?? '' }}"
-                           min="{{ date('Y-m-d', strtotime('+1 day')) }}"
-                           class="bg-transparent text-white text-sm font-bold placeholder-white/50 outline-none cursor-pointer w-full [color-scheme:dark]"
-                           placeholder="Add date">
-                </div>
-                <!-- Guests -->
-                <div class="flex-1 flex flex-col px-4 py-2.5 rounded-2xl bg-white/20 hover:bg-white/25 border border-white/20 transition-all cursor-pointer">
-                    <label class="text-[10px] font-extrabold uppercase tracking-widest text-blue-200 mb-0.5">Guests</label>
-                    <select name="guests"
-                            class="bg-transparent text-white text-sm font-bold outline-none cursor-pointer w-full appearance-none [color-scheme:dark]">
-                        @for ($g = 1; $g <= 6; $g++)
-                            <option value="{{ $g }}" {{ ($selectedGuests ?? 1) == $g ? 'selected' : '' }}
-                                    class="bg-slate-900 text-white">{{ $g }} {{ $g === 1 ? 'Guest' : 'Guests' }}</option>
-                        @endfor
-                    </select>
-                </div>
-                <!-- Search Button -->
-                <button type="submit"
-                        class="shrink-0 px-6 py-3 rounded-2xl font-black text-sm text-white bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/30 hover:shadow-xl transition-all flex items-center gap-2 btn-press cursor-pointer whitespace-nowrap">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    <span class="hidden sm:inline">Search</span>
-                </button>
-            </form>
-
             <!-- Quick Trust Badges Strip -->
-            <div class="mt-6 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-medium text-slate-300">
+            <div class="mt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-medium text-slate-300">
                 <div class="flex items-center gap-1.5 bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur-md border border-white/10">
                     <span class="text-emerald-400 font-bold">✓</span>
                     <span>KM 19 Ortigas Ave Ext, Rosario, Pasig</span>
