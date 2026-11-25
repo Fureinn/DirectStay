@@ -74,7 +74,7 @@
                 <div class="p-3 rounded-2xl bg-white border border-slate-200 shadow-xs">
                     <img src="{{ asset('images/paymongo-static-qr.png') }}"
                          alt="PayMongo Static QR Ph Code"
-                         class="w-60 h-60 sm:w-64 sm:h-64 object-contain mx-auto">
+                         class="w-64 sm:w-72 h-auto object-contain mx-auto">
                 </div>
                 <div class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
