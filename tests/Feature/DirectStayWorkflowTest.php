@@ -497,4 +497,56 @@ class DirectStayWorkflowTest extends TestCase
         $agreementResponse->assertStatus(200);
         $this->assertStringContainsString('pdf', $agreementResponse->headers->get('content-type'));
     }
+
+    public function test_gate_pass_pdf_embeds_uploaded_government_ids_and_attaches_page_two(): void
+    {
+        $unit = Unit::where('unit_number', 'Unit N343')->firstOrFail();
+
+        $booking = Booking::create([
+            'booking_code' => 'DS-PDF-IDS-01',
+            'unit_id' => $unit->id,
+            'guest_name' => 'Kenry M. Cui',
+            'guest_email' => 'kenry@example.com',
+            'guest_phone' => '09178889911',
+            'guest_count' => 2,
+            'guest_roster' => [
+                ['name' => 'Maria Cui', 'relationship' => 'Spouse', 'id_type' => 'Philippine Passport'],
+            ],
+            'check_in_date' => Carbon::tomorrow()->toDateString(),
+            'check_out_date' => Carbon::tomorrow()->addDays(2)->toDateString(),
+            'nights_count' => 2,
+            'base_amount' => 3000.00,
+            'add_ons_amount' => 0.00,
+            'advance_deposit_amount' => 1000.00,
+            'platform_fee' => 150.00,
+            'total_amount' => 4150.00,
+            'status' => 'confirmed',
+            'payment_status' => 'verified',
+            'waiver_accepted_at' => now(),
+        ]);
+
+        $idOnePath = UploadedFile::fake()->image('lead_id.png', 300, 180)->store('compliance/'.$booking->booking_code, 'local');
+        $idTwoPath = UploadedFile::fake()->image('companion_id.jpg', 300, 180)->store('compliance/'.$booking->booking_code, 'local');
+
+        $booking->complianceDocuments()->createMany([
+            [
+                'document_type' => 'gov_id_0',
+                'file_path' => $idOnePath,
+                'original_filename' => 'lead_id.png',
+                'mime_type' => 'image/png',
+                'notes' => 'Philippine National ID (PhilSys)',
+            ],
+            [
+                'document_type' => 'gov_id_1',
+                'file_path' => $idTwoPath,
+                'original_filename' => 'companion_id.jpg',
+                'mime_type' => 'image/jpeg',
+                'notes' => 'Philippine Passport',
+            ],
+        ]);
+
+        $gatePassResponse = $this->get(route('compliance.downloadGatePass', $booking->booking_code));
+        $gatePassResponse->assertStatus(200);
+        $this->assertGreaterThanOrEqual(2, preg_match_all('/\/Type\s*\/Page\b/', $gatePassResponse->getContent()));
+    }
 }

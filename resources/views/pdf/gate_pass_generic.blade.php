@@ -79,9 +79,10 @@
     <table class="roster-table">
         <thead>
             <tr>
-                <th style="width: 10%;">#</th>
-                <th style="width: 50%;">Name</th>
-                <th style="width: 40%;">Designation</th>
+                <th style="width: 8%;">#</th>
+                <th style="width: 34%;">Name</th>
+                <th style="width: 24%;">Designation</th>
+                <th style="width: 34%;">Proof of Identification</th>
             </tr>
         </thead>
         <tbody>
@@ -89,6 +90,7 @@
                 <td>1</td>
                 <td><strong>{{ $booking->guest_name }}</strong></td>
                 <td>Lead Guest (Verified)</td>
+                <td>@include('pdf.partials.guest_id_cell', ['guestId' => $guestIdsByIndex[0] ?? null])</td>
             </tr>
             @if(!empty($booking->guest_roster) && is_array($booking->guest_roster))
                 @foreach($booking->guest_roster as $index => $companion)
@@ -97,6 +99,7 @@
                             <td>{{ $index + 2 }}</td>
                             <td>{{ $companion['name'] }}</td>
                             <td>{{ $companion['relationship'] ?? 'Guest' }}</td>
+                            <td>@include('pdf.partials.guest_id_cell', ['guestId' => $guestIdsByIndex[$index + 1] ?? null])</td>
                         </tr>
                     @endif
                 @endforeach
@@ -120,5 +123,7 @@
             </td>
         </tr>
     </table>
+
+    @include('pdf.partials.guest_id_attachments')
 </body>
 </html>

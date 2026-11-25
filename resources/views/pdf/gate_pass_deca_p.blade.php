@@ -57,7 +57,6 @@
             text-align: center;
             font-weight: bold;
             background-color: #ffffff;
-            text-decoration: underline;
         }
         .certify-p {
             text-align: justify;
@@ -126,8 +125,8 @@
 
     <!-- Authorization Statement (Verbatim Deca) -->
     <p class="authorize-p">
-        <span class="underlined">This is to authorize the following guest (s) to occupy and use my unit located at Building</span><br>
-        <span class="underlined">&nbsp;{{ $buildingLetter ?? 'P' }}&nbsp;</span> &nbsp; <span class="underlined">Unit</span> &nbsp; <span class="underlined">&nbsp;{{ $unitOnlyNumber ?? '718' }}&nbsp;</span> &nbsp; <span class="underlined">for the period covering form</span> &nbsp; <span class="underlined">&nbsp;{{ $booking->check_in_date->format('M j') }}-{{ $booking->check_out_date->format('j') }}&nbsp;</span>.
+        This is to authorize the following guest(s) to occupy and use my unit located at Building<br>
+        <span class="underlined">&nbsp;{{ $buildingLetter ?? 'P' }}&nbsp;</span> &nbsp; Unit &nbsp; <span class="underlined">&nbsp;{{ $unitOnlyNumber ?? '718' }}&nbsp;</span> &nbsp; for the period covering from &nbsp; <span class="underlined">&nbsp;{{ $booking->check_in_date->format('M j') }}-{{ $booking->check_out_date->format('j') }}&nbsp;</span>.
     </p>
 
     <!-- Table of Guests (Verbatim Deca Building P) -->
@@ -138,7 +137,7 @@
                 <th style="width: 31.6%;">Signature of Guest(s)</th>
                 <th style="width: 37.9%; text-align: center;">
                     Proof of Identification<br>
-                    <span style="font-weight: normal; font-size: 8.5pt;">(please attached copy of ID)</span>
+                    <span style="font-weight: normal; font-size: 8.5pt;">(please attach copy of ID)</span>
                 </th>
             </tr>
         </thead>
@@ -147,19 +146,19 @@
             <tr>
                 <td style="font-weight: bold; text-align: center;">{{ $booking->guest_name }}</td>
                 <td>&nbsp;</td>
-                <td>&nbsp;</td>
+                <td>@include('pdf.partials.guest_id_cell', ['guestId' => $guestIdsByIndex[0] ?? null])</td>
             </tr>
 
             <!-- Companion Roster -->
             @php $rowCount = 1; @endphp
             @if(!empty($booking->guest_roster) && is_array($booking->guest_roster))
-                @foreach($booking->guest_roster as $companion)
+                @foreach($booking->guest_roster as $companionIndex => $companion)
                     @if(!empty($companion['name']))
                         @php $rowCount++; @endphp
                         <tr>
                             <td style="text-align: center;">{{ $companion['name'] }}</td>
                             <td>&nbsp;</td>
-                            <td>&nbsp;</td>
+                            <td>@include('pdf.partials.guest_id_cell', ['guestId' => $guestIdsByIndex[$companionIndex + 1] ?? null])</td>
                         </tr>
                     @endif
                 @endforeach
@@ -178,12 +177,12 @@
 
     <!-- Certification Paragraph (Verbatim Deca) -->
     <p class="certify-p">
-        <span class="underlined">This is to certify that I have oriented my guest(s) on the existing house rules and regulations of The Urban Deca Homes Ortigas Condominium Corporation (including some of the most applicable house rules itemized below) and that any violations that will be committed by my guest(s) will be my liability to the Condominium Corporation.</span>
+        This is to certify that I have oriented my guest(s) on the existing house rules and regulations of The Urban Deca Homes Ortigas Condominium Corporation (including some of the most applicable house rules itemized below) and that any violations that will be committed by my guest(s) will be my liability to the Condominium Corporation.
     </p>
 
     <!-- Execution Date Statement -->
     <p class="date-p">
-        <span class="underlined">Given this</span> &nbsp; <span class="underlined">&nbsp;{{ $booking->created_at->format('M') }}&nbsp;</span> &nbsp; <span class="underlined">day of</span> &nbsp; <span class="underlined">&nbsp;{{ $booking->created_at->format('j') }}&nbsp;</span> &nbsp; <span class="underlined">, 20</span><span class="underlined">{{ $booking->created_at->format('y') }}</span>.
+        Given this &nbsp; <span class="underlined">&nbsp;{{ $booking->created_at->format('M') }}&nbsp;</span> &nbsp; day of &nbsp; <span class="underlined">&nbsp;{{ $booking->created_at->format('j') }}&nbsp;</span> &nbsp;, 20<span class="underlined">{{ $booking->created_at->format('y') }}</span>.
     </p>
 
     <!-- Signature Block (Aurelio J. Budol Sr.) -->
@@ -196,13 +195,15 @@
 
     <!-- Abbreviated House Rules (Verbatim Deca Docx) -->
     <div class="rules-section">
-        <p class="rules-line"><span class="underlined">Abbreviated house rules for guest(s):</span></p>
-        <p class="rules-line"><span class="underlined">1. No pets of any kind (except tropical fishes) is allowed within the property.</span></p>
-        <p class="rules-line"><span class="underlined">2. Urban Deca Homes Ortigas is a No-Smoking complex, no smoking policy is observed in all common areas within the property.</span></p>
-        <p class="rules-line"><span class="underlined">3. Noise control: Avoid loud music or of use of amplified audio equipment.</span></p>
-        <p class="rules-line"><span class="underlined">4. Building wide quiet hours: Sunday to Thursday: 10pm to 8am Friday to Saturday: 12am to 9am</span></p>
-        <p class="rules-line"><span class="underlined">5. Smoking is prohibited at all common areas of the building.</span></p>
+        <p class="rules-line">Abbreviated house rules for guest(s):</p>
+        <p class="rules-line">1. No pets of any kind (except tropical fishes) is allowed within the property.</p>
+        <p class="rules-line">2. Urban Deca Homes Ortigas is a No-Smoking complex, no smoking policy is observed in all common areas within the property.</p>
+        <p class="rules-line">3. Noise control: Avoid loud music or use of amplified audio equipment.</p>
+        <p class="rules-line">4. Building wide quiet hours: Sunday to Thursday: 10pm to 8am; Friday to Saturday: 12am to 9am.</p>
+        <p class="rules-line">5. Smoking is prohibited at all common areas of the building.</p>
     </div>
+
+    @include('pdf.partials.guest_id_attachments')
 
 </body>
 </html>
