@@ -7,6 +7,7 @@ use App\Models\Payment;
 use App\Services\PayMongoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PayMongoWebhookController extends Controller
@@ -20,6 +21,11 @@ class PayMongoWebhookController extends Controller
         $signatureHeader = $request->header('Paymongo-Signature');
 
         if (! $payMongo->verifyWebhookSignature($rawPayload, $signatureHeader)) {
+            Log::warning('PayMongo webhook signature verification failed', [
+                'has_signature' => ! empty($signatureHeader),
+                'has_secret' => ! empty(config('services.paymongo.webhook_secret')),
+            ]);
+
             return response()->json(['message' => 'Invalid signature'], 401);
         }
 
@@ -30,12 +36,23 @@ class PayMongoWebhookController extends Controller
 
         $eventType = $payload['data']['attributes']['type'] ?? null;
 
+        Log::info('PayMongo webhook received', [
+            'event_type' => $eventType,
+            'resource_type' => $payload['data']['attributes']['data']['type'] ?? null,
+        ]);
+
         if (in_array($eventType, ['qr.paid', 'payment.paid'], true)) {
             $resourceData = $payload['data']['attributes']['data'] ?? [];
             $attributes = is_array($resourceData['attributes'] ?? null) ? $resourceData['attributes'] : [];
 
             $receivedAmount = $this->extractAmountCentavos($attributes);
             $paymentId = $this->extractPaymentId($resourceData, $attributes);
+
+            Log::info('PayMongo QR/Payment webhook parsed', [
+                'event_type' => $eventType,
+                'received_amount' => $receivedAmount,
+                'payment_id' => $paymentId,
+            ]);
 
             if ($receivedAmount !== null && $receivedAmount > 0) {
                 $payment = Payment::where('status', 'pending')
