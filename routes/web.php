@@ -14,6 +14,7 @@ use App\Http\Controllers\Host\TransactionController as HostTransactionController
 use App\Http\Controllers\Host\UnitManagementController as HostUnitManagementController;
 use App\Http\Controllers\Host\VerificationController as HostVerificationController;
 use App\Http\Controllers\PayMongoController;
+use App\Http\Controllers\PayMongoWebhookController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionReceiptController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [BookingController::class, 'index'])->name('units.index');
 Route::get('/units/{unit}', [BookingController::class, 'show'])->name('units.show');
 Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+Route::get('/bookings/{booking}', [BookingController::class, 'showBooking'])->name('bookings.show');
 Route::post('/bookings/{booking}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
 Route::prefix('compliance')->name('compliance.')->group(function () {
@@ -33,6 +35,7 @@ Route::prefix('compliance')->name('compliance.')->group(function () {
     Route::post('/{bookingCode}/roster', [ComplianceController::class, 'saveRoster'])->name('roster');
     Route::post('/{bookingCode}/payment', [ComplianceController::class, 'uploadPayment'])->name('payment');
     Route::post('/{bookingCode}/paymongo/checkout', [PayMongoController::class, 'checkout'])->name('paymongo.checkout');
+    Route::post('/{bookingCode}/qrph/checkout', [PayMongoController::class, 'initiateQrPh'])->name('qrph.checkout');
     Route::get('/{bookingCode}/paymongo/success', [PayMongoController::class, 'success'])->name('paymongo.success');
     Route::get('/{bookingCode}/paymongo/cancel', [PayMongoController::class, 'cancel'])->name('paymongo.cancel');
     Route::post('/{bookingCode}/identity', [ComplianceController::class, 'uploadIdentity'])->name('identity');
@@ -45,12 +48,15 @@ Route::prefix('compliance')->name('compliance.')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| PayMongo Sandbox Simulator & Webhook Endpoints
+| PayMongo QR Ph, Sandbox Simulator & Webhook Endpoints
 |--------------------------------------------------------------------------
 */
+Route::get('/payments/{payment}/qrph', [PayMongoController::class, 'showQrPh'])->name('payments.qrph');
+Route::get('/payments/{payment}/status', [PayMongoController::class, 'paymentStatus'])->name('payments.status');
+Route::post('/payments/{payment}/simulate', [PayMongoController::class, 'simulateQrPh'])->name('payments.qrph.simulate');
 Route::get('/paymongo/sandbox/{checkoutId}', [PayMongoController::class, 'sandboxPage'])->name('paymongo.sandbox');
 Route::post('/paymongo/sandbox/{checkoutId}/complete', [PayMongoController::class, 'sandboxComplete'])->name('paymongo.sandbox.complete');
-Route::post('/webhooks/paymongo', [PayMongoController::class, 'webhook'])->name('webhooks.paymongo');
+Route::post('/webhooks/paymongo', PayMongoWebhookController::class)->name('webhooks.paymongo');
 
 /*
 |--------------------------------------------------------------------------

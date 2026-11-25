@@ -155,6 +155,16 @@ class Booking extends Model
     }
 
     /**
+     * Static QR Ph payment attempts associated with this booking.
+     *
+     * @return HasMany<Payment, $this>
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    /**
      * Check if payment receipt is uploaded.
      */
     public function hasPaymentReceipt(): bool

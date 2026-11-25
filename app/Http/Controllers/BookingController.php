@@ -288,4 +288,24 @@ class BookingController extends Controller
         return redirect()->route('compliance.portal', ['bookingCode' => $booking->booking_code])
             ->with('success', 'Reservation initiated! Please submit your security deposit proof and Government ID to complete confirmation.');
     }
+
+    /**
+     * Display the booking confirmation and payment status page.
+     */
+    public function showBooking(Booking $booking): View
+    {
+        $booking->load(['unit.building', 'complianceDocuments', 'bookingAddOns.addOn', 'review', 'checkout', 'transactions']);
+
+        $depositRefundTxn = $booking->transactions
+            ->where('type', 'deposit_refund')
+            ->sortByDesc('id')
+            ->first();
+
+        return view('compliance.status', [
+            'booking' => $booking,
+            'unit' => $booking->unit,
+            'building' => $booking->unit->building,
+            'depositRefundTxn' => $depositRefundTxn,
+        ]);
+    }
 }

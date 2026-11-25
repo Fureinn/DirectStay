@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Payment;
 use App\Services\PayMongoService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
@@ -175,82 +177,68 @@ class PayMongoController extends Controller
     }
 
     /**
-     * Handle PayMongo webhook callbacks for asynchronous payment confirmation.
+     * Initiate a Static QR Ph payment with unique centavo fingerprinting and show the QR page.
      */
-    public function webhook(Request $request, PayMongoService $payMongo): JsonResponse
+    public function initiateQrPh(Request $request, string $bookingCode, PayMongoService $payMongo): RedirectResponse
     {
-        $rawPayload = $request->getContent();
-        $signatureHeader = $request->header('Paymongo-Signature');
+        $booking = Booking::where('booking_code', $bookingCode)->firstOrFail();
 
-        if (! $payMongo->verifyWebhookSignature($rawPayload, $signatureHeader)) {
-            return response()->json(['message' => 'Invalid signature'], 401);
+        if ($booking->status === 'cancelled') {
+            return back()->with('error', 'This reservation has been cancelled. Payments are no longer accepted.');
         }
 
-        $payload = json_decode($rawPayload, true);
-        if (! is_array($payload)) {
-            return response()->json(['message' => 'Invalid payload'], 400);
+        if ($booking->isPaid()) {
+            return redirect()->route('bookings.show', $booking->id)
+                ->with('success', 'Payment for this reservation has already been verified.');
         }
 
-        $eventType = $payload['data']['attributes']['type'] ?? null;
-        if (! in_array($eventType, ['checkout_session.payment.paid', 'payment.paid'], true)) {
-            return response()->json(['received' => true]);
+        $validated = $request->validate([
+            'payment_scope' => ['nullable', 'in:deposit,full'],
+        ]);
+
+        $paymentScope = $validated['payment_scope'] ?? PayMongoService::SCOPE_DEPOSIT;
+        $payment = $payMongo->createStaticQrPayment($booking, $paymentScope);
+
+        return redirect()->route('payments.qrph', $payment);
+    }
+
+    /**
+     * Display the Static QR Ph checkout screen with exact centavo amount and 3-second polling.
+     */
+    public function showQrPh(Payment $payment): View
+    {
+        $payment->load(['booking.unit.building', 'booking.unit.host']);
+
+        return view('payments.qrph', [
+            'payment' => $payment,
+            'booking' => $payment->booking,
+            'sandboxSimulation' => (bool) config('services.paymongo.sandbox_simulation'),
+        ]);
+    }
+
+    /**
+     * Return JSON status for the 3-second Static QR Ph polling script.
+     */
+    public function paymentStatus(Payment $payment): JsonResponse
+    {
+        return response()->json([
+            'status' => $payment->status,
+            'redirect_url' => route('bookings.show', $payment->booking_id),
+        ]);
+    }
+
+    /**
+     * Locally simulate a paid Static QR Ph payment when sandbox simulation is enabled.
+     */
+    public function simulateQrPh(Payment $payment, PayMongoService $payMongo): RedirectResponse
+    {
+        if (! (bool) config('services.paymongo.sandbox_simulation')) {
+            abort(404);
         }
 
-        $resourceData = $payload['data']['attributes']['data'] ?? [];
-        $attributes = $resourceData['attributes'] ?? [];
+        $payMongo->markStaticQrPaymentPaid($payment, 'pay_sim_qr_'.Str::random(16));
 
-        $checkoutId = $eventType === 'checkout_session.payment.paid'
-            ? (string) ($resourceData['id'] ?? '')
-            : (string) ($attributes['checkout_session_id'] ?? '');
-
-        $bookingCode = $attributes['metadata']['booking_code']
-            ?? ($attributes['reference_number'] ?? null);
-
-        $booking = null;
-        if ($checkoutId !== '') {
-            $booking = Booking::where('paymongo_checkout_id', $checkoutId)->first();
-        }
-        if (! $booking && $bookingCode) {
-            $booking = Booking::where('booking_code', $bookingCode)->first();
-        }
-
-        if (! $booking) {
-            return response()->json(['received' => true]);
-        }
-
-        $payments = $attributes['payments'] ?? [];
-        $paidPayment = is_array($payments) ? ($payments[0] ?? null) : null;
-
-        $paymentId = (string) ($paidPayment['id'] ?? ($resourceData['id'] ?? $checkoutId));
-        $paymentMethod = strtolower((string) (
-            $paidPayment['attributes']['source']['type']
-            ?? $paidPayment['attributes']['payment_method']['type']
-            ?? $attributes['source']['type']
-            ?? $attributes['payment_method_used']
-            ?? PayMongoService::ALLOWED_PAYMENT_METHOD
-        ));
-
-        if (! PayMongoService::isAllowedPaymentMethod($paymentMethod)) {
-            return response()->json(['ignored' => 'Only GCash and QR Ph payments are accepted.']);
-        }
-        $paidCentavos = $paidPayment['attributes']['amount']
-            ?? ($attributes['amount'] ?? null);
-        $paymentScope = (string) ($attributes['metadata']['payment_scope']
-            ?? $booking->payment_scope
-            ?? PayMongoService::SCOPE_DEPOSIT);
-        $paidAmount = $paidCentavos !== null
-            ? round(((int) $paidCentavos) / 100, 2)
-            : $payMongo->resolveAmount($booking, $paymentScope);
-
-        $payMongo->markBookingPaid(
-            booking: $booking,
-            checkoutId: $checkoutId !== '' ? $checkoutId : (string) $booking->paymongo_checkout_id,
-            paymentId: $paymentId,
-            paymentMethod: $paymentMethod,
-            paidAmount: $paidAmount,
-            paymentScope: $paymentScope,
-        );
-
-        return response()->json(['received' => true]);
+        return redirect()->route('bookings.show', $payment->booking_id)
+            ->with('success', 'QR Ph payment simulated and confirmed!');
     }
 }

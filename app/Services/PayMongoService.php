@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use App\Models\Payment;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -344,6 +345,96 @@ class PayMongoService
     }
 
     /**
+     * Create a pending Static QR Ph payment with a unique centavo fingerprint (+1 to +99 centavos).
+     */
+    public function createStaticQrPayment(Booking $booking, string $paymentScope = self::SCOPE_DEPOSIT): Payment
+    {
+        $scope = $paymentScope === self::SCOPE_FULL ? self::SCOPE_FULL : self::SCOPE_DEPOSIT;
+        $baseAmountPhp = $this->resolveAmount($booking, $scope);
+        $baseCentavos = max(100, (int) round($baseAmountPhp * 100));
+
+        return DB::transaction(function () use ($booking, $scope, $baseCentavos): Payment {
+            $usedAmounts = Payment::where('status', 'pending')
+                ->where('created_at', '>=', now()->subMinutes(30))
+                ->whereBetween('amount_centavos', [$baseCentavos + 1, $baseCentavos + 99])
+                ->pluck('amount_centavos')
+                ->all();
+
+            $usedLookup = array_flip($usedAmounts);
+            $selectedCentavos = null;
+
+            for ($offset = 1; $offset <= 99; $offset++) {
+                $candidate = $baseCentavos + $offset;
+                if (! isset($usedLookup[$candidate])) {
+                    $selectedCentavos = $candidate;
+                    break;
+                }
+            }
+
+            if ($selectedCentavos === null) {
+                throw new RuntimeException('Unable to allocate a unique QR Ph payment amount right now. Please try again shortly.');
+            }
+
+            return Payment::create([
+                'booking_id' => $booking->id,
+                'amount_centavos' => $selectedCentavos,
+                'status' => 'pending',
+                'payment_scope' => $scope,
+            ]);
+        });
+    }
+
+    /**
+     * Mark a Static QR Ph payment as paid and confirm the associated booking (idempotent).
+     */
+    public function markStaticQrPaymentPaid(Payment $payment, string $paymentId): Payment
+    {
+        return DB::transaction(function () use ($payment, $paymentId): Payment {
+            /** @var Payment $lockedPayment */
+            $lockedPayment = Payment::whereKey($payment->id)->lockForUpdate()->firstOrFail();
+
+            if ($lockedPayment->status === 'paid') {
+                return $lockedPayment;
+            }
+
+            $lockedPayment->update([
+                'status' => 'paid',
+                'paymongo_payment_id' => $paymentId,
+                'paid_at' => now(),
+            ]);
+
+            /** @var Booking $lockedBooking */
+            $lockedBooking = Booking::whereKey($lockedPayment->booking_id)->lockForUpdate()->firstOrFail();
+
+            $bookingStatus = in_array($lockedBooking->status, ['checked_in', 'checked_out'], true)
+                ? $lockedBooking->status
+                : 'confirmed';
+
+            $paymentScope = $lockedPayment->payment_scope ?: self::SCOPE_DEPOSIT;
+            $paidAmount = round($lockedPayment->amount_centavos / 100, 2);
+
+            $lockedBooking->update([
+                'status' => $bookingStatus,
+                'payment_status' => 'verified',
+                'paymongo_payment_id' => $paymentId,
+                'payment_method' => 'paymongo_'.self::ALLOWED_PAYMENT_METHOD_QRPH,
+                'payment_scope' => $paymentScope,
+                'paid_amount' => $paidAmount,
+                'paid_at' => now(),
+            ]);
+
+            $this->syncBookingTransactions(
+                lockedBooking: $lockedBooking,
+                paymentId: $paymentId,
+                normalizedMethod: 'paymongo_'.self::ALLOWED_PAYMENT_METHOD_QRPH,
+                paymentScope: $paymentScope,
+            );
+
+            return $lockedPayment->fresh();
+        });
+    }
+
+    /**
      * Mark a booking as paid & verified after PayMongo payment succeeds (idempotent).
      */
     public function markBookingPaid(
@@ -376,71 +467,84 @@ class PayMongoService
                 'paid_at' => now(),
             ]);
 
-            $depositTxn = Transaction::where('booking_id', $lockedBooking->id)
-                ->where('type', 'advance_deposit')
-                ->first();
+            $this->syncBookingTransactions(
+                lockedBooking: $lockedBooking,
+                paymentId: $paymentId,
+                normalizedMethod: $normalizedMethod,
+                paymentScope: $paymentScope,
+                checkoutId: $checkoutId,
+            );
+        });
+    }
 
-            if ($depositTxn) {
-                $depositTxn->update([
+    /**
+     * Synchronize DirectStay ledger transactions after a verified PayMongo payment.
+     */
+    private function syncBookingTransactions(
+        Booking $lockedBooking,
+        string $paymentId,
+        string $normalizedMethod,
+        string $paymentScope,
+        ?string $checkoutId = null,
+    ): void {
+        $metadataBase = array_filter([
+            'gateway' => 'paymongo',
+            'checkout_id' => $checkoutId,
+            'payment_method' => $normalizedMethod,
+            'payment_scope' => $paymentScope,
+        ], static fn (mixed $value): bool => $value !== null && $value !== '');
+
+        $depositTxn = Transaction::where('booking_id', $lockedBooking->id)
+            ->where('type', 'advance_deposit')
+            ->first();
+
+        if ($depositTxn) {
+            $depositTxn->update([
+                'status' => 'completed',
+                'reference_number' => $paymentId,
+                'metadata' => array_merge($depositTxn->metadata ?? [], $metadataBase),
+            ]);
+        } else {
+            Transaction::create([
+                'booking_id' => $lockedBooking->id,
+                'type' => 'advance_deposit',
+                'amount' => $lockedBooking->advance_deposit_amount,
+                'reference_number' => $paymentId,
+                'status' => 'completed',
+                'metadata' => $metadataBase,
+            ]);
+        }
+
+        if ($paymentScope === self::SCOPE_FULL) {
+            Transaction::where('booking_id', $lockedBooking->id)
+                ->where('type', 'platform_fee')
+                ->where('status', 'pending')
+                ->update([
                     'status' => 'completed',
                     'reference_number' => $paymentId,
-                    'metadata' => array_merge($depositTxn->metadata ?? [], [
-                        'gateway' => 'paymongo',
-                        'checkout_id' => $checkoutId,
-                        'payment_method' => $normalizedMethod,
-                        'payment_scope' => $paymentScope,
-                    ]),
                 ]);
-            } else {
-                Transaction::create([
-                    'booking_id' => $lockedBooking->id,
-                    'type' => 'advance_deposit',
-                    'amount' => $lockedBooking->advance_deposit_amount,
-                    'reference_number' => $paymentId,
-                    'status' => 'completed',
-                    'metadata' => [
-                        'gateway' => 'paymongo',
-                        'checkout_id' => $checkoutId,
-                        'payment_method' => $normalizedMethod,
-                        'payment_scope' => $paymentScope,
-                    ],
-                ]);
-            }
 
-            if ($paymentScope === self::SCOPE_FULL) {
-                Transaction::where('booking_id', $lockedBooking->id)
-                    ->where('type', 'platform_fee')
-                    ->where('status', 'pending')
-                    ->update([
-                        'status' => 'completed',
+            $stayBalance = (float) $lockedBooking->base_amount + (float) $lockedBooking->add_ons_amount;
+            if ($stayBalance > 0) {
+                $existingStayTxn = Transaction::where('booking_id', $lockedBooking->id)
+                    ->where('type', 'stay_payment')
+                    ->where('reference_number', $paymentId)
+                    ->exists();
+
+                if (! $existingStayTxn) {
+                    Transaction::create([
+                        'booking_id' => $lockedBooking->id,
+                        'type' => 'stay_payment',
+                        'amount' => $stayBalance,
                         'reference_number' => $paymentId,
+                        'status' => 'completed',
+                        'metadata' => array_merge($metadataBase, [
+                            'description' => 'Full stay room rate & add-ons settled via PayMongo',
+                        ]),
                     ]);
-
-                $stayBalance = (float) $lockedBooking->base_amount + (float) $lockedBooking->add_ons_amount;
-                if ($stayBalance > 0) {
-                    $existingStayTxn = Transaction::where('booking_id', $lockedBooking->id)
-                        ->where('type', 'stay_payment')
-                        ->where('reference_number', $paymentId)
-                        ->exists();
-
-                    if (! $existingStayTxn) {
-                        Transaction::create([
-                            'booking_id' => $lockedBooking->id,
-                            'type' => 'stay_payment',
-                            'amount' => $stayBalance,
-                            'reference_number' => $paymentId,
-                            'status' => 'completed',
-                            'metadata' => [
-                                'gateway' => 'paymongo',
-                                'checkout_id' => $checkoutId,
-                                'payment_method' => $normalizedMethod,
-                                'description' => 'Full stay room rate & add-ons settled via PayMongo',
-                            ],
-                        ]);
-                    }
                 }
             }
-        });
+        }
     }
 
     /**
@@ -449,11 +553,7 @@ class PayMongoService
     public function verifyWebhookSignature(string $payload, ?string $signatureHeader): bool
     {
         $secret = (string) config('services.paymongo.webhook_secret');
-        if ($secret === '') {
-            return true;
-        }
-
-        if (! $signatureHeader) {
+        if ($secret === '' || ! $signatureHeader) {
             return false;
         }
 

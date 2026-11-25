@@ -913,13 +913,21 @@
                                 </span>
                             @endif
 
-                            <button type="submit" :disabled="startingCheckout"
-                                    class="px-6 py-3 rounded-2xl text-xs font-black text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-md shadow-emerald-600/25 transition-all cursor-pointer shrink-0">
-                                <span x-show="!startingCheckout">
-                                    Pay <span x-text="paymentScope === 'full' ? '₱{{ number_format($booking->total_amount, 2) }}' : '₱{{ number_format($booking->advance_deposit_amount, 2) }}'"></span> via PayMongo &rarr;
-                                </span>
-                                <span x-show="startingCheckout" x-cloak>Connecting to PayMongo...</span>
-                            </button>
+                            <div class="flex flex-wrap items-center gap-2 shrink-0">
+                                <button type="submit" :disabled="startingCheckout"
+                                        class="px-5 py-3 rounded-2xl text-xs font-black text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-md shadow-emerald-600/25 transition-all cursor-pointer shrink-0">
+                                    <span x-show="!startingCheckout">
+                                        Pay <span x-text="paymentScope === 'full' ? '₱{{ number_format($booking->total_amount, 2) }}' : '₱{{ number_format($booking->advance_deposit_amount, 2) }}'"></span> via PayMongo &rarr;
+                                    </span>
+                                    <span x-show="startingCheckout" x-cloak>Connecting to PayMongo...</span>
+                                </button>
+                                <button type="submit"
+                                        formaction="{{ route('compliance.qrph.checkout', $booking->booking_code) }}"
+                                        :disabled="startingCheckout"
+                                        class="px-5 py-3 rounded-2xl text-xs font-black text-emerald-700 dark:text-emerald-200 bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/60 transition-all cursor-pointer shrink-0">
+                                    Scan Static QR Ph &rarr;
+                                </button>
+                            </div>
                         </div>
                     </form>
                 </div>

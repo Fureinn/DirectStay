@@ -17,9 +17,18 @@
             <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-2">
                 Your Staycation is Fully Confirmed!
             </h1>
-            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-lg mx-auto mb-8">
+            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-lg mx-auto mb-6">
                 Your payment and government ID have been validated by the host. Your official building move-in gate pass has been compiled and emailed to you and the lobby desk.
             </p>
+
+            @if(! $booking->waiver_accepted_at)
+                <div class="mb-6">
+                    <a href="{{ route('compliance.portal', ['bookingCode' => $booking->booking_code, 'step' => 4]) }}"
+                       class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-emerald-800 dark:text-emerald-200 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 hover:bg-emerald-100 transition-colors">
+                        Complete Remaining Guest IDs &amp; Lease Agreement &rarr;
+                    </a>
+                </div>
+            @endif
 
             <!-- Download Official Building Documents (Gate Pass & Rental Agreement) -->
             <div class="p-6 bg-slate-50/80 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 mb-8 max-w-xl mx-auto text-center">
