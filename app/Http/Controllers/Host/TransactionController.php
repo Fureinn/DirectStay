@@ -30,7 +30,10 @@ class TransactionController extends Controller
             ->whereIn('type', ['advance_deposit', 'platform_fee', 'stay_payment'])
             ->sum('amount');
 
-        $escrowHeld = $allCompleted->where('type', 'advance_deposit')->sum('amount');
+        $escrowHeld = Transaction::where('type', 'advance_deposit')
+            ->where('status', 'completed')
+            ->whereHas('booking', fn ($query) => $query->whereNotIn('status', ['checked_out', 'cancelled']))
+            ->sum('amount');
         $platformFees = $allCompleted->where('type', 'platform_fee')->sum('amount');
         $penaltiesAndRefunds = $allCompleted->whereIn('type', ['penalty_deduction', 'deposit_refund'])->sum('amount');
 

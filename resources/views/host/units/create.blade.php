@@ -5,7 +5,17 @@
 @section('content')
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
      x-data="{
-        selectedBuildingId: '{{ old('building_id', $buildings->first()->id ?? '') }}',
+        selectedBuildingId: '{{ old('building_id', $buildings->first()->id ?? 'new') }}',
+        newBuildingName: `{{ old('new_building_name', '') }}`,
+        newBuildingCode: `{{ old('new_building_code', '') }}`,
+        newBuildingAddress: `{{ old('new_building_address', '') }}`,
+        newBuildingAdminEmail: `{{ old('new_building_admin_email', '') }}`,
+        applyCondoPreset(name, code, address) {
+            this.selectedBuildingId = 'new';
+            this.newBuildingName = name;
+            this.newBuildingCode = code;
+            this.newBuildingAddress = address;
+        },
         title: '{{ old('title', '') }}',
         unitNumber: '{{ old('unit_number', '') }}',
         basePrice: parseFloat('{{ old('base_price_per_night', '1500') }}') || 1500,
@@ -201,6 +211,124 @@
                             </div>
                         </label>
                     @endforeach
+
+                    <!-- Option to add another condo / tower in Ortigas, Pasig -->
+                    <label class="relative flex items-start p-4 rounded-2xl border-2 border-dashed cursor-pointer transition-all hover:border-emerald-400 dark:hover:border-emerald-600"
+                           :class="selectedBuildingId == 'new' ? 'border-emerald-600 bg-emerald-50/50 dark:bg-emerald-950/40 ring-2 ring-emerald-500/20' : 'border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40'">
+                        <input type="radio" name="building_id" value="new"
+                               x-model="selectedBuildingId" class="sr-only" required>
+
+                        <div class="flex items-start gap-3 w-full">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white font-black text-lg flex items-center justify-center shrink-0 shadow-xs">
+                                +
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-xs font-black text-slate-900 dark:text-white">
+                                        Add Another Condo / Tower
+                                    </h3>
+                                    <span x-show="selectedBuildingId == 'new'" x-cloak class="text-emerald-600 dark:text-emerald-400 text-xs font-extrabold">✓ Active</span>
+                                </div>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                                    Any condo or tower across Ortigas, Pasig City
+                                </p>
+                                <span class="inline-block mt-2 text-[10px] font-bold px-2 py-0.5 rounded-md bg-white dark:bg-slate-800 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                    + Register New Building
+                                </span>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Inline New Building / Condo Form (Ortigas, Pasig) -->
+                <div x-show="selectedBuildingId == 'new'" x-cloak
+                     class="mt-4 p-5 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/80 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-emerald-200/70 dark:border-emerald-800/60 pb-3">
+                        <div>
+                            <h3 class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                                New Ortigas / Pasig Condo Details
+                            </h3>
+                            <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                                Enter the condo building details or pick a quick Ortigas/Pasig preset below.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400">Quick presets:</span>
+                        <button type="button" @click="applyCondoPreset('Urban Deca Homes Ortigas - Building Q', 'UDH-Q', 'KM 19 Ortigas Avenue Extension, Brgy. Rosario, Pasig City')"
+                                class="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 cursor-pointer">
+                            + Deca Ortigas Bldg
+                        </button>
+                        <button type="button" @click="applyCondoPreset('Sorrento Oasis - Building F', 'SORR-F', 'C. Raymundo Ave, Brgy. Rosario, Pasig City')"
+                                class="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 cursor-pointer">
+                            + Sorrento Oasis
+                        </button>
+                        <button type="button" @click="applyCondoPreset('East Raya Gardens - Building A', 'ERG-A', 'Mercedes Ave, Brgy. San Miguel, Pasig City')"
+                                class="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 cursor-pointer">
+                            + East Raya Gardens
+                        </button>
+                        <button type="button" @click="applyCondoPreset('Kasara Urban Resort Residences - Tower 1', 'KAS-T1', 'Eagle Ave, Brgy. Ugong, Pasig City')"
+                                class="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 cursor-pointer">
+                            + Kasara Residences
+                        </button>
+                        <button type="button" @click="applyCondoPreset('The Sapphire Bloc - North Tower', 'TSB-N', 'Sapphire Rd, Ortigas Center, Pasig City')"
+                                class="text-[10px] font-semibold px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 cursor-pointer">
+                            + The Sapphire Bloc
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                                Condo &amp; Tower Name <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" name="new_building_name" x-model="newBuildingName" :required="selectedBuildingId == 'new'"
+                                   placeholder="e.g. Sorrento Oasis - Building F"
+                                   class="w-full text-xs px-3.5 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            @error('new_building_name')
+                                <p class="text-[11px] text-rose-600 dark:text-rose-400 mt-1 font-semibold">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                                Building Code <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" name="new_building_code" x-model="newBuildingCode" :required="selectedBuildingId == 'new'"
+                                   placeholder="e.g. SORR-F"
+                                   class="w-full text-xs px-3.5 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white uppercase font-mono font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            @error('new_building_code')
+                                <p class="text-[11px] text-rose-600 dark:text-rose-400 mt-1 font-semibold">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                                Ortigas / Pasig Street Address <span class="text-rose-500">*</span>
+                            </label>
+                            <input type="text" name="new_building_address" x-model="newBuildingAddress" :required="selectedBuildingId == 'new'"
+                                   placeholder="e.g. C. Raymundo Ave, Brgy. Rosario, Pasig City"
+                                   class="w-full text-xs px-3.5 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            @error('new_building_address')
+                                <p class="text-[11px] text-rose-600 dark:text-rose-400 mt-1 font-semibold">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                                PMO / Admin Email <span class="text-slate-400 font-normal">(Optional)</span>
+                            </label>
+                            <input type="email" name="new_building_admin_email" x-model="newBuildingAdminEmail"
+                                   placeholder="pmo@condo.ph"
+                                   class="w-full text-xs px-3.5 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            @error('new_building_admin_email')
+                                <p class="text-[11px] text-rose-600 dark:text-rose-400 mt-1 font-semibold">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
                 </div>
                 @error('building_id')
                     <p class="text-[11px] text-rose-600 dark:text-rose-400 mt-1.5 font-semibold">{{ $message }}</p>

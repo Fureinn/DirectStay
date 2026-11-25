@@ -28,13 +28,23 @@ class DashboardController extends Controller
         $activeBookingsCount = Booking::whereIn('status', ['confirmed', 'checked_in'])->count();
         $completedBookingsCount = Booking::where('status', 'checked_out')->count();
 
-        // Calculate total micro-commissions (platform fees) and deposits
+        // Calculate host stay earnings, 5% platform fees, active escrow deposits, and penalties
+        $totalHostEarnings = (float) Booking::where(function ($query): void {
+            $query->whereIn('status', ['confirmed', 'checked_in', 'checked_out'])
+                ->orWhere(function ($fullPaidQuery): void {
+                    $fullPaidQuery->whereIn('payment_status', ['verified', 'paid'])
+                        ->where('payment_scope', 'full');
+                });
+        })->selectRaw('COALESCE(SUM(base_amount + add_ons_amount), 0) as total')
+            ->value('total');
+
         $totalPlatformFees = Transaction::where('type', 'platform_fee')
             ->where('status', 'completed')
             ->sum('amount');
 
         $totalDepositsHeld = Transaction::where('type', 'advance_deposit')
             ->where('status', 'completed')
+            ->whereHas('booking', fn ($query) => $query->whereNotIn('status', ['checked_out', 'cancelled']))
             ->sum('amount');
 
         $totalPenalties = Transaction::where('type', 'penalty_deduction')
@@ -88,6 +98,7 @@ class DashboardController extends Controller
             'pendingVerificationsCount' => $pendingVerificationsCount,
             'activeBookingsCount' => $activeBookingsCount,
             'completedBookingsCount' => $completedBookingsCount,
+            'totalHostEarnings' => $totalHostEarnings,
             'totalPlatformFees' => $totalPlatformFees,
             'totalDepositsHeld' => $totalDepositsHeld,
             'totalPenalties' => $totalPenalties,

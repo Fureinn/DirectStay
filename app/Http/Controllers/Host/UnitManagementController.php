@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class UnitManagementController extends Controller
@@ -42,8 +43,23 @@ class UnitManagementController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $isNewBuilding = $request->input('building_id') === 'new';
+
+        if ($isNewBuilding && $request->filled('new_building_code')) {
+            $request->merge([
+                'new_building_code' => strtoupper(trim((string) $request->input('new_building_code'))),
+            ]);
+        }
+
         $validated = $request->validate([
-            'building_id' => ['required', 'exists:buildings,id'],
+            'building_id' => [
+                'required',
+                $isNewBuilding ? Rule::in(['new']) : Rule::exists('buildings', 'id'),
+            ],
+            'new_building_name' => [Rule::requiredIf($isNewBuilding), 'nullable', 'string', 'max:255'],
+            'new_building_code' => [Rule::requiredIf($isNewBuilding), 'nullable', 'string', 'max:20', Rule::unique('buildings', 'code')],
+            'new_building_address' => [Rule::requiredIf($isNewBuilding), 'nullable', 'string', 'max:255'],
+            'new_building_admin_email' => ['nullable', 'email', 'max:255'],
             'unit_number' => ['required', 'string', 'max:50'],
             'title' => ['required', 'string', 'max:255'],
             'base_price_per_night' => ['required', 'numeric', 'min:0', 'max:100000'],
@@ -56,13 +72,29 @@ class UnitManagementController extends Controller
             'photos.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:10240'],
         ]);
 
+        $buildingId = $validated['building_id'];
+
+        if ($isNewBuilding) {
+            $newBuilding = Building::create([
+                'name' => trim((string) $validated['new_building_name']),
+                'code' => strtoupper(trim((string) $validated['new_building_code'])),
+                'address' => trim((string) $validated['new_building_address']),
+                'admin_email' => ! empty($validated['new_building_admin_email'])
+                    ? trim((string) $validated['new_building_admin_email'])
+                    : 'pmo@directstay.local',
+                'gate_pass_template' => 'pdf.gate_pass_generic',
+            ]);
+
+            $buildingId = $newBuilding->id;
+        }
+
         $inventoryArray = [];
         if (! empty($validated['inventory_items'])) {
             $inventoryArray = array_values(array_filter(array_map('trim', explode(',', $validated['inventory_items']))));
         }
 
         $unit = Unit::create([
-            'building_id' => $validated['building_id'],
+            'building_id' => $buildingId,
             'user_id' => auth()->id(),
             'unit_number' => $validated['unit_number'],
             'title' => $validated['title'],

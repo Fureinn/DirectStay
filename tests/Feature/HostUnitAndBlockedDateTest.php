@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Models\BlockedDate;
+use App\Models\Booking;
 use App\Models\Building;
+use App\Models\Transaction;
 use App\Models\Unit;
 use App\Models\User;
 use Database\Seeders\DirectStaySeeder;
@@ -178,5 +180,159 @@ class HostUnitAndBlockedDateTest extends TestCase
         $response->assertSee('Interactive Calendar');
         $response->assertSee('Click dates to block');
         $response->assertSee('Confirm &amp; Block Dates', false);
+    }
+
+    public function test_host_dashboard_calculates_host_earnings_active_deposits_and_qrph_badge_accurately(): void
+    {
+        $baselineResponse = $this->actingAs($this->host)->get(route('host.dashboard'));
+        $baselineResponse->assertOk();
+        $baselineEarnings = (float) $baselineResponse->viewData('totalHostEarnings');
+        $baselineFees = (float) $baselineResponse->viewData('totalPlatformFees');
+        $baselineDeposits = (float) $baselineResponse->viewData('totalDepositsHeld');
+
+        $unit = Unit::firstOrFail();
+
+        $activeBooking = Booking::create([
+            'booking_code' => 'DS-DASH-ACT-01',
+            'unit_id' => $unit->id,
+            'guest_name' => 'Active Guest',
+            'guest_email' => 'active@example.com',
+            'guest_phone' => '09170000001',
+            'guest_count' => 1,
+            'check_in_date' => now()->addDay()->toDateString(),
+            'check_out_date' => now()->addDays(2)->toDateString(),
+            'nights_count' => 1,
+            'base_amount' => 1500.00,
+            'add_ons_amount' => 100.00,
+            'advance_deposit_amount' => 1000.00,
+            'platform_fee' => 75.00,
+            'total_amount' => 2675.00,
+            'status' => 'confirmed',
+            'payment_status' => 'verified',
+            'payment_method' => 'paymongo_qrph',
+            'payment_scope' => 'full',
+        ]);
+
+        Transaction::create([
+            'booking_id' => $activeBooking->id,
+            'type' => 'advance_deposit',
+            'amount' => 1000.00,
+            'status' => 'completed',
+        ]);
+        Transaction::create([
+            'booking_id' => $activeBooking->id,
+            'type' => 'platform_fee',
+            'amount' => 75.00,
+            'status' => 'completed',
+        ]);
+
+        $checkedOutBooking = Booking::create([
+            'booking_code' => 'DS-DASH-OUT-01',
+            'unit_id' => $unit->id,
+            'guest_name' => 'Checked Out Guest',
+            'guest_email' => 'out@example.com',
+            'guest_phone' => '09170000002',
+            'guest_count' => 1,
+            'check_in_date' => now()->subDays(2)->toDateString(),
+            'check_out_date' => now()->subDay()->toDateString(),
+            'nights_count' => 1,
+            'base_amount' => 2000.00,
+            'add_ons_amount' => 0.00,
+            'advance_deposit_amount' => 1000.00,
+            'platform_fee' => 100.00,
+            'total_amount' => 3100.00,
+            'status' => 'checked_out',
+            'payment_status' => 'verified',
+            'payment_method' => 'paymongo_gcash',
+            'payment_scope' => 'full',
+        ]);
+
+        Transaction::create([
+            'booking_id' => $checkedOutBooking->id,
+            'type' => 'advance_deposit',
+            'amount' => 1000.00,
+            'status' => 'completed',
+        ]);
+        Transaction::create([
+            'booking_id' => $checkedOutBooking->id,
+            'type' => 'platform_fee',
+            'amount' => 100.00,
+            'status' => 'completed',
+        ]);
+
+        $response = $this->actingAs($this->host)->get(route('host.dashboard'));
+
+        $response->assertOk();
+        $this->assertEquals($baselineEarnings + 3600.0, (float) $response->viewData('totalHostEarnings'));
+        $this->assertEquals($baselineFees + 175.0, (float) $response->viewData('totalPlatformFees'));
+        $this->assertEquals($baselineDeposits + 1000.0, (float) $response->viewData('totalDepositsHeld'));
+        $response->assertSee(number_format($baselineEarnings + 3600.0, 2));
+        $response->assertSee('QR Ph Paid');
+        $response->assertSee('View Inspection');
+    }
+
+    public function test_host_can_register_a_new_ortigas_pasig_building_when_creating_a_unit(): void
+    {
+        $response = $this->actingAs($this->host)->post(route('host.units.store'), [
+            'building_id' => 'new',
+            'new_building_name' => 'Sorrento Oasis - Building F',
+            'new_building_code' => 'sorr-f',
+            'new_building_address' => 'C. Raymundo Ave, Brgy. Rosario, Pasig City',
+            'new_building_admin_email' => 'pmo.sorrento@example.com',
+            'unit_number' => 'Unit F408',
+            'title' => 'Sorrento Oasis 2BR Garden Suite',
+            'base_price_per_night' => 1900.00,
+            'advance_deposit_required' => 1000.00,
+            'max_guests' => 4,
+            'description' => 'Resort-style staycation in Ortigas, Pasig.',
+            'inventory_items' => 'Aircon, WiFi, Smart TV',
+        ]);
+
+        $response->assertRedirect(route('host.units.index'));
+
+        $this->assertDatabaseHas('buildings', [
+            'name' => 'Sorrento Oasis - Building F',
+            'code' => 'SORR-F',
+            'address' => 'C. Raymundo Ave, Brgy. Rosario, Pasig City',
+            'admin_email' => 'pmo.sorrento@example.com',
+            'gate_pass_template' => 'pdf.gate_pass_generic',
+        ]);
+
+        $building = Building::where('code', 'SORR-F')->firstOrFail();
+
+        $this->assertDatabaseHas('units', [
+            'building_id' => $building->id,
+            'unit_number' => 'Unit F408',
+            'title' => 'Sorrento Oasis 2BR Garden Suite',
+        ]);
+
+        $this->get(route('units.index'))
+            ->assertOk()
+            ->assertSee('Sorrento Oasis - Building F')
+            ->assertSee('Sorrento Oasis 2BR Garden Suite');
+    }
+
+    public function test_creating_unit_with_new_building_requires_building_details_and_unique_code(): void
+    {
+        $this->actingAs($this->host)->post(route('host.units.store'), [
+            'building_id' => 'new',
+            'unit_number' => 'Unit 101',
+            'title' => 'Incomplete Condo Unit',
+            'base_price_per_night' => 1500,
+            'advance_deposit_required' => 1000,
+            'max_guests' => 2,
+        ])->assertSessionHasErrors(['new_building_name', 'new_building_code', 'new_building_address']);
+
+        $this->actingAs($this->host)->post(route('host.units.store'), [
+            'building_id' => 'new',
+            'new_building_name' => 'Duplicate Code Tower',
+            'new_building_code' => 'udh-n',
+            'new_building_address' => 'Ortigas Ave, Pasig City',
+            'unit_number' => 'Unit 102',
+            'title' => 'Duplicate Building Code Unit',
+            'base_price_per_night' => 1500,
+            'advance_deposit_required' => 1000,
+            'max_guests' => 2,
+        ])->assertSessionHasErrors(['new_building_code']);
     }
 }

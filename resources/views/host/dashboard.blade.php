@@ -701,15 +701,15 @@ window.hostDashboard = function() {
                     <span class="px-1.5 py-0.5 rounded text-[9px] font-black bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300">100% Payout</span>
                 </div>
                 <div class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight tabular-nums">
-                    ₱{{ number_format($totalPlatformFees, 2) }}
+                    ₱{{ number_format($totalHostEarnings, 2) }}
                 </div>
                 <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
-                    5% guest micro-fee (0% OTA commission)
+                    Room rate &amp; add-ons (0% host commission)
                 </p>
             </div>
 
             <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
-                <span>Host keeps 100% room rate</span>
+                <span>5% Platform Fee: <strong class="font-mono text-slate-700 dark:text-slate-200">₱{{ number_format($totalPlatformFees, 2) }}</strong></span>
                 <span class="text-emerald-600 dark:text-emerald-400 font-bold">✓</span>
             </div>
         </div>
@@ -895,7 +895,7 @@ window.hostDashboard = function() {
                                     <span class="text-[10px] text-blue-600 dark:text-blue-400 font-medium block">Dep: ₱{{ number_format($b->advance_deposit_amount, 2) }}</span>
                                     @if($b->isPaid())
                                         <a href="{{ route('transactions.receipt', $b->booking_code) }}" class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 hover:underline">
-                                            GCash Paid ✓ &bull; Receipt
+                                            {{ \App\Services\PayMongoService::formatPaymentMethodLabel($b->payment_method) }} Paid ✓ &bull; Receipt
                                         </a>
                                     @endif
                                 </td>
@@ -929,6 +929,11 @@ window.hostDashboard = function() {
                                         <a href="{{ route('host.checkouts.show', $b) }}"
                                            class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors">
                                             Checkout Inspect
+                                        </a>
+                                    @elseif($b->status === 'checked_out')
+                                        <a href="{{ route('host.checkouts.show', $b) }}"
+                                           class="inline-flex items-center px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200/80 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors">
+                                            View Inspection
                                         </a>
                                     @endif
                                 </td>
