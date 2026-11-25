@@ -277,7 +277,7 @@
                     </div>
                     <p class="text-xs font-bold text-slate-900 dark:text-white mt-1.5 truncate">Advance Deposit</p>
                     <p class="text-[10px] text-slate-400 dark:text-slate-500">
-                        {{ $booking->isPaid() ? 'GCash Paid ✓' : 'GCash Only' }}
+                        {{ $booking->isPaid() ? \App\Services\PayMongoService::formatPaymentMethodLabel($booking->payment_method).' Paid ✓' : 'GCash / QR Ph' }}
                     </p>
                 </button>
 
@@ -819,7 +819,7 @@
                         <div class="p-3 rounded-2xl bg-white/80 dark:bg-slate-900/70 border border-emerald-200/60 dark:border-emerald-900">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Payment Method</span>
                             <strong class="text-sm font-bold text-blue-600 dark:text-blue-400 uppercase">
-                                GCash (PayMongo)
+                                {{ \App\Services\PayMongoService::formatPaymentMethodLabel($booking->payment_method) }} (PayMongo)
                             </strong>
                         </div>
                         <div class="p-3 rounded-2xl bg-white/80 dark:bg-slate-900/70 border border-emerald-200/60 dark:border-emerald-900">
@@ -857,18 +857,19 @@
                         <div>
                             <div class="flex items-center gap-2">
                                 <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white">
-                                    GCash Only
+                                    GCash &amp; QR Ph
                                 </span>
                                 <span class="text-xs font-black uppercase tracking-wider text-blue-900 dark:text-blue-300">
-                                    Instant GCash Payment via PayMongo
+                                    Instant GCash &amp; QR Ph Payment via PayMongo
                                 </span>
                             </div>
                             <p class="text-[11px] text-slate-600 dark:text-slate-400 mt-1">
-                                GCash is the only accepted payment method. Payment is automatically verified and recorded on both buyer and seller ledgers upon success.
+                                Pay using GCash E-Wallet or scan a dynamic QR Ph code (compatible with GCash, Maya, and banking apps). Payment is automatically verified and recorded on both buyer and seller ledgers upon success.
                             </p>
                         </div>
                         <div class="flex items-center gap-1.5 text-[10px] font-bold shrink-0">
-                            <span class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400">GCash E-Wallet Only</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400">GCash</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-emerald-200 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400">QR Ph</span>
                         </div>
                     </div>
 

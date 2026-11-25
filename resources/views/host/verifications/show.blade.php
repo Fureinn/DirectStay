@@ -195,7 +195,7 @@
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-[11px] text-slate-600 dark:text-slate-300">
                             <div>Payment Ref: <strong class="font-mono text-slate-900 dark:text-white">{{ $booking->paymongo_payment_id }}</strong></div>
-                            <div>Method: <strong class="uppercase text-slate-900 dark:text-white">{{ str_replace('paymongo_', '', $booking->payment_method ?? 'paymongo') }}</strong></div>
+                            <div>Method: <strong class="uppercase text-slate-900 dark:text-white">{{ \App\Services\PayMongoService::formatPaymentMethodLabel($booking->payment_method) }}</strong></div>
                             <div>Paid At: <strong>{{ $booking->paid_at?->format('M d, Y h:i A') ?? 'Verified' }}</strong></div>
                         </div>
                     </div>

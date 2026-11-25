@@ -123,7 +123,7 @@
                                 </td>
                                 <td class="py-4 px-6">
                                     <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-black bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 mb-1">
-                                        GCash
+                                        {{ \App\Services\PayMongoService::formatPaymentMethodLabel($booking?->payment_method) }}
                                     </span>
                                     <span class="font-mono text-[11px] text-slate-700 dark:text-slate-300 block">
                                         {{ $txn->reference_number ?? $booking?->paymongo_payment_id ?? 'Awaiting Payment' }}

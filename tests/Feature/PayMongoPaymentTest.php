@@ -126,7 +126,7 @@ class PayMongoPaymentTest extends TestCase
                 return true;
             }
 
-            return $request['data']['attributes']['payment_method_types'] === ['gcash'];
+            return $request['data']['attributes']['payment_method_types'] === ['gcash', 'qrph'];
         });
 
         $booking->refresh();
@@ -437,5 +437,205 @@ class PayMongoPaymentTest extends TestCase
         $this->actingAs($seller)
             ->get(route('customer.transactions'))
             ->assertForbidden();
+    }
+
+    public function test_paymongo_api_checkout_verifies_qrph_payment_successfully(): void
+    {
+        Config::set('services.paymongo.secret_key', 'sk_test_dummy_key');
+        Config::set('services.paymongo.base_url', 'https://api.paymongo.com/v1');
+
+        Http::preventStrayRequests();
+        Http::fake([
+            'api.paymongo.com/v1/checkout_sessions' => Http::response([
+                'data' => [
+                    'id' => 'cs_test_qrph_001',
+                    'type' => 'checkout_session',
+                    'attributes' => [
+                        'checkout_url' => 'https://checkout.paymongo.com/cs_test_qrph_001',
+                    ],
+                ],
+            ], 200),
+            'api.paymongo.com/v1/checkout_sessions/cs_test_qrph_001' => Http::response([
+                'data' => [
+                    'id' => 'cs_test_qrph_001',
+                    'type' => 'checkout_session',
+                    'attributes' => [
+                        'status' => 'paid',
+                        'payment_intent' => [
+                            'id' => 'pi_test_qrph_001',
+                            'attributes' => [
+                                'status' => 'succeeded',
+                                'amount' => 100000,
+                            ],
+                        ],
+                        'payments' => [
+                            [
+                                'id' => 'pay_qrph_abc999',
+                                'attributes' => [
+                                    'amount' => 100000,
+                                    'status' => 'paid',
+                                    'payment_method' => ['type' => 'qrph'],
+                                ],
+                            ],
+                        ],
+                        'metadata' => [
+                            'payment_scope' => 'deposit',
+                        ],
+                    ],
+                ],
+            ], 200),
+        ]);
+
+        $booking = $this->createUnpaidBooking('DS-PM-QRPH-01');
+
+        $this->post(route('compliance.paymongo.checkout', $booking->booking_code), [
+            'payment_scope' => 'deposit',
+        ])->assertRedirect('https://checkout.paymongo.com/cs_test_qrph_001');
+
+        $this->get(route('compliance.paymongo.success', ['bookingCode' => $booking->booking_code]))
+            ->assertRedirect(route('compliance.portal', ['bookingCode' => $booking->booking_code, 'step' => 3]))
+            ->assertSessionHas('success');
+
+        $booking->refresh();
+        $this->assertSame('verified', $booking->payment_status);
+        $this->assertSame('pay_qrph_abc999', $booking->paymongo_payment_id);
+        $this->assertSame('paymongo_qrph', $booking->payment_method);
+    }
+
+    public function test_paymongo_sandbox_simulation_supports_qrph_payment_method(): void
+    {
+        Config::set('services.paymongo.secret_key', '');
+        Config::set('services.paymongo.sandbox_simulation', true);
+
+        $buyer = User::where('email', 'customer@directstay.local')->firstOrFail();
+        $booking = $this->createUnpaidBooking('DS-SIM-QRPH-01');
+        $booking->update(['user_id' => $buyer->id]);
+
+        $this->post(route('compliance.paymongo.checkout', $booking->booking_code), [
+            'payment_scope' => 'deposit',
+        ]);
+
+        $checkoutId = $booking->fresh()->paymongo_checkout_id;
+
+        $this->get(route('paymongo.sandbox', ['checkoutId' => $checkoutId]))
+            ->assertOk()
+            ->assertSee('QR Ph (Scan to Pay)');
+
+        $completeResponse = $this->post(route('paymongo.sandbox.complete', ['checkoutId' => $checkoutId]), [
+            'action' => 'succeed',
+            'payment_method' => 'qrph',
+        ]);
+
+        $this->get($completeResponse->headers->get('Location'))
+            ->assertRedirect(route('compliance.portal', ['bookingCode' => $booking->booking_code, 'step' => 3]))
+            ->assertSessionHas('success');
+
+        $booking->refresh();
+        $this->assertSame('verified', $booking->payment_status);
+        $this->assertSame('paymongo_qrph', $booking->payment_method);
+
+        $this->actingAs($buyer)
+            ->get(route('transactions.receipt', $booking->booking_code))
+            ->assertOk()
+            ->assertSee('QR Ph');
+    }
+
+    public function test_paymongo_webhook_accepts_qrph_and_ignores_unsupported_methods(): void
+    {
+        $webhookSecret = 'whsec_test_qrph_123';
+        Config::set('services.paymongo.webhook_secret', $webhookSecret);
+
+        $booking = $this->createUnpaidBooking('DS-WH-QRPH-01');
+        $booking->update(['paymongo_checkout_id' => 'cs_wh_qrph_01', 'payment_scope' => 'deposit']);
+
+        $unsupportedPayload = json_encode([
+            'data' => [
+                'attributes' => [
+                    'type' => 'checkout_session.payment.paid',
+                    'data' => [
+                        'id' => 'cs_wh_qrph_01',
+                        'attributes' => [
+                            'booking_code' => $booking->booking_code,
+                            'payments' => [
+                                [
+                                    'id' => 'pay_wh_card_01',
+                                    'attributes' => [
+                                        'amount' => 100000,
+                                        'status' => 'paid',
+                                        'source' => ['type' => 'card'],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], JSON_THROW_ON_ERROR);
+
+        $timestamp = (string) time();
+        $unsupportedSig = hash_hmac('sha256', $timestamp.'.'.$unsupportedPayload, $webhookSecret);
+
+        $this->call(
+            'POST',
+            route('webhooks.paymongo'),
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_PAYMONGO_SIGNATURE' => "t={$timestamp},te={$unsupportedSig}",
+            ],
+            $unsupportedPayload
+        )->assertOk()->assertJson(['ignored' => 'Only GCash and QR Ph payments are accepted.']);
+
+        $this->assertSame('unpaid', $booking->fresh()->payment_status);
+
+        $qrphPayload = json_encode([
+            'data' => [
+                'attributes' => [
+                    'type' => 'checkout_session.payment.paid',
+                    'data' => [
+                        'id' => 'cs_wh_qrph_01',
+                        'attributes' => [
+                            'reference_number' => $booking->booking_code,
+                            'metadata' => [
+                                'booking_code' => $booking->booking_code,
+                                'payment_scope' => 'deposit',
+                            ],
+                            'payments' => [
+                                [
+                                    'id' => 'pay_wh_qrph_777',
+                                    'attributes' => [
+                                        'amount' => 100000,
+                                        'status' => 'paid',
+                                        'payment_method' => ['type' => 'qrph'],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], JSON_THROW_ON_ERROR);
+
+        $qrphSig = hash_hmac('sha256', $timestamp.'.'.$qrphPayload, $webhookSecret);
+
+        $this->call(
+            'POST',
+            route('webhooks.paymongo'),
+            [],
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_PAYMONGO_SIGNATURE' => "t={$timestamp},te={$qrphSig}",
+            ],
+            $qrphPayload
+        )->assertOk();
+
+        $booking->refresh();
+        $this->assertSame('verified', $booking->payment_status);
+        $this->assertSame('pay_wh_qrph_777', $booking->paymongo_payment_id);
+        $this->assertSame('paymongo_qrph', $booking->payment_method);
     }
 }

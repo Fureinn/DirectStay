@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class PayMongoController extends Controller
@@ -155,11 +156,12 @@ class PayMongoController extends Controller
 
         $validated = $request->validate([
             'action' => ['required', 'in:succeed,fail'],
-            'payment_method' => ['nullable', 'in:gcash'],
+            'payment_method' => ['nullable', Rule::in(PayMongoService::ALLOWED_PAYMENT_METHODS)],
         ]);
 
         $succeed = $validated['action'] === 'succeed';
-        $session = $payMongo->completeSimulatedSession($checkoutId, $succeed, PayMongoService::ALLOWED_PAYMENT_METHOD);
+        $selectedMethod = $validated['payment_method'] ?? PayMongoService::ALLOWED_PAYMENT_METHOD;
+        $session = $payMongo->completeSimulatedSession($checkoutId, $succeed, $selectedMethod);
 
         if ($session === null) {
             abort(404, 'Checkout session expired or not found.');
@@ -220,11 +222,16 @@ class PayMongoController extends Controller
         $paidPayment = is_array($payments) ? ($payments[0] ?? null) : null;
 
         $paymentId = (string) ($paidPayment['id'] ?? ($resourceData['id'] ?? $checkoutId));
-        $paymentMethod = strtolower((string) ($paidPayment['attributes']['source']['type']
-            ?? ($attributes['source']['type'] ?? PayMongoService::ALLOWED_PAYMENT_METHOD)));
+        $paymentMethod = strtolower((string) (
+            $paidPayment['attributes']['source']['type']
+            ?? $paidPayment['attributes']['payment_method']['type']
+            ?? $attributes['source']['type']
+            ?? $attributes['payment_method_used']
+            ?? PayMongoService::ALLOWED_PAYMENT_METHOD
+        ));
 
-        if ($paymentMethod !== PayMongoService::ALLOWED_PAYMENT_METHOD) {
-            return response()->json(['ignored' => 'GCash is the only accepted payment method.']);
+        if (! PayMongoService::isAllowedPaymentMethod($paymentMethod)) {
+            return response()->json(['ignored' => 'Only GCash and QR Ph payments are accepted.']);
         }
         $paidCentavos = $paidPayment['attributes']['amount']
             ?? ($attributes['amount'] ?? null);

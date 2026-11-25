@@ -18,6 +18,36 @@ class PayMongoService
 
     public const ALLOWED_PAYMENT_METHOD = 'gcash';
 
+    public const ALLOWED_PAYMENT_METHOD_QRPH = 'qrph';
+
+    /** @var list<string> */
+    public const ALLOWED_PAYMENT_METHODS = [
+        self::ALLOWED_PAYMENT_METHOD,
+        self::ALLOWED_PAYMENT_METHOD_QRPH,
+    ];
+
+    /**
+     * Determine whether a PayMongo payment method type is accepted by DirectStay.
+     */
+    public static function isAllowedPaymentMethod(string $paymentMethod): bool
+    {
+        return in_array(strtolower($paymentMethod), self::ALLOWED_PAYMENT_METHODS, true);
+    }
+
+    /**
+     * Format a stored payment method key into a user-facing label.
+     */
+    public static function formatPaymentMethodLabel(?string $paymentMethod): string
+    {
+        $normalized = strtolower((string) $paymentMethod);
+
+        if (str_contains($normalized, self::ALLOWED_PAYMENT_METHOD_QRPH)) {
+            return 'QR Ph';
+        }
+
+        return 'GCash';
+    }
+
     /**
      * Determine if live or test PayMongo API credentials are configured.
      */
@@ -95,7 +125,7 @@ class PayMongoService
                                     'description' => $description,
                                 ],
                             ],
-                            'payment_method_types' => [self::ALLOWED_PAYMENT_METHOD],
+                            'payment_method_types' => self::ALLOWED_PAYMENT_METHODS,
                             'reference_number' => $booking->booking_code,
                             'send_email_receipt' => true,
                             'show_description' => true,
@@ -241,12 +271,14 @@ class PayMongoService
         $isPaid = $paidPayment !== null || $paymentIntentStatus === 'succeeded' || $sessionStatus === 'paid';
 
         $paymentId = $paidPayment['id'] ?? ($attributes['payment_intent']['id'] ?? null);
-        $paymentMethod = strtolower((string) ($paidPayment['attributes']['source']['type']
-            ?? ($attributes['payment_method_used'] ?? self::ALLOWED_PAYMENT_METHOD)));
+        $paymentMethod = $this->extractPaymentMethod(
+            is_array($paidPayment) ? $paidPayment : [],
+            is_array($attributes) ? $attributes : [],
+        );
         $paidCentavos = $paidPayment['attributes']['amount']
             ?? ($attributes['payment_intent']['attributes']['amount'] ?? null);
 
-        if ($isPaid && $paymentMethod !== self::ALLOWED_PAYMENT_METHOD) {
+        if ($isPaid && ! self::isAllowedPaymentMethod($paymentMethod)) {
             return [
                 'paid' => false,
                 'status' => 'unsupported_payment_method',
@@ -293,13 +325,17 @@ class PayMongoService
             return null;
         }
 
+        $resolvedMethod = self::isAllowedPaymentMethod($paymentMethod)
+            ? strtolower($paymentMethod)
+            : self::ALLOWED_PAYMENT_METHOD;
+
         if ($succeed) {
             $session['status'] = 'paid';
             $session['payment_id'] = 'pay_sim_'.Str::random(16);
-            $session['payment_method'] = self::ALLOWED_PAYMENT_METHOD;
+            $session['payment_method'] = $resolvedMethod;
         } else {
             $session['status'] = 'failed';
-            $session['payment_method'] = self::ALLOWED_PAYMENT_METHOD;
+            $session['payment_method'] = $resolvedMethod;
         }
 
         Cache::put($this->simulationCacheKey($checkoutId), $session, now()->addHours(2));
@@ -447,6 +483,23 @@ class PayMongoService
         }
 
         return false;
+    }
+
+    /**
+     * Extract the normalized payment method type from a PayMongo checkout session payload.
+     *
+     * @param  array<string, mixed>  $paidPayment
+     * @param  array<string, mixed>  $attributes
+     */
+    private function extractPaymentMethod(array $paidPayment, array $attributes): string
+    {
+        return strtolower((string) (
+            $paidPayment['attributes']['source']['type']
+            ?? $paidPayment['attributes']['payment_method']['type']
+            ?? $attributes['source']['type']
+            ?? $attributes['payment_method_used']
+            ?? self::ALLOWED_PAYMENT_METHOD
+        ));
     }
 
     /**

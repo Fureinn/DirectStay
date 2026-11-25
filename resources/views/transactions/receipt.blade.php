@@ -9,6 +9,7 @@
         ?? $booking->booking_code;
     $paidTotal = (float) ($booking->paid_amount ?? $booking->transactions->where('status', 'completed')->whereIn('type', ['advance_deposit', 'platform_fee', 'stay_payment'])->sum('amount'));
     $isVerified = $booking->isPaid();
+    $paymentMethodLabel = \App\Services\PayMongoService::formatPaymentMethodLabel($booking->payment_method);
 @endphp
 
 <div class="page-enter max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -38,11 +39,11 @@
                         {{ $isSeller ? 'Seller Receipt (Payment Received)' : 'Buyer Receipt (Payment Transmitted)' }}
                     </span>
                     <span class="px-2.5 py-0.5 rounded-md bg-blue-500 text-white text-[10px] font-black uppercase tracking-wider">
-                        GCash Verified Channel
+                        {{ $paymentMethodLabel }} Verified Channel
                     </span>
                 </div>
                 <h1 class="text-xl sm:text-2xl font-black tracking-tight">
-                    Official GCash Transaction Confirmation
+                    Official {{ $paymentMethodLabel }} Transaction Confirmation
                 </h1>
                 <p class="text-xs text-white/85 mt-0.5 font-mono">
                     Booking Ref: {{ $booking->booking_code }} &bull; Transaction Ref: {{ $primaryRef }}
@@ -95,7 +96,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
                 <div>
                     <span class="text-[10px] font-bold uppercase text-slate-400 block">Payment Method</span>
-                    <strong class="text-blue-600 dark:text-blue-400 font-black">GCash</strong>
+                    <strong class="text-blue-600 dark:text-blue-400 font-black">{{ $paymentMethodLabel }}</strong>
                 </div>
                 <div>
                     <span class="text-[10px] font-bold uppercase text-slate-400 block">Reference No.</span>
